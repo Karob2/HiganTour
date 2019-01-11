@@ -51,6 +51,7 @@ namespace LifeDeath.Scenes
                 .AttachTo(root);
 
             camera = new Entity()
+                .SetRenderByDepth(true)
                 .AddUpdateComponent(new Components.CameraComponent(player))
                 .AttachTo(container);
 

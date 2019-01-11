@@ -14,10 +14,10 @@ namespace Lichen.Entities
         private float relativeY;
         public float RelativeX { get { return relativeX; } }
         public float RelativeY { get { return relativeY; } }
-        public Boolean Active { get; set; } = true;
-        public Boolean Visible { get; set; } = true;
-        private Boolean inheritedVisibility;
-        public Boolean InheritedVisibility { get { return inheritedVisibility; } }
+        public bool Active { get; set; } = true;
+        public bool Visible { get; set; } = true;
+        private bool inheritedVisibility;
+        public bool InheritedVisibility { get { return inheritedVisibility; } }
         // UpdateComponent: For components that have code to run every frame, such as updating motion and collisions, and responding to player input.
         // RenderComponent: For components that need to be drawn every frame.
         // ComponentList: For components that do not Update or Render, such as data holders.
@@ -26,6 +26,11 @@ namespace Lichen.Entities
         public IRenderComponent RenderComponent { get; set; }
         public Dictionary<Type,Component> ComponentList { get; set; }
         public Dictionary<string,UpdateChain> UpdateChains { get; set; }
+
+        public bool RenderByDepth { get; set; }
+        public float RenderOrder { get; set; }
+        public int RenderBackupOrder { get; set; }
+        public static int RenderBackupCount { get; set; }
 
         public Entity()
         {
@@ -40,7 +45,7 @@ namespace Lichen.Entities
             Y = y;
         }
 
-        public Entity(float x, float y, Boolean active, Boolean visible) : this()
+        public Entity(float x, float y, bool active, bool visible) : this()
         {
             X = x;
             Y = y;
@@ -48,7 +53,7 @@ namespace Lichen.Entities
             Visible = visible;
         }
 
-        public Entity(Boolean active, Boolean visible) : this()
+        public Entity(bool active, bool visible) : this()
         {
             Active = active;
             Visible = visible;
@@ -66,7 +71,7 @@ namespace Lichen.Entities
             Active = true;
             return this;
         }
-        public Entity SetActive(Boolean active)
+        public Entity SetActive(bool active)
         {
             Active = active;
             return this;
@@ -77,9 +82,21 @@ namespace Lichen.Entities
             Visible = true;
             return this;
         }
-        public Entity SetVisible(Boolean visible)
+        public Entity SetVisible(bool visible)
         {
             Visible = visible;
+            return this;
+        }
+
+        public Entity SetRenderOrder(float renderOrder)
+        {
+            RenderOrder = renderOrder;
+            return this;
+        }
+
+        public Entity SetRenderByDepth(bool renderByDepth)
+        {
+            RenderByDepth = renderByDepth;
             return this;
         }
 
@@ -128,13 +145,26 @@ namespace Lichen.Entities
             return this;
         }
 
-        public Boolean IsVisible()
+        public bool IsVisible()
         {
             return inheritedVisibility;
         }
 
         public void Render()
         {
+            if (RenderByDepth)
+            {
+                List<Entity> renderList = new List<Entity>();
+                RenderBackupCount = 0;
+                this.BuildSortedRenderList(renderList);
+                renderList.Sort(new EntitySorter());
+                foreach (Entity entity in renderList)
+                {
+                    entity.RenderComponent.Render();
+                }
+                return;
+            }
+
             if (!Visible) return;
             if (Parent != null)
             {
@@ -153,6 +183,37 @@ namespace Lichen.Entities
                 while (child != null)
                 {
                     child.Value.Render();
+                    child = child.Next;
+                }
+            }
+        }
+
+        public void BuildSortedRenderList(List<Entity> renderList)
+        {
+            if (!Visible) return;
+            if (Parent != null)
+            {
+                relativeX = Parent.RelativeX + X;
+                relativeY = Parent.RelativeY + Y;
+            }
+            else
+            {
+                relativeX = X;
+                relativeY = Y;
+            }
+            if (RenderComponent != null)
+            {
+                renderList.Add(this);
+                RenderBackupOrder = RenderBackupCount;
+                RenderBackupCount++;
+                RenderOrder = -Y;
+            }
+            if (Children.Count != 0)
+            {
+                LinkedListNode<Entity> child = Children.First;
+                while (child != null)
+                {
+                    child.Value.BuildSortedRenderList(renderList);
                     child = child.Next;
                 }
             }
@@ -221,6 +282,16 @@ namespace Lichen.Entities
             }
 
             return entity;
+        }
+    }
+
+    public class EntitySorter : IComparer<Entity>
+    {
+        public int Compare(Entity e1, Entity e2)
+        {
+            int compared = e2.RenderOrder.CompareTo(e1.RenderOrder);
+            if (compared != 0) return compared;
+            return e1.RenderBackupOrder.CompareTo(e2.RenderBackupOrder);
         }
     }
 }
