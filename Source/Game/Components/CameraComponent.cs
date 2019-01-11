@@ -18,7 +18,8 @@ namespace LifeDeath.Components
 
         public void Update()
         {
-            Owner.X = -target.X + Lichen.GlobalServices.Game.GraphicsDevice.Viewport.Width / 2;
+            //Owner.X = -target.X + Lichen.GlobalServices.Game.GraphicsDevice.Viewport.Width / 2;
+            Owner.X = 0;
             Owner.Y = -target.Y + Lichen.GlobalServices.Game.GraphicsDevice.Viewport.Height / 2;
         }
     }

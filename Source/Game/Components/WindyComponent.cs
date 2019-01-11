@@ -14,7 +14,7 @@ namespace LifeDeath.Components
         float ax, ay;
         Random rand;
 
-        public WindyComponent(int x, int y)
+        public WindyComponent(float x, float y)
         {
             this.x = x;
             this.y = y;

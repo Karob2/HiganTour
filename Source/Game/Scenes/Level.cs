@@ -62,11 +62,17 @@ namespace LifeDeath.Scenes
             */
 
             Random random = new Random();
+            double phi = (Math.Sqrt(5d)-1d)/2d;
+            double theta = random.NextDouble();
             for (int i = 0; i < 200; i++)
             {
-                lycoris.Clone().SetPosition(random.Next(0, 700), random.Next(0, 700))
-                    .AddChainComponent("motion", new Components.WindyComponent(random.Next(0, 700), random.Next(0, 700)))
+                lycoris.Clone()
+                    //.SetPosition(random.Next(0, 700), random.Next(0, 700))
+                    //.AddChainComponent("motion", new Components.WindyComponent(random.Next(0, 1280), random.Next(0, 720)))
+                    .AddChainComponent("motion", new Components.WindyComponent((float)(theta * 1280d + random.NextDouble() * 200d - 100d), (float)i * 720f/200f))
                     .AttachTo(camera);
+                theta += phi;
+                if (theta > 1d) theta -= 1d;
             }
 
             enemy.Clone().SetPosition(200, 200).AttachTo(camera);

@@ -1,7 +1,7 @@
 {
     "DefaultFrame": {
         "Spritesheet": "spirit",
-        "AnchorX": 32,
-        "AnchorY": 32
+        "AnchorX": 48,
+        "AnchorY": 48
     }
 }

@@ -1,7 +1,7 @@
 {
     "DefaultFrame": {
         "Spritesheet": "lycoris",
-        "AnchorX": 16,
-        "AnchorY": 8
+        "AnchorX": 32,
+        "AnchorY": 16
     }
 }
