@@ -11,6 +11,7 @@ namespace LifeDeath.Scenes
 {
     public class Level : Scene
     {
+        Entity camera;
         Entity player;
         Entity enemy;
         Entity lycoris;
@@ -46,21 +47,31 @@ namespace LifeDeath.Scenes
         // Create the scene's entities by cloning reference entities.
         public override void Load()
         {
-            container = new Entity();
-            container.AttachTo(root);
+            container = new Entity()
+                .AttachTo(root);
+
+            camera = new Entity()
+                .AddUpdateComponent(new Components.CameraComponent(player))
+                .AttachTo(container);
+
+            /*
+            zone1 = new Entity().AttachTo(container);
+            zone2 = new Entity().AttachTo(container);
+            zone3 = new Entity().AttachTo(container);
+            */
 
             Random random = new Random();
             for (int i = 0; i < 200; i++)
             {
                 lycoris.Clone().SetPosition(random.Next(0, 700), random.Next(0, 700))
                     .AddChainComponent("motion", new Components.WindyComponent(random.Next(0, 700), random.Next(0, 700)))
-                    .AttachTo(container);
+                    .AttachTo(camera);
             }
 
-            enemy.Clone().SetPosition(200, 200).AttachTo(container);
+            enemy.Clone().SetPosition(200, 200).AttachTo(camera);
 
             //Entity player1 = player.Clone().SetPosition(300, 200).AttachTo(container);
-            player.SetPosition(300, 200).AttachTo(container);
+            player.SetPosition(300, 200).AttachTo(camera);
 
             /*
             TextComponent tc = (TextComponent)player1.Children.First.Value.RenderComponent;

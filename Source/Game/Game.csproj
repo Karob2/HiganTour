@@ -60,6 +60,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Components\AI\SeekerAIComponent.cs" />
+    <Compile Include="Components\CameraComponent.cs" />
     <Compile Include="Components\MenuComponent.cs" />
     <Compile Include="Components\PlayerControlComponent.cs" />
     <Compile Include="Components\WindyComponent.cs" />
