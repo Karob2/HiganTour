@@ -33,7 +33,8 @@ namespace LifeDeath.Scenes
                 .AttachTo(player);
                 */
             enemy = new Entity()
-                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:darkness")));
+                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:darkness")))
+                .AddChainComponent("control", new Components.AI.SeekerAIComponent(player));
 
             Sprite lycorisSprite = GlobalServices.GlobalSprites.Register("lifedeath:lycoris");
             lycoris = new Entity()
@@ -58,7 +59,8 @@ namespace LifeDeath.Scenes
 
             enemy.Clone().SetPosition(200, 200).AttachTo(container);
 
-            Entity player1 = player.Clone().SetPosition(300, 200).AttachTo(container);
+            //Entity player1 = player.Clone().SetPosition(300, 200).AttachTo(container);
+            player.SetPosition(300, 200).AttachTo(container);
 
             /*
             TextComponent tc = (TextComponent)player1.Children.First.Value.RenderComponent;
