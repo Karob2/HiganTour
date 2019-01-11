@@ -29,6 +29,9 @@ namespace LifeDeath
             graphicsManager.PreferredBackBufferHeight = 720;
             graphicsManager.ApplyChanges();
 
+            //graphicsManager.SynchronizeWithVerticalRetrace = false;
+            //IsFixedTimeStep = false;
+
             GlobalServices.Initialize(gameName, companyName, this, graphicsManager);
             base.Initialize();
         }

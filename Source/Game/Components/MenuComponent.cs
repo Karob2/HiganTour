@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LifeDeath.Components
 {
-    public class MenuComponent : Lichen.Entities.Component, Lichen.Entities.IUpdateComponent
+    class MenuComponent : Lichen.Entities.Component, Lichen.Entities.IUpdateComponent
     {
         public void Update()
         {

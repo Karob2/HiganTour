@@ -11,8 +11,10 @@ namespace LifeDeath.Scenes
 {
     public class Level : Scene
     {
-        Entity block;
         Entity player;
+        Entity enemy;
+        Entity lycoris;
+        //Entity zone1, zone2, zone3;
 
         Font font;
 
@@ -21,17 +23,21 @@ namespace LifeDeath.Scenes
         {
             this.root = root;
 
-            // TODO: Add SpriteLibrary.Lookup(string) when the asset should not be loaded if not found.
-            Sprite blockSprite = GlobalServices.GlobalSprites.Register("lifedeath:block_gray");
-            block = new Entity()
-                .AddRenderComponent(new SpriteComponent(blockSprite));
             player = new Entity()
-                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:hopper")))
+                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:spirit")))
                 .AddChainComponent("control", new Components.PlayerControlComponent());
             //.AddChainComponent("motion", )
+            /*
             new Entity(0, 0)
                 .AddRenderComponent(new TextComponent(GlobalServices.GlobalFonts.Register("lifedeath:sans"), "Player 1"))
                 .AttachTo(player);
+                */
+            enemy = new Entity()
+                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:darkness")));
+
+            Sprite lycorisSprite = GlobalServices.GlobalSprites.Register("lifedeath:lycoris");
+            lycoris = new Entity()
+                .AddRenderComponent(new SpriteComponent(lycorisSprite));
 
             font = GlobalServices.GlobalFonts.Register("lifedeath:sans");
         }
@@ -42,11 +48,22 @@ namespace LifeDeath.Scenes
             container = new Entity();
             container.AttachTo(root);
 
-            block.Clone().SetPosition(200, 200).AttachTo(container);
+            Random random = new Random();
+            for (int i = 0; i < 200; i++)
+            {
+                lycoris.Clone().SetPosition(random.Next(0, 700), random.Next(0, 700))
+                    .AddChainComponent("motion", new Components.WindyComponent(random.Next(0, 700), random.Next(0, 700)))
+                    .AttachTo(container);
+            }
+
+            enemy.Clone().SetPosition(200, 200).AttachTo(container);
+
             Entity player1 = player.Clone().SetPosition(300, 200).AttachTo(container);
 
+            /*
             TextComponent tc = (TextComponent)player1.Children.First.Value.RenderComponent;
             tc.Value = "PLAYER";
+            */
         }
 
         // Delete the scene. (Reference entities and assets remain.)

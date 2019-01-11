@@ -51,6 +51,8 @@ namespace Lichen
 
         public static Input.TextHandler TextHandler { get; set; }
 
+        public static Random GlobalRandom { get; set; }
+
         public static void Initialize(string gameName, string companyName, Game game, GraphicsDeviceManager graphicsManager)
         {
             GameName = gameName;
@@ -116,6 +118,7 @@ namespace Lichen
             System.Diagnostics.Debug.WriteLine(Pathfinder.Find("superball", "spriteconfigs", Pathfinder.FileType.xml, pf).Path);
 #endif
 */
+            GlobalRandom = new Random();
 
             Libraries.TextureLibrary.Initialize();
             Libraries.SpriteLibrary.Initialize();

@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="Components\MenuComponent.cs" />
     <Compile Include="Components\PlayerControlComponent.cs" />
+    <Compile Include="Components\WindyComponent.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
