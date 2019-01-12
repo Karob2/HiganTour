@@ -32,6 +32,8 @@ namespace Lichen.Entities
         public int RenderBackupOrder { get; set; }
         public static int RenderBackupCount { get; set; }
 
+        public List<Entity> ActorList { get; set; }
+
         public Entity()
         {
             Children = new LinkedList<Entity>();
@@ -126,6 +128,19 @@ namespace Lichen.Entities
             if (!UpdateChains.ContainsKey(chain)) UpdateChains.Add(chain, new UpdateChain());
             UpdateChains[chain].Add(component);
             component.Owner = this;
+            return this;
+        }
+
+        public Entity AddActor(List<Entity> actorList)
+        {
+            ActorList = actorList;
+            actorList.Add(this);
+            return this;
+        }
+
+        public Entity AddActorList(List<Entity> actorList)
+        {
+            ActorList = actorList;
             return this;
         }
 

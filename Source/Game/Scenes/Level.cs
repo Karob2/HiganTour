@@ -17,12 +17,15 @@ namespace LifeDeath.Scenes
         Entity lycoris;
         //Entity zone1, zone2, zone3;
 
+        List<Entity> actorList;
+
         Font font;
 
         // Create a reference set of entities and load necessary assets.
         public override void Preload(Entity root)
         {
             this.root = root;
+            actorList = new List<Entity>();
 
             player = new Entity()
                 .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:spirit")))
@@ -69,16 +72,19 @@ namespace LifeDeath.Scenes
                 lycoris.Clone()
                     //.SetPosition(random.Next(0, 700), random.Next(0, 700))
                     //.AddChainComponent("motion", new Components.WindyComponent(random.Next(0, 1280), random.Next(0, 720)))
-                    .AddChainComponent("motion", new Components.WindyComponent((float)(theta * 1280d + random.NextDouble() * 200d - 100d), (float)i * 720f/200f))
-                    .AttachTo(camera);
+                    .AddChainComponent("motion", new Components.WindyComponent((float)(theta * 1280d + random.NextDouble() * 200d - 100d), (float)i * 720f / 200f))
+                    .AttachTo(camera)
+                    .AddActorList(actorList);
                 theta += phi;
                 if (theta > 1d) theta -= 1d;
             }
 
-            enemy.Clone().SetPosition(200, 200).AttachTo(camera);
+            enemy.Clone().SetPosition(200, 200).AttachTo(camera)
+                .AddActor(actorList);
 
             //Entity player1 = player.Clone().SetPosition(300, 200).AttachTo(container);
-            player.SetPosition(300, 200).AttachTo(camera);
+            player.SetPosition(300, 200).AttachTo(camera)
+                .AddActor(actorList);
 
             /*
             TextComponent tc = (TextComponent)player1.Children.First.Value.RenderComponent;
