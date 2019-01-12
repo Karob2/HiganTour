@@ -14,12 +14,15 @@ namespace LifeDeath.Scenes
         Entity camera;
         Entity player;
         Entity enemy;
+        Entity enemyContainer;
         Entity lycoris;
         //Entity zone1, zone2, zone3;
 
         List<Entity> actorList;
 
         Font font;
+
+        int furthestDistance;
 
         // Create a reference set of entities and load necessary assets.
         public override void Preload(Entity root)
@@ -29,7 +32,7 @@ namespace LifeDeath.Scenes
 
             player = new Entity()
                 .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:spirit")))
-                .AddChainComponent("control", new Components.PlayerControlComponent());
+                .AddChainComponent("control", new Components.PlayerControlComponent(this));
             //.AddChainComponent("motion", )
             /*
             new Entity(0, 0)
@@ -79,18 +82,31 @@ namespace LifeDeath.Scenes
                 if (theta > 1d) theta -= 1d;
             }
 
+            enemyContainer = new Entity()
+                .AttachTo(camera);
             //enemy.Clone().SetPosition(200, 200).AttachTo(camera)
-            enemy.SetPosition(200, 200).AttachTo(camera)
+            enemy.Clone().SetPosition(200, 200).AttachTo(enemyContainer)
                 .AddActor(actorList);
 
             //Entity player1 = player.Clone().SetPosition(300, 200).AttachTo(container);
-            player.SetPosition(300, 200).AttachTo(camera)
+            player.SetPosition(880, 200).AttachTo(camera)
                 .AddActor(actorList);
 
             /*
             TextComponent tc = (TextComponent)player1.Children.First.Value.RenderComponent;
             tc.Value = "PLAYER";
             */
+        }
+
+        public void UpdateDistance(float position)
+        {
+            int newDistance = (int)(-position / 1000f);
+            if (newDistance > furthestDistance)
+            {
+                furthestDistance = newDistance;
+                enemy.Clone().SetPosition(player.X, player.Y - 400f).AttachTo(enemyContainer)
+                    .AddActor(actorList);
+            }
         }
 
         // Delete the scene. (Reference entities and assets remain.)
@@ -104,8 +120,16 @@ namespace LifeDeath.Scenes
 
         public void Reset()
         {
-            enemy.SetPosition(200, 200);
-            player.SetPosition(300, 200);
+            enemyContainer.Children.Clear();
+            actorList.Clear();
+
+            enemy.Clone().SetPosition(200, 200).AttachTo(enemyContainer)
+                .AddActor(actorList);
+
+            ((Components.PlayerControlComponent)(player.UpdateChains["control"].First())).Reset();
+
+            player.SetPosition(880, 200)
+                .AddActor(actorList);
         }
     }
 }

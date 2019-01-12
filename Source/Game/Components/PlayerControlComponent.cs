@@ -12,7 +12,20 @@ namespace LifeDeath.Components
 {
     class PlayerControlComponent : Lichen.Entities.Component, Lichen.Entities.IUpdateComponent
     {
+        Scenes.Level level;
         Vector2 d;
+
+        public PlayerControlComponent(Scenes.Level level)
+        {
+            this.level = level;
+        }
+
+        public void Reset()
+        {
+            //furthestDistance = 0;
+            d.X = 0;
+            d.Y = 0;
+        }
 
         public void Update()
         {
@@ -47,8 +60,11 @@ namespace LifeDeath.Components
                 if (Lichen.Util.MathHelper.Distance(Owner, actor) < 50d)
                 {
                     ((Game1)Lichen.GlobalServices.Game).ChangeScene(2);
+                    return;
                 }
             }
+
+            level.UpdateDistance(Owner.Y);
         }
     }
 }
