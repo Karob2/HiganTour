@@ -12,11 +12,12 @@ namespace LifeDeath.Components.AI
     {
         Scenes.Level level;
         Entity target;
+        int bulletTimer;
 
-        public SeekerAIComponent(Scenes.Level level, Entity target)
+        public SeekerAIComponent(Scenes.Level level)
         {
             this.level = level;
-            this.target = target;
+            target = level.Player;
         }
 
         public void Update()
@@ -24,9 +25,19 @@ namespace LifeDeath.Components.AI
             if (!level.Hiding)
             {
                 Vector2 vector = new Vector2(target.X - Owner.X, target.Y - Owner.Y);
-                vector.Normalize();
-                Owner.X += vector.X;
-                Owner.Y += vector.Y;
+                if (vector.X != 0 || vector.Y != 0)
+                {
+                    vector.Normalize();
+                    Owner.X += vector.X;
+                    Owner.Y += vector.Y;
+
+                    bulletTimer++;
+                    if (bulletTimer >= 100)
+                    {
+                        level.MakeBullet(Owner.X, Owner.Y, vector.X * 10f, vector.Y * 10f);
+                        bulletTimer = 0;
+                    }
+                }
             }
         }
     }

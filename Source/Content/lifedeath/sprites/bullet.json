@@ -1,0 +1,7 @@
+{
+    "DefaultFrame": {
+        "Spritesheet": "bullet",
+        "AnchorX": 16,
+        "AnchorY": 16
+    }
+}

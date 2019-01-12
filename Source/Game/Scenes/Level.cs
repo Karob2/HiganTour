@@ -21,7 +21,9 @@ namespace LifeDeath.Scenes
             set { player = value; }
         }
         public bool Hiding { get; set; }
-        Entity enemy;
+        Entity enemy, bullet;
+        List<Entity> bullets;
+        int currentBullet;
         Entity enemyContainer;
         Entity lycoris;
         //Entity zone1, zone2, zone3;
@@ -52,7 +54,11 @@ namespace LifeDeath.Scenes
                 */
             enemy = new Entity()
                 .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:darkness")))
-                .AddChainComponent("control", new Components.AI.SeekerAIComponent(this, player));
+                .AddChainComponent("control", new Components.AI.SeekerAIComponent(this));
+
+            bullet = new Entity()
+                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:bullet")))
+                .AddChainComponent("control", new Components.AI.BulletComponent(this, -200, 0, 0, 0));
 
             Sprite lycorisSprite = GlobalServices.GlobalSprites.Register("lifedeath:lycoris");
             lycoris = new Entity()
@@ -110,6 +116,12 @@ namespace LifeDeath.Scenes
             TextComponent tc = (TextComponent)player1.Children.First.Value.RenderComponent;
             tc.Value = "PLAYER";
             */
+
+            bullets = new List<Entity>();
+            for (int i = 0; i < 100; i++)
+            {
+                bullets.Add(bullet.Clone().AttachTo(camera).AddActor(actorList));
+            }
         }
 
         public void UpdateDistance(float position)
@@ -121,6 +133,21 @@ namespace LifeDeath.Scenes
                 enemy.Clone().SetPosition(player.X, player.Y - 400f).AttachTo(enemyContainer)
                     .AddActor(actorList);
             }
+        }
+
+        public void MakeBullet(float x, float y, float vx, float vy)
+        {
+            /*
+            bullet.Clone()
+                .AddChainComponent("motion", new Components.AI.BulletComponent(this, x, y, vx, vy));
+            */
+            Entity bullet = bullets[currentBullet];
+            ((Components.AI.BulletComponent)bullet.UpdateChains["control"].First()).Set(x, y, vx, vy);
+            bullet.Visible = true;
+            bullet.Active = true;
+
+            currentBullet++;
+            if (currentBullet >= bullets.Count) currentBullet = 0;
         }
 
         // Delete the scene. (Reference entities and assets remain.)
@@ -145,11 +172,23 @@ namespace LifeDeath.Scenes
             player.SetPosition(880, 200)
                 .AddActor(actorList);
 
+            foreach(Entity bullet in bullets)
+            {
+                bullet.AddActor(actorList);
+            }
+
             furthestDistance = 0;
 
             MediaPlayer.Volume = 0.5f;
             MediaPlayer.Play(bgm);
             MediaPlayer.IsRepeating = true;
+
+            foreach (Entity b in bullets)
+            {
+                ((Components.AI.BulletComponent)b.UpdateChains["control"].First()).Reset();
+                b.Visible = false;
+                b.Active = false;
+            }
         }
     }
 }

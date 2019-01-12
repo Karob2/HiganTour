@@ -59,6 +59,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Components\AI\BulletComponent.cs" />
     <Compile Include="Components\AI\SeekerAIComponent.cs" />
     <Compile Include="Components\CameraComponent.cs" />
     <Compile Include="Components\MenuComponent.cs" />
