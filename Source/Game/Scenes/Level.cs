@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace LifeDeath.Scenes
 {
@@ -21,6 +23,9 @@ namespace LifeDeath.Scenes
         List<Entity> actorList;
 
         Font font;
+        Song bgm;
+        public SoundEffect PlayerSfx { get; set; }
+        public SoundEffectInstance PlayerSfxInstance { get; set; }
 
         int furthestDistance;
 
@@ -48,6 +53,9 @@ namespace LifeDeath.Scenes
                 .AddRenderComponent(new SpriteComponent(lycorisSprite));
 
             font = GlobalServices.GlobalFonts.Register("lifedeath:sans");
+            bgm = GlobalServices.GlobalSongs.Register("lifedeath:Stage");
+            PlayerSfx = GlobalServices.GlobalSoundEffects.Register("lifedeath:leaves");
+            PlayerSfxInstance = PlayerSfx.CreateInstance();
         }
 
         // Create the scene's entities by cloning reference entities.
@@ -130,6 +138,12 @@ namespace LifeDeath.Scenes
 
             player.SetPosition(880, 200)
                 .AddActor(actorList);
+
+            furthestDistance = 0;
+
+            MediaPlayer.Volume = 0.5f;
+            MediaPlayer.Play(bgm);
+            MediaPlayer.IsRepeating = true;
         }
     }
 }

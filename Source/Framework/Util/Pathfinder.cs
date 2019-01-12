@@ -15,6 +15,8 @@ namespace Lichen.Util
             xml,
             image,
             xnb,
+            bgm,
+            sfx,
             custom
         }
 
@@ -79,6 +81,12 @@ namespace Lichen.Util
                     break;
                 case FileType.image:
                     ext = new string[] { "xnb", "png", "jpg" };
+                    break;
+                case FileType.bgm:
+                    ext = new string[] { "xnb", "mp3", "ogg", "wav" };
+                    break;
+                case FileType.sfx:
+                    ext = new string[] { "xnb", "mp3", "ogg", "wav" };
                     break;
                 case FileType.custom:
                     ext = new string[] { this.ext };

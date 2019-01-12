@@ -47,7 +47,20 @@ namespace LifeDeath.Components
                 vector.X = 1;
             }
 
-            if (vector.X != 0f || vector.Y != 0f) vector.Normalize();
+            if (vector.X != 0f || vector.Y != 0f)
+            {
+                vector.Normalize();
+                level.PlayerSfxInstance.Volume = 0.4f;
+                level.PlayerSfxInstance.IsLooped = true;
+                level.PlayerSfxInstance.Resume();
+            }
+            else
+            {
+                //level.PlayerSfxInstance.Pause();
+                level.PlayerSfxInstance.Volume = 0.1f;
+                level.PlayerSfxInstance.IsLooped = true;
+                level.PlayerSfxInstance.Resume();
+            }
 
             d.X = (d.X * 5f + vector.X) / 6f;
             d.Y = (d.Y * 5f + vector.Y) / 6f;

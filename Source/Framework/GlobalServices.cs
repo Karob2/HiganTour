@@ -47,6 +47,9 @@ namespace Lichen
         public static Libraries.TextureLibrary GlobalTextures { get; set; }
         public static Libraries.SpriteLibrary GlobalSprites { get; set; }
         public static Libraries.FontLibrary GlobalFonts { get; set; }
+        public static Libraries.SongLibrary GlobalSongs { get; set; }
+        public static Libraries.SoundEffectLibrary GlobalSoundEffects { get; set; }
+
         public static Input.InputManager InputManager { get; set; }
 
         public static Input.TextHandler TextHandler { get; set; }
@@ -123,6 +126,8 @@ namespace Lichen
             Libraries.TextureLibrary.Initialize();
             Libraries.SpriteLibrary.Initialize();
             Libraries.FontLibrary.Initialize();
+            Libraries.SongLibrary.Initialize();
+            Libraries.SoundEffectLibrary.Initialize();
 
             GlobalTextures = new Libraries.TextureLibrary();
             Libraries.TextureLibrary.AddLibrary(GlobalTextures);
@@ -132,6 +137,12 @@ namespace Lichen
 
             GlobalFonts = new Libraries.FontLibrary();
             Libraries.FontLibrary.AddLibrary(GlobalFonts);
+
+            GlobalSongs = new Libraries.SongLibrary();
+            Libraries.SongLibrary.AddLibrary(GlobalSongs);
+
+            GlobalSoundEffects = new Libraries.SoundEffectLibrary();
+            Libraries.SoundEffectLibrary.AddLibrary(GlobalSoundEffects);
 
             InputManager = new Input.InputManager(GetSaveDirectory("inputconfig.json"));
 
