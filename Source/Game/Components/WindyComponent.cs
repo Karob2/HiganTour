@@ -45,6 +45,9 @@ namespace LifeDeath.Components
             //dx = 0f;
             //dy = 0f;
 
+            double ddx = 0f;
+            double ddy = 0f;
+
             Entity nearestActor = null;
             double nearestDistance = 1000d;
             foreach (Entity entity in Owner.ActorList)
@@ -59,12 +62,12 @@ namespace LifeDeath.Components
             if (nearestActor != null && nearestDistance < 200d)
             {
                 double multiplier = (200d - nearestDistance) / 4d;
-                dx = -(nearestActor.X - x) / nearestDistance * multiplier;
-                dy = -(nearestActor.Y - y) * 2f / nearestDistance * multiplier;
+                ddx = -(nearestActor.X - x) / nearestDistance * multiplier;
+                ddy = -(nearestActor.Y - y) * 2f / nearestDistance * multiplier;
             }
 
-            Owner.X = (float)(x + dx);
-            Owner.Y = (float)(y + dy);
+            Owner.X = (float)(x + dx + ddx);
+            Owner.Y = (float)(y + dy + ddy);
         }
     }
 }

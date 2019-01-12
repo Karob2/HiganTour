@@ -79,7 +79,8 @@ namespace LifeDeath.Scenes
                 if (theta > 1d) theta -= 1d;
             }
 
-            enemy.Clone().SetPosition(200, 200).AttachTo(camera)
+            //enemy.Clone().SetPosition(200, 200).AttachTo(camera)
+            enemy.SetPosition(200, 200).AttachTo(camera)
                 .AddActor(actorList);
 
             //Entity player1 = player.Clone().SetPosition(300, 200).AttachTo(container);
@@ -99,6 +100,12 @@ namespace LifeDeath.Scenes
             container = null;
             // TODO: Is that enough to destroy the scene entities? Or do I need to parse through them all?
             //     Is garbage collection hindered by parent and child referencing each other?
+        }
+
+        public void Reset()
+        {
+            enemy.SetPosition(200, 200);
+            player.SetPosition(300, 200);
         }
     }
 }

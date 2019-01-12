@@ -67,6 +67,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scenes\GameOver.cs" />
     <Compile Include="Scenes\Level.cs" />
     <Compile Include="Scenes\MainMenu.cs" />
     <Compile Include="Scenes\Scene.cs" />

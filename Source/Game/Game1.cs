@@ -15,6 +15,7 @@ namespace LifeDeath
         Entity root;
         Scenes.Scene mainMenu;
         Scenes.Scene level;
+        Scenes.Scene gameOver;
 
 
         public Game1()
@@ -46,6 +47,9 @@ namespace LifeDeath
             level = new Scenes.Level();
             level.Preload(root);
             level.Load();
+            gameOver = new Scenes.GameOver();
+            gameOver.Preload(root);
+            gameOver.Load();
             ChangeScene(0);
         }
 
@@ -89,10 +93,18 @@ namespace LifeDeath
                 case 1:
                     mainMenu.Deactivate();
                     level.Activate();
+                    ((Scenes.Level)level).Reset();
+                    gameOver.Deactivate();
+                    break;
+                case 2:
+                    mainMenu.Deactivate();
+                    level.Deactivate();
+                    gameOver.Activate();
                     break;
                 default:
                     mainMenu.Activate();
                     level.Deactivate();
+                    gameOver.Deactivate();
                     break;
             }
         }
