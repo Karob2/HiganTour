@@ -14,6 +14,8 @@ namespace LifeDeath.Components
     {
         Scenes.Level level;
         Vector2 d;
+        int dodgeTimer;
+        //public bool Hiding { get; set; }
 
         public PlayerControlComponent(Scenes.Level level)
         {
@@ -29,7 +31,9 @@ namespace LifeDeath.Components
 
         public void Update()
         {
+            if (dodgeTimer > 0) dodgeTimer--;
             Vector2 vector = new Vector2(0, 0);
+
             if (GlobalServices.InputManager.Held(Lichen.Input.GameCommand.Up))
             {
                 vector.Y = -1;
@@ -47,12 +51,34 @@ namespace LifeDeath.Components
                 vector.X = 1;
             }
 
+            if (GlobalServices.InputManager.Held(Lichen.Input.GameCommand.Action2))
+            {
+                ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = "hiding";
+                vector.X = 0;
+                vector.Y = 0;
+                level.Hiding = true;
+            }
+            else
+            {
+                ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = "default";
+                level.Hiding = false;
+            }
+
             if (vector.X != 0f || vector.Y != 0f)
             {
                 vector.Normalize();
                 level.PlayerSfxInstance.Volume = 0.4f;
                 level.PlayerSfxInstance.IsLooped = true;
                 level.PlayerSfxInstance.Resume();
+
+                if (dodgeTimer <= 0 && GlobalServices.InputManager.Held(Lichen.Input.GameCommand.Action1))
+                {
+                    dodgeTimer = 60 * 1;
+                    vector.X = vector.X * 8f;
+                    vector.Y = vector.Y * 8f;
+                    d.X = vector.X;
+                    d.Y = vector.Y;
+                }
             }
             else
             {

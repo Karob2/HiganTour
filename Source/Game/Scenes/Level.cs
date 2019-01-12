@@ -15,6 +15,12 @@ namespace LifeDeath.Scenes
     {
         Entity camera;
         Entity player;
+        public Entity Player
+        {
+            get { return player; }
+            set { player = value; }
+        }
+        public bool Hiding { get; set; }
         Entity enemy;
         Entity enemyContainer;
         Entity lycoris;
@@ -46,7 +52,7 @@ namespace LifeDeath.Scenes
                 */
             enemy = new Entity()
                 .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:darkness")))
-                .AddChainComponent("control", new Components.AI.SeekerAIComponent(player));
+                .AddChainComponent("control", new Components.AI.SeekerAIComponent(this, player));
 
             Sprite lycorisSprite = GlobalServices.GlobalSprites.Register("lifedeath:lycoris");
             lycoris = new Entity()
@@ -83,7 +89,7 @@ namespace LifeDeath.Scenes
                 lycoris.Clone()
                     //.SetPosition(random.Next(0, 700), random.Next(0, 700))
                     //.AddChainComponent("motion", new Components.WindyComponent(random.Next(0, 1280), random.Next(0, 720)))
-                    .AddChainComponent("motion", new Components.WindyComponent(camera, (float)(theta * 1280d + random.NextDouble() * 200d - 100d), (float)i * 720f / 200f))
+                    .AddChainComponent("motion", new Components.WindyComponent(this, camera, (float)(theta * 1280d + random.NextDouble() * 200d - 100d), (float)i * 720f / 200f))
                     .AttachTo(camera)
                     .AddActorList(actorList);
                 theta += phi;

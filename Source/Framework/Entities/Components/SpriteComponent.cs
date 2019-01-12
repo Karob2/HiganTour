@@ -20,6 +20,13 @@ namespace Lichen.Entities
             CurrentTime = 0f;
         }
 
+        public void SetAnimation(string animation)
+        {
+            CurrentAnimation = animation;
+            CurrentFrame = 0;
+            CurrentTime = 0f;
+        }
+
         public void Render()
         {
             Sprite.Render(Owner.RelativeX, Owner.RelativeY, CurrentAnimation, CurrentFrame);

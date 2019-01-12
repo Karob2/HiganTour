@@ -1,7 +1,29 @@
 {
     "DefaultFrame": {
         "Spritesheet": "spirit",
+        "Width": 96,
+        "Height": 96,
         "AnchorX": 48,
         "AnchorY": 48
-    }
+    },
+    "Animations": [
+        {
+            "Name": "default",
+            "FrameRanges": [
+                {
+                    "X": 0,
+                    "Y": 0
+                }
+            ]
+        },
+        {
+            "Name": "hiding",
+            "FrameRanges": [
+                {
+                    "X": 96,
+                    "Y": 0
+                }
+            ]
+        }
+    ]
 }

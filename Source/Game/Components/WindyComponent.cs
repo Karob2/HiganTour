@@ -14,13 +14,16 @@ namespace LifeDeath.Components
         double vx, vy;
         double ax, ay;
         double theta;
+        double xx, yy;
         Random rand;
+        Scenes.Level level;
         Entity camera;
 
-        public WindyComponent(Entity camera, float x, float y)
+        public WindyComponent(Scenes.Level level, Entity camera, float x, float y)
         {
             this.x = x;
             this.y = y;
+            this.level = level;
             this.camera = camera;
             rand = new Random(Lichen.GlobalServices.GlobalRandom.Next());
         }
@@ -78,8 +81,19 @@ namespace LifeDeath.Components
                 ddy = -(nearestActor.Y - y) * 2f / nearestDistance * multiplier;
             }
 
-            Owner.X = (float)(x + dx + ddx);
-            Owner.Y = (float)(y + dy + ddy);
+            if (Object.ReferenceEquals(nearestActor, level.Player) && level.Hiding)
+            {
+                ddx = -ddx;
+                ddy = -ddy;
+            }
+
+            xx = (10d * xx + dx + ddx) / 11d;
+            yy = (10d * yy + dy + ddy) / 11d;
+            Owner.X = (float)(x + xx);
+            Owner.Y = (float)(y + yy);
+
+            //Owner.X = (float)(x + dx + ddx);
+            //Owner.Y = (float)(y + dy + ddy);
         }
     }
 }
