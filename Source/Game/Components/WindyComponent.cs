@@ -15,16 +15,28 @@ namespace LifeDeath.Components
         double ax, ay;
         double theta;
         Random rand;
+        Entity camera;
 
-        public WindyComponent(float x, float y)
+        public WindyComponent(Entity camera, float x, float y)
         {
             this.x = x;
             this.y = y;
+            this.camera = camera;
             rand = new Random(Lichen.GlobalServices.GlobalRandom.Next());
         }
 
         public void Update()
         {
+            float dist = (float)y + camera.Y - 720f / 2f;
+            if (dist > 720f / 2f)
+            {
+                y -= 720d;
+            }
+            if (dist < -720f / 2f)
+            {
+                y += 720d;
+            }
+
             vx += rand.NextDouble() - 0.5d;
             vy += rand.NextDouble() - 0.5d;
             dx += vx;
