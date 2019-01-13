@@ -1,4 +1,4 @@
-﻿using Lichen;
+using Lichen;
 using Lichen.Entities;
 using Lichen.Libraries;
 using System;
@@ -35,6 +35,11 @@ namespace LifeDeath.Scenes
                 .AddRenderComponent(new TextComponent(font, "Press Enter to Begin"))
                 .AddUpdateComponent(new Components.MenuComponent())
                 .AttachTo(container);
+
+            new Entity(0, 80)
+               .AddRenderComponent(new TextComponent(font, "Press D to Enter the Music Room"))
+               .AddUpdateComponent(new Components.MenuComponent())
+               .AttachTo(container);
         }
 
         // Delete the scene. (Reference entities and assets remain.)
