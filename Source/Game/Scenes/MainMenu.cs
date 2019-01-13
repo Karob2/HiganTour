@@ -11,7 +11,10 @@ namespace LifeDeath.Scenes
 {
     public class MainMenu : Scene
     {
+        Entity camera;
+        Entity lycoris;
         Font font;
+        Random random;
 
         // Create a reference set of entities and load necessary assets.
         public override void Preload(Entity root)
@@ -19,6 +22,10 @@ namespace LifeDeath.Scenes
             this.root = root;
 
             font = GlobalServices.GlobalFonts.Register("lifedeath:sans");
+
+            Sprite lycorisSprite = GlobalServices.GlobalSprites.Register("lifedeath:redlily");
+            lycoris = new Entity()
+                .AddRenderComponent(new SpriteComponent(lycorisSprite));
         }
 
         // Create the scene's entities by cloning reference entities.
@@ -26,10 +33,13 @@ namespace LifeDeath.Scenes
         {
             container = new Entity();
             container.AttachTo(root);
-
-            new Entity(0, 0)
-                .AddRenderComponent(new TextComponent(font, "LifeDeath"))
+            camera = new Entity()
+                .SetRenderByDepth(true)
                 .AttachTo(container);
+
+            new Entity(640, 250)
+                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:title")))
+                .AttachTo(camera);
 
             new Entity(0, 40)
                 .AddRenderComponent(new TextComponent(font, "Press Enter to Begin"))
@@ -40,6 +50,20 @@ namespace LifeDeath.Scenes
                .AddRenderComponent(new TextComponent(font, "Press D to Enter the Music Room"))
                .AddUpdateComponent(new Components.MenuComponent())
                .AttachTo(container);
+
+            random = new Random();
+            double phi = (Math.Sqrt(5d) - 1d) / 2d;
+            double theta = random.NextDouble();
+            for (int i = 0; i < 200; i++)
+            {
+                lycoris.Clone()
+                    //.SetPosition(random.Next(0, 700), random.Next(0, 700))
+                    //.AddChainComponent("motion", new Components.WindyComponent(random.Next(0, 1280), random.Next(0, 720)))
+                    .AddChainComponent("motion", new Components.WindyComponent(null, camera, (float)(theta * 1280d + random.NextDouble() * 200d - 100d), (float)i * 920f / 200f))
+                    .AttachTo(camera);
+                theta += phi;
+                if (theta > 1d) theta -= 1d;
+            }
         }
 
         // Delete the scene. (Reference entities and assets remain.)

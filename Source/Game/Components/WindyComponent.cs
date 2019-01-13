@@ -30,9 +30,15 @@ namespace LifeDeath.Components
 
         public void Update()
         {
-            float dist = (float)y + camera.Y + 200f;
-            if (dist >= 0) y = dist % 920f - camera.Y - 200f;
-            else y = (920f + dist % 920f) - camera.Y - 200f;
+            float pos = 0;
+            if (camera != null) pos = camera.Y;
+
+            if (camera != null)
+            {
+                float dist = (float)y + pos + 200f;
+                if (dist >= 0) y = dist % 920f - pos - 200f;
+                else y = (920f + dist % 920f) - pos - 200f;
+            }
             /*
             if (dist > 920f)
             {
@@ -67,28 +73,31 @@ namespace LifeDeath.Components
             double ddx = 0f;
             double ddy = 0f;
 
-            Entity nearestActor = null;
-            double nearestDistance = 1000d;
-            foreach (Entity entity in Owner.ActorList)
+            if (level != null)
             {
-                double distance = Math.Sqrt(Math.Pow(entity.X - x, 2) + Math.Pow((entity.Y - y) * 2d, 2));
-                if (distance < nearestDistance)
+                Entity nearestActor = null;
+                double nearestDistance = 1000d;
+                foreach (Entity entity in Owner.ActorList)
                 {
-                    nearestDistance = distance;
-                    nearestActor = entity;
+                    double distance = Math.Sqrt(Math.Pow(entity.X - x, 2) + Math.Pow((entity.Y - y) * 2d, 2));
+                    if (distance < nearestDistance)
+                    {
+                        nearestDistance = distance;
+                        nearestActor = entity;
+                    }
                 }
-            }
-            if (nearestActor != null && nearestDistance < 200d)
-            {
-                double multiplier = (200d - nearestDistance) / 4d;
-                ddx = -(nearestActor.X - x) / nearestDistance * multiplier;
-                ddy = -(nearestActor.Y - y) * 2f / nearestDistance * multiplier;
-            }
+                if (nearestActor != null && nearestDistance < 200d)
+                {
+                    double multiplier = (200d - nearestDistance) / 4d;
+                    ddx = -(nearestActor.X - x) / nearestDistance * multiplier;
+                    ddy = -(nearestActor.Y - y) * 2f / nearestDistance * multiplier;
+                }
 
-            if (Object.ReferenceEquals(nearestActor, level.Player) && level.Hiding)
-            {
-                ddx = -ddx;
-                ddy = -ddy;
+                if (Object.ReferenceEquals(nearestActor, level.Player) && level.Hiding)
+                {
+                    ddx = -ddx;
+                    ddy = -ddy;
+                }
             }
 
             xx = (10d * xx + dx + ddx) / 11d;
