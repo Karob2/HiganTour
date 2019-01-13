@@ -1,6 +1,7 @@
 using Lichen;
 using Lichen.Entities;
 using Lichen.Libraries;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
@@ -13,46 +14,10 @@ namespace LifeDeath.Scenes
 
     public class MusicRoom : Scene
     {
+
         Font font;
 
-        public int SN = 0;
-
-        Song bgm;
-
-        public void SwitchSong()
-        {
-            SN++;
-
-            if (SN > 5) { SN = 0; }
-
-            switch (SN)
-            {
-                case 1:
-                    bgm = GlobalServices.GlobalSongs.Register("lifedeath:Stage");
-
-                    break;
-                case 2:
-
-
-                    break;
-                case 3:
-
-                    break;
-
-                case 4:
-
-                    break;
-
-                case 5:
-
-                    break;
-                default:
-
-                    break;
-            }
-        }
-
-        //MediaPlayer.Play(Song song);
+        
 
         // Create a reference set of entities and load necessary assets.
         public override void Preload(Entity root)
@@ -61,8 +26,6 @@ namespace LifeDeath.Scenes
 
             font = GlobalServices.GlobalFonts.Register("lifedeath:sans");
         }
-
-        
 
         // Create the scene's entities by cloning reference entities.
         public override void Load()
@@ -76,7 +39,7 @@ namespace LifeDeath.Scenes
                 .AttachTo(container);
 
             new Entity(0, 40)
-                .AddRenderComponent(new TextComponent(font, "Use W To Swith Between Songs"))
+                .AddRenderComponent(new TextComponent(font, "Use W To Swith Between Songs And Use S To Pause"))
                 .AddUpdateComponent(new Components.MenuComponent())
                 .AttachTo(container);
             new Entity(0, 80)
