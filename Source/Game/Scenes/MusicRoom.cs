@@ -39,7 +39,7 @@ namespace LifeDeath.Scenes
                 .AttachTo(container);
 
             new Entity(0, 40)
-                .AddRenderComponent(new TextComponent(font, "Use W To Swith Between Songs And Use S To Pause"))
+                .AddRenderComponent(new TextComponent(font, "Use Up To Swith Between Songs And Down To Pause"))
                 .AddUpdateComponent(new Components.MenuComponent())
                 .AttachTo(container);
             new Entity(0, 80)

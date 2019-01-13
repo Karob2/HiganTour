@@ -13,6 +13,7 @@ namespace LifeDeath.Scenes
     {
         Entity camera;
         Entity lycoris;
+        Entity title, gameover;
         Font font;
         Random random;
 
@@ -37,9 +38,13 @@ namespace LifeDeath.Scenes
                 .SetRenderByDepth(true)
                 .AttachTo(container);
 
-            new Entity(640, 250)
+            title = new Entity(640, 250)
                 .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:title")))
                 .AttachTo(camera);
+
+            gameover = new Entity(640, 250)
+                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:gameover")))
+                .AttachTo(camera).SetVisible(false);
 
             new Entity(0, 40)
                 .AddRenderComponent(new TextComponent(font, "Press Enter to Begin"))
@@ -47,7 +52,7 @@ namespace LifeDeath.Scenes
                 .AttachTo(container);
 
             new Entity(0, 80)
-               .AddRenderComponent(new TextComponent(font, "Press D to Enter the Music Room"))
+               .AddRenderComponent(new TextComponent(font, "Press M to Enter the Music Room"))
                .AddUpdateComponent(new Components.MenuComponent())
                .AttachTo(container);
 
@@ -63,6 +68,20 @@ namespace LifeDeath.Scenes
                     .AttachTo(camera);
                 theta += phi;
                 if (theta > 1d) theta -= 1d;
+            }
+        }
+
+        public void SetMode(int mode)
+        {
+            if (mode == 0)
+            {
+                title.Visible = true;
+                gameover.Visible = false;
+            }
+            if (mode == 1)
+            {
+                title.Visible = false;
+                gameover.Visible = true;
             }
         }
 

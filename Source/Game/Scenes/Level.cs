@@ -34,7 +34,7 @@ namespace LifeDeath.Scenes
         List<Entity> actorList;
 
         Font font;
-        Song bgm;
+        //Song bgm;
         public SoundEffect PlayerSfx { get; set; }
         public SoundEffectInstance PlayerSfxInstance { get; set; }
 
@@ -77,7 +77,7 @@ namespace LifeDeath.Scenes
                 .AddRenderComponent(new SpriteComponent(lycorisSprite));
 
             font = GlobalServices.GlobalFonts.Register("lifedeath:sans");
-            bgm = GlobalServices.GlobalSongs.Register("lifedeath:Stage");
+//            bgm = GlobalServices.GlobalSongs.Register("lifedeath:Stage");
             PlayerSfx = GlobalServices.GlobalSoundEffects.Register("lifedeath:leaves");
             PlayerSfxInstance = PlayerSfx.CreateInstance();
         }
@@ -256,9 +256,9 @@ namespace LifeDeath.Scenes
             furthestDistance = 0;
             distanceTraveled = 0;
 
-            MediaPlayer.Volume = 0.5f;
-            MediaPlayer.Play(bgm);
-            MediaPlayer.IsRepeating = true;
+            //MediaPlayer.Volume = 0.5f;
+            //MediaPlayer.Play(bgm);
+            //MediaPlayer.IsRepeating = true;
 
             foreach (Entity e in enemies)
             {

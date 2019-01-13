@@ -1,0 +1,7 @@
+{
+    "DefaultFrame": {
+        "Spritesheet": "gameover",
+        "AnchorX": 220,
+        "AnchorY": 53
+    }
+}

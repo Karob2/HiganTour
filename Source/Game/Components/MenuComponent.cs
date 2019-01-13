@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Input;
 
 namespace LifeDeath.Components
 {
@@ -15,11 +16,11 @@ namespace LifeDeath.Components
             if (!((Game1)Lichen.GlobalServices.Game).getMR())
             {
 
-                if (Lichen.GlobalServices.InputManager.Held(Lichen.Input.GameCommand.Action1))
+                if (Lichen.GlobalServices.InputManager.Held(Lichen.Input.GameCommand.MenuConfirm))
                 {
                     ((Game1)Lichen.GlobalServices.Game).ChangeScene(1);
                 }
-                if (Lichen.GlobalServices.InputManager.Held(Lichen.Input.GameCommand.MenuRight))
+                if (Keyboard.GetState().IsKeyDown(Keys.M))
                 {
                     ((Game1)Lichen.GlobalServices.Game).ChangeScene(3);
                 }
@@ -27,7 +28,7 @@ namespace LifeDeath.Components
             if (((Game1)Lichen.GlobalServices.Game).getMR())
             {
 
-                if (Lichen.GlobalServices.InputManager.Held(Lichen.Input.GameCommand.Action2))
+                if (Lichen.GlobalServices.InputManager.Held(Lichen.Input.GameCommand.MenuCancel))
                 {
                     ((Game1)Lichen.GlobalServices.Game).ChangeScene(0);
                 }

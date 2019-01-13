@@ -94,6 +94,8 @@ namespace LifeDeath
 
         public void ChangeScene(int sceneNumber)
         {
+            ((Scenes.Level)level).PlayerSfxInstance.Stop();
+
             switch (sceneNumber)
             {
                 case 1:
@@ -101,11 +103,22 @@ namespace LifeDeath
                     level.Activate();
                     ((Scenes.Level)level).Reset();
                     gameOver.Deactivate();
+                    MusicRoom.Deactivate();
+                    bgm = GlobalServices.GlobalSongs.Register("lifedeath:Stage");
+                    MediaPlayer.Volume = 0.5f;
+                    MediaPlayer.Play(bgm);
+                    MediaPlayer.IsRepeating = true;
                     break;
                 case 2:
-                    mainMenu.Deactivate();
+                    mainMenu.Activate();
                     level.Deactivate();
-                    gameOver.Activate();
+                    gameOver.Deactivate();
+                    MusicRoom.Deactivate();
+                    ((Scenes.MainMenu)mainMenu).SetMode(1);
+                    bgm = GlobalServices.GlobalSongs.Register("lifedeath:Game_Over");
+                    MediaPlayer.Volume = 0.5f;
+                    MediaPlayer.Play(bgm);
+                    MediaPlayer.IsRepeating = true;
                     break;
                 case 3:
                     mainMenu.Deactivate();
@@ -113,13 +126,25 @@ namespace LifeDeath
                     gameOver.Deactivate();
                     MusicRoom.Activate();
                     MR = true;
+                    MediaPlayer.Stop();
+                    /*
+                    bgm = GlobalServices.GlobalSongs.Register("lifedeath:Another_Stage");
+                    MediaPlayer.Volume = 0.5f;
+                    MediaPlayer.Play(bgm);
+                    MediaPlayer.IsRepeating = true;
+                    */
                     break;
                 default:
                     mainMenu.Activate();
                     level.Deactivate();
                     gameOver.Deactivate();
                     MusicRoom.Deactivate();
+                    ((Scenes.MainMenu)mainMenu).SetMode(0);
                     MR = false;
+                    bgm = GlobalServices.GlobalSongs.Register("lifedeath:Main_Menu");
+                    MediaPlayer.Volume = 0.5f;
+                    MediaPlayer.Play(bgm);
+                    MediaPlayer.IsRepeating = true;
                     break;
             }
         }
@@ -139,9 +164,8 @@ namespace LifeDeath
 
             switch (SN)
             {
-
                 case 0:
-                    bgm = GlobalServices.GlobalSongs.Register("lifedeath:Stage");
+                    bgm = GlobalServices.GlobalSongs.Register("lifedeath:Main_Menu");
 
                     MediaPlayer.Volume = 0.5f;
                     MediaPlayer.Play(bgm);
@@ -155,14 +179,14 @@ namespace LifeDeath
                     MediaPlayer.IsRepeating = true;
                     break;
                 case 2:
-                    bgm = GlobalServices.GlobalSongs.Register("lifedeath:Stage");
+                    bgm = GlobalServices.GlobalSongs.Register("lifedeath:Another_Stage");
 
                     MediaPlayer.Volume = 0.5f;
                     MediaPlayer.Play(bgm);
                     MediaPlayer.IsRepeating = true;
                     break;
                 case 3:
-                    bgm = GlobalServices.GlobalSongs.Register("lifedeath:Stage");
+                    bgm = GlobalServices.GlobalSongs.Register("lifedeath:Boss_Battle");
 
                     MediaPlayer.Volume = 0.5f;
                     MediaPlayer.Play(bgm);
@@ -170,7 +194,7 @@ namespace LifeDeath
                     break;
 
                 case 4:
-                    bgm = GlobalServices.GlobalSongs.Register("lifedeath:Stage");
+                    bgm = GlobalServices.GlobalSongs.Register("lifedeath:Game_Over");
 
                     MediaPlayer.Volume = 0.5f;
                     MediaPlayer.Play(bgm);
