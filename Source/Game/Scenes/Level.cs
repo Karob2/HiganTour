@@ -36,6 +36,7 @@ namespace LifeDeath.Scenes
         public SoundEffectInstance PlayerSfxInstance { get; set; }
 
         int furthestDistance;
+        float distanceTraveled;
 
         // Create a reference set of entities and load necessary assets.
         public override void Preload(Entity root)
@@ -130,9 +131,11 @@ namespace LifeDeath.Scenes
             }
         }
 
-        public void UpdateDistance(float position)
+        public void UpdateDistance(float delta)
         {
-            int newDistance = (int)(-position / 1000f);
+            if (delta < 0) distanceTraveled -= delta;
+
+            int newDistance = (int)(distanceTraveled / 1000f);
             if (newDistance > furthestDistance)
             {
                 furthestDistance = newDistance;
@@ -149,6 +152,7 @@ namespace LifeDeath.Scenes
         public void MakeEnemy(float x, float y)
         {
             Entity enemy = enemies[currentEnemy];
+            ((Components.AI.SeekerAIComponent)enemy.UpdateChains["control"].First()).SetAIMode(furthestDistance);
             enemy.SetPosition(player.X, player.Y - 400f);
             enemy.Visible = true;
             enemy.Active = true;
@@ -205,6 +209,7 @@ namespace LifeDeath.Scenes
             }
 
             furthestDistance = 0;
+            distanceTraveled = 0;
 
             MediaPlayer.Volume = 0.5f;
             MediaPlayer.Play(bgm);

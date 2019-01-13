@@ -103,7 +103,7 @@ namespace LifeDeath.Components
                 }
             }
 
-            level.UpdateDistance(Owner.Y);
+            level.UpdateDistance(d.Y * 6f);
         }
     }
 }

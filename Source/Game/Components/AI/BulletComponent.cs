@@ -36,6 +36,8 @@ namespace LifeDeath.Components.AI
             y = 0;
             vx = 0;
             vy = 0;
+            Owner.X = -200;
+            Owner.Y = 0;
         }
 
         public void Update()

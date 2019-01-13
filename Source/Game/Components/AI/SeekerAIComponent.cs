@@ -14,10 +14,18 @@ namespace LifeDeath.Components.AI
         Entity target;
         int bulletTimer;
 
+        int mode;
+
         public SeekerAIComponent(Scenes.Level level)
         {
             this.level = level;
             target = level.Player;
+        }
+
+        public void SetAIMode(int location)
+        {
+            mode = location % 2 + 1;
+            bulletTimer = 0;
         }
 
         public void Update()
@@ -28,14 +36,21 @@ namespace LifeDeath.Components.AI
                 if (vector.X != 0 || vector.Y != 0)
                 {
                     vector.Normalize();
-                    Owner.X += vector.X;
-                    Owner.Y += vector.Y;
 
-                    bulletTimer++;
-                    if (bulletTimer >= 100)
+                    if (mode == 1)
                     {
-                        level.MakeBullet(Owner.X, Owner.Y, vector.X * 10f, vector.Y * 10f);
-                        bulletTimer = 0;
+                        Owner.X += vector.X;
+                        Owner.Y += vector.Y;
+                    }
+
+                    if (mode == 2)
+                    {
+                        bulletTimer++;
+                        if (bulletTimer >= 100)
+                        {
+                            level.MakeBullet(Owner.X, Owner.Y, vector.X * 10f, vector.Y * 10f);
+                            bulletTimer = 0;
+                        }
                     }
                 }
             }
