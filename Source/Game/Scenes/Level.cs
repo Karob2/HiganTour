@@ -22,8 +22,8 @@ namespace LifeDeath.Scenes
         }
         public bool Hiding { get; set; }
         Entity enemy, bullet;
-        List<Entity> bullets;
-        int currentBullet;
+        List<Entity> enemies, bullets;
+        int currentEnemy, currentBullet;
         Entity enemyContainer;
         Entity lycoris;
         //Entity zone1, zone2, zone3;
@@ -105,8 +105,8 @@ namespace LifeDeath.Scenes
             enemyContainer = new Entity()
                 .AttachTo(camera);
             //enemy.Clone().SetPosition(200, 200).AttachTo(camera)
-            enemy.Clone().SetPosition(200, 200).AttachTo(enemyContainer)
-                .AddActor(actorList);
+            //enemy.Clone().SetPosition(200, 200).AttachTo(enemyContainer)
+            //    .AddActor(actorList);
 
             //Entity player1 = player.Clone().SetPosition(300, 200).AttachTo(container);
             player.SetPosition(880, 200).AttachTo(camera)
@@ -122,6 +122,12 @@ namespace LifeDeath.Scenes
             {
                 bullets.Add(bullet.Clone().AttachTo(camera).AddActor(actorList));
             }
+
+            enemies = new List<Entity>();
+            for (int i = 0; i < 20; i++)
+            {
+                enemies.Add(enemy.Clone().AttachTo(enemyContainer).AddActor(actorList));
+            }
         }
 
         public void UpdateDistance(float position)
@@ -130,9 +136,25 @@ namespace LifeDeath.Scenes
             if (newDistance > furthestDistance)
             {
                 furthestDistance = newDistance;
-                enemy.Clone().SetPosition(player.X, player.Y - 400f).AttachTo(enemyContainer)
+                MakeEnemy(player.X, player.Y - 400f);
+                /*
+                enemies[currentEnemy].SetPosition(player.X, player.Y - 400f).AttachTo(enemyContainer)
                     .AddActor(actorList);
+                currentEnemy++;
+                if (currentEnemy >= 20) currentEnemy = 0;
+                */
             }
+        }
+
+        public void MakeEnemy(float x, float y)
+        {
+            Entity enemy = enemies[currentEnemy];
+            enemy.SetPosition(player.X, player.Y - 400f);
+            enemy.Visible = true;
+            enemy.Active = true;
+
+            currentEnemy++;
+            if (currentEnemy >= 20) currentEnemy = 0;
         }
 
         public void MakeBullet(float x, float y, float vx, float vy)
@@ -161,18 +183,23 @@ namespace LifeDeath.Scenes
 
         public void Reset()
         {
-            enemyContainer.Children.Clear();
+            //enemyContainer.Children.Clear();
             actorList.Clear();
 
-            enemy.Clone().SetPosition(200, 200).AttachTo(enemyContainer)
-                .AddActor(actorList);
+            //enemy.Clone().SetPosition(200, 200).AttachTo(enemyContainer)
+            //    .AddActor(actorList);
 
             ((Components.PlayerControlComponent)(player.UpdateChains["control"].First())).Reset();
 
             player.SetPosition(880, 200)
                 .AddActor(actorList);
 
-            foreach(Entity bullet in bullets)
+            foreach (Entity enemy in enemies)
+            {
+                enemy.AddActor(actorList);
+            }
+
+            foreach (Entity bullet in bullets)
             {
                 bullet.AddActor(actorList);
             }
@@ -182,6 +209,14 @@ namespace LifeDeath.Scenes
             MediaPlayer.Volume = 0.5f;
             MediaPlayer.Play(bgm);
             MediaPlayer.IsRepeating = true;
+
+            foreach (Entity e in enemies)
+            {
+                e.X = -200;
+                e.Y = 0;
+                e.Visible = false;
+                e.Active = false;
+            }
 
             foreach (Entity b in bullets)
             {

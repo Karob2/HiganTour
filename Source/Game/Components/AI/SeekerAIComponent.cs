@@ -22,7 +22,7 @@ namespace LifeDeath.Components.AI
 
         public void Update()
         {
-            if (!level.Hiding)
+            if (!level.Hiding && Math.Abs(Owner.Y - level.Player.Y) < 400)
             {
                 Vector2 vector = new Vector2(target.X - Owner.X, target.Y - Owner.Y);
                 if (vector.X != 0 || vector.Y != 0)
@@ -38,6 +38,14 @@ namespace LifeDeath.Components.AI
                         bulletTimer = 0;
                     }
                 }
+            }
+
+            if (Math.Abs(Owner.Y - level.Player.Y) > 720)
+            {
+                Owner.X = -200;
+                Owner.Y = 0;
+                Owner.Active = false;
+                Owner.Visible = false;
             }
         }
     }
