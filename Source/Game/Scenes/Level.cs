@@ -21,8 +21,10 @@ namespace LifeDeath.Scenes
             set { player = value; }
         }
         public bool Hiding { get; set; }
-        Entity enemy, bullet, warning;
+        Entity enemy, bullet, warning, death;
         int warningTimer;
+        public float Karma { get; set; }
+        public bool KarmaChanged { get; set; }
         List<Entity> enemies, bullets;
         int currentEnemy, currentBullet;
         Entity enemyContainer;
@@ -48,7 +50,7 @@ namespace LifeDeath.Scenes
             actorList = new List<Entity>();
 
             player = new Entity()
-                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:spirit")))
+                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:spirit4")))
                 .AddChainComponent("control", new Components.PlayerControlComponent(this));
             //.AddChainComponent("motion", )
             /*
@@ -57,12 +59,14 @@ namespace LifeDeath.Scenes
                 .AttachTo(player);
                 */
             enemy = new Entity()
-                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:fae_sm")))
+                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:fairy_sm")))
                 .AddChainComponent("control", new Components.AI.SeekerAIComponent(this));
+
+            death = new Entity()
+                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:death_sm")));
 
             warning = new Entity()
                 .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:fae_warn")));
-                //.AddChainComponent("control", new Components.SignComponent(this));
 
             bullet = new Entity()
                 .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:bullet")))
@@ -138,17 +142,28 @@ namespace LifeDeath.Scenes
             }
 
             warning.AttachTo(container).SetPosition(0, -10);
+            death.AttachTo(camera);
         }
 
         public void UpdateDistance(float delta)
         {
-            if (delta < 0) distanceTraveled -= delta;
+            if (delta < 0)
+            {
+                distanceTraveled -= delta;
+            }
+            /*
+            else if (delta > 0)
+            {
+                Karma -= 0.5f;
+                KarmaChanged = true;
+            }
+            */
 
             int newDistance = (int)(distanceTraveled / 500f);
             if (newDistance > furthestDistance)
             {
                 furthestDistance = newDistance;
-                MakeEnemy((float)random.NextDouble() * 980f + 50f, player.Y - 600f);
+                MakeEnemy((float)random.NextDouble() * 980f + 50f, player.Y - 700f);
                 /*
                 enemies[currentEnemy].SetPosition(player.X, player.Y - 400f).AttachTo(enemyContainer)
                     .AddActor(actorList);
@@ -159,6 +174,20 @@ namespace LifeDeath.Scenes
 
             warningTimer++;
             if (warningTimer > 30) warning.Visible = false;
+
+            if (Hiding)
+            {
+                Karma -= 0.5f;
+                KarmaChanged = true;
+            }
+            if (!KarmaChanged && Karma < 100f) Karma += 0.5f;
+            death.X = player.X;
+            death.Y = player.Y - Karma * 8f;
+            KarmaChanged = false;
+            if (Karma < 8f)
+            {
+                ((Game1)Lichen.GlobalServices.Game).ChangeScene(2);
+            }
         }
 
         public void MakeEnemy(float x, float y)
@@ -248,6 +277,7 @@ namespace LifeDeath.Scenes
 
             warning.Visible = false;
             warningTimer = 0;
+            Karma = 100f;
         }
     }
 }

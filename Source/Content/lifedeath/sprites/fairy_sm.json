@@ -1,6 +1,6 @@
 {
     "DefaultFrame": {
-        "Spritesheet": "fae_sm",
+        "Spritesheet": "fairy_sm",
         "Width": 128,
         "Height": 128,
         "AnchorX": 64,
@@ -9,36 +9,56 @@
     "Animations": [
         {
             "Name": "down",
+            "Speed": 3,
             "FrameRanges": [
                 {
                     "X": 0,
-                    "Y": 384
+                    "Y": 256
+                },
+                {
+                    "X": 128,
+                    "Y": 256
                 }
             ]
         },
         {
             "Name": "up",
+            "Speed": 3,
             "FrameRanges": [
                 {
                     "X": 0,
+                    "Y": 0
+                },
+                {
+                    "X": 128,
                     "Y": 0
                 }
             ]
         },
         {
             "Name": "left",
+            "Speed": 3,
             "FrameRanges": [
                 {
                     "X": 0,
-                    "Y": 256
+                    "Y": 384
+                },
+                {
+                    "X": 128,
+                    "Y": 384
                 }
             ]
         },
         {
             "Name": "right",
+            "Speed": 3,
             "FrameRanges": [
                 {
                     "X": 0,
+                    "Y": 128
+                },
+                {
+                    "X": 128,
                     "Y": 128
                 }
             ]

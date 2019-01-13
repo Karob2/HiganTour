@@ -1,0 +1,41 @@
+{
+    "DefaultFrame": {
+        "Spritesheet": "spirit4",
+        "Width": 100,
+        "Height": 100,
+        "AnchorX": 50,
+        "AnchorY": 50
+    },
+    "Animations": [
+        {
+            "Name": "default",
+            "Speed": 3,
+            "FrameRanges": [
+                {
+                    "X": 0,
+                    "Y": 0
+                },
+                {
+                    "X": 100,
+                    "Y": 0
+                }
+            ]
+        },
+        {
+            "Name": "hiding",
+            "Speed": 3,
+            "FrameRanges": [
+                {
+                    "X": 0,
+                    "Y": 100,
+                    "AnchorY": 12
+                },
+                {
+                    "X": 100,
+                    "Y": 100,
+                    "AnchorY": 12
+                }
+            ]
+        }
+    ]
+}

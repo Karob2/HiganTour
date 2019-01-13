@@ -62,6 +62,11 @@ namespace LifeDeath.Components
             {
                 ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = "default";
                 level.Hiding = false;
+                if (vector.Y > 0)
+                {
+                    level.Karma -= 0.5f;
+                    level.KarmaChanged = true;
+                }
             }
 
             if (vector.X != 0f || vector.Y != 0f)
