@@ -20,6 +20,7 @@ namespace LifeDeath
         Scenes.Scene MusicRoom;
 
         public bool MR = false;
+        public bool MM = false;
 
         public Game1()
         {
@@ -101,17 +102,20 @@ namespace LifeDeath
                     level.Activate();
                     ((Scenes.Level)level).Reset();
                     gameOver.Deactivate();
+                    MM = false;
                     break;
                 case 2:
                     mainMenu.Deactivate();
                     level.Deactivate();
                     gameOver.Activate();
+                    MM = false;
                     break;
                 case 3:
                     mainMenu.Deactivate();
                     level.Deactivate();
                     gameOver.Deactivate();
                     MusicRoom.Activate();
+                    MM = false;
                     MR = true;
                     break;
                 default:
@@ -119,12 +123,15 @@ namespace LifeDeath
                     level.Deactivate();
                     gameOver.Deactivate();
                     MusicRoom.Deactivate();
+                    MM = true;
                     MR = false;
                     break;
             }
         }
 
         public bool getMR() { return MR; }
+
+        public bool getMM() { return MM; }
 
 
         public int SN;
