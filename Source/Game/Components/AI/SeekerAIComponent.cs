@@ -24,13 +24,13 @@ namespace LifeDeath.Components.AI
 
         public void SetAIMode(int location)
         {
-            mode = location % 2 + 1;
+            mode = location % (Math.Min(location / 4 + 1, 3)) + 1;
             bulletTimer = 0;
         }
 
         public void Update()
         {
-            if (!level.Hiding && Math.Abs(Owner.Y - level.Player.Y) < 400)
+            if (!level.Hiding && Math.Abs(Owner.Y - level.Player.Y) < 600)
             {
                 Vector2 vector = new Vector2(target.X - Owner.X, target.Y - Owner.Y);
                 if (vector.X != 0 || vector.Y != 0)
@@ -46,16 +46,31 @@ namespace LifeDeath.Components.AI
                     if (mode == 2)
                     {
                         bulletTimer++;
+                        if (bulletTimer == 90 || bulletTimer == 80)
+                        {
+                            level.MakeBullet(Owner.X, Owner.Y, vector.X * 10f, vector.Y * 10f);
+                        }
                         if (bulletTimer >= 100)
                         {
                             level.MakeBullet(Owner.X, Owner.Y, vector.X * 10f, vector.Y * 10f);
                             bulletTimer = 0;
                         }
                     }
+
+                    if (mode == 3)
+                    {
+                        bulletTimer++;
+                        if (bulletTimer >= 60)
+                        {
+                            Owner.X += vector.X * 10f;
+                            Owner.Y += vector.Y * 10f;
+                        }
+                        if (bulletTimer >= 80) bulletTimer = 0;
+                    }
                 }
             }
 
-            if (Math.Abs(Owner.Y - level.Player.Y) > 720)
+            if (Math.Abs(Owner.Y - level.Player.Y) > 1000)
             {
                 Owner.X = -200;
                 Owner.Y = 0;

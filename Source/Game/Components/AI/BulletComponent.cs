@@ -48,7 +48,7 @@ namespace LifeDeath.Components.AI
             Owner.X = x;
             Owner.Y = y;
 
-            if (Math.Abs(x - level.Player.X) > 720 || Math.Abs(y - level.Player.Y) > 720)
+            if (Math.Abs(x - level.Player.X) > 1480 || Math.Abs(y - level.Player.Y) > 720)
             {
                 Reset();
                 Owner.Active = false;

@@ -35,6 +35,8 @@ namespace LifeDeath.Scenes
         public SoundEffect PlayerSfx { get; set; }
         public SoundEffectInstance PlayerSfxInstance { get; set; }
 
+        Random random;
+
         int furthestDistance;
         float distanceTraveled;
 
@@ -88,7 +90,7 @@ namespace LifeDeath.Scenes
             zone3 = new Entity().AttachTo(container);
             */
 
-            Random random = new Random();
+            random = new Random();
             double phi = (Math.Sqrt(5d)-1d)/2d;
             double theta = random.NextDouble();
             for (int i = 0; i < 200; i++)
@@ -135,11 +137,11 @@ namespace LifeDeath.Scenes
         {
             if (delta < 0) distanceTraveled -= delta;
 
-            int newDistance = (int)(distanceTraveled / 1000f);
+            int newDistance = (int)(distanceTraveled / 500f);
             if (newDistance > furthestDistance)
             {
                 furthestDistance = newDistance;
-                MakeEnemy(player.X, player.Y - 400f);
+                MakeEnemy((float)random.NextDouble() * 980f + 50f, player.Y - 400f);
                 /*
                 enemies[currentEnemy].SetPosition(player.X, player.Y - 400f).AttachTo(enemyContainer)
                     .AddActor(actorList);
@@ -153,7 +155,7 @@ namespace LifeDeath.Scenes
         {
             Entity enemy = enemies[currentEnemy];
             ((Components.AI.SeekerAIComponent)enemy.UpdateChains["control"].First()).SetAIMode(furthestDistance);
-            enemy.SetPosition(player.X, player.Y - 400f);
+            enemy.SetPosition(x, y);
             enemy.Visible = true;
             enemy.Active = true;
 
