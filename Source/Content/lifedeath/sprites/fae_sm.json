@@ -1,0 +1,47 @@
+{
+    "DefaultFrame": {
+        "Spritesheet": "fae_sm",
+        "Width": 128,
+        "Height": 128,
+        "AnchorX": 64,
+        "AnchorY": 64
+    },
+    "Animations": [
+        {
+            "Name": "down",
+            "FrameRanges": [
+                {
+                    "X": 0,
+                    "Y": 384
+                }
+            ]
+        },
+        {
+            "Name": "up",
+            "FrameRanges": [
+                {
+                    "X": 0,
+                    "Y": 0
+                }
+            ]
+        },
+        {
+            "Name": "left",
+            "FrameRanges": [
+                {
+                    "X": 0,
+                    "Y": 256
+                }
+            ]
+        },
+        {
+            "Name": "right",
+            "FrameRanges": [
+                {
+                    "X": 0,
+                    "Y": 128
+                }
+            ]
+        }
+    ]
+}

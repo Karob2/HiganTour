@@ -30,15 +30,19 @@ namespace LifeDeath.Components
 
         public void Update()
         {
-            float dist = (float)y + camera.Y - 720f / 2f;
-            if (dist > 720f / 2f)
+            float dist = (float)y + camera.Y + 200f;
+            if (dist >= 0) y = dist % 920f - camera.Y - 200f;
+            else y = (920f + dist % 920f) - camera.Y - 200f;
+            /*
+            if (dist > 920f)
             {
-                y -= 720d;
+                y -= 920d;
             }
-            if (dist < -720f / 2f)
+            if (dist < 0f)
             {
-                y += 720d;
+                y += 920d;
             }
+            */
 
             vx += rand.NextDouble() - 0.5d;
             vy += rand.NextDouble() - 0.5d;

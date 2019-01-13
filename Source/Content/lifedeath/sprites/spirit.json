@@ -21,7 +21,8 @@
             "FrameRanges": [
                 {
                     "X": 96,
-                    "Y": 0
+                    "Y": 0,
+                    "AnchorY": 12
                 }
             ]
         }
