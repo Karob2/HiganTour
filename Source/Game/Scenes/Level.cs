@@ -21,7 +21,8 @@ namespace LifeDeath.Scenes
             set { player = value; }
         }
         public bool Hiding { get; set; }
-        Entity enemy, bullet;
+        Entity enemy, bullet, warning;
+        int warningTimer;
         List<Entity> enemies, bullets;
         int currentEnemy, currentBullet;
         Entity enemyContainer;
@@ -58,6 +59,10 @@ namespace LifeDeath.Scenes
             enemy = new Entity()
                 .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:fae_sm")))
                 .AddChainComponent("control", new Components.AI.SeekerAIComponent(this));
+
+            warning = new Entity()
+                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:fae_warn")));
+                //.AddChainComponent("control", new Components.SignComponent(this));
 
             bullet = new Entity()
                 .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:bullet")))
@@ -131,6 +136,8 @@ namespace LifeDeath.Scenes
             {
                 enemies.Add(enemy.Clone().AttachTo(enemyContainer).AddActor(actorList));
             }
+
+            warning.AttachTo(container).SetPosition(0, -10);
         }
 
         public void UpdateDistance(float delta)
@@ -141,7 +148,7 @@ namespace LifeDeath.Scenes
             if (newDistance > furthestDistance)
             {
                 furthestDistance = newDistance;
-                MakeEnemy((float)random.NextDouble() * 980f + 50f, player.Y - 400f);
+                MakeEnemy((float)random.NextDouble() * 980f + 50f, player.Y - 600f);
                 /*
                 enemies[currentEnemy].SetPosition(player.X, player.Y - 400f).AttachTo(enemyContainer)
                     .AddActor(actorList);
@@ -149,6 +156,9 @@ namespace LifeDeath.Scenes
                 if (currentEnemy >= 20) currentEnemy = 0;
                 */
             }
+
+            warningTimer++;
+            if (warningTimer > 30) warning.Visible = false;
         }
 
         public void MakeEnemy(float x, float y)
@@ -161,6 +171,10 @@ namespace LifeDeath.Scenes
 
             currentEnemy++;
             if (currentEnemy >= 20) currentEnemy = 0;
+
+            warning.X = x;
+            warningTimer = 0;
+            warning.Visible = true;
         }
 
         public void MakeBullet(float x, float y, float vx, float vy)
@@ -231,6 +245,9 @@ namespace LifeDeath.Scenes
                 b.Visible = false;
                 b.Active = false;
             }
+
+            warning.Visible = false;
+            warningTimer = 0;
         }
     }
 }

@@ -1,0 +1,24 @@
+{
+    "DefaultFrame": {
+        "Spritesheet": "fae_warn",
+        "Width": 128,
+        "Height": 128,
+        "AnchorX": 64,
+        "AnchorY": 0
+    },
+    "Animations": [
+        {
+            "Speed": 10,
+            "FrameRanges": [
+                {
+                    "X": 0,
+                    "Y": 0
+                },
+                {
+                    "X": 0,
+                    "Y": 128
+                }
+            ]
+        }
+    ]
+}

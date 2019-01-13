@@ -13,6 +13,7 @@ namespace LifeDeath.Components.AI
         Scenes.Level level;
         Entity target;
         int bulletTimer;
+        double theta;
 
         int mode;
 
@@ -24,9 +25,11 @@ namespace LifeDeath.Components.AI
 
         public void SetAIMode(int location)
         {
-            //mode = location % (Math.Min(location / 4 + 1, 3)) + 1;
-            mode = location % 4 + 1;
+            mode = location % (Math.Min(location / 4 + 1, 6)) + 1;
+            //mode = location % 6 + 1;
+            //mode = 6;
             bulletTimer = 0;
+            theta = 0d;
         }
 
         public void Update()
@@ -41,8 +44,8 @@ namespace LifeDeath.Components.AI
                     if (mode == 1)
                     {
                         FacePlayer();
-                        Owner.X += vector.X;
-                        Owner.Y += vector.Y;
+                        Owner.X += vector.X * 2f;
+                        Owner.Y += vector.Y * 2f;
                     }
 
                     if (mode == 2)
@@ -90,6 +93,51 @@ namespace LifeDeath.Components.AI
                         {
                             Owner.X += vector.X * 20f;
                             Owner.Y += vector.Y * 20f;
+                        }
+                    }
+
+                    if (mode == 5)
+                    {
+                        Owner.X += vector.X;
+                        Owner.Y += vector.Y;
+                        if (level.Player.Y < Owner.Y)
+                        {
+                            ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = "up";
+                            Owner.Y -= Math.Min(5f, Owner.Y - level.Player.Y);
+                        }
+                        else
+                        {
+                            ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = "down";
+                            Owner.Y += Math.Min(5f, level.Player.Y - Owner.Y);
+                        }
+                    }
+
+                    if (mode == 6)
+                    {
+                        bulletTimer++;
+                        if (bulletTimer >= 20)
+                        {
+                            level.MakeBullet(Owner.X, Owner.Y, (float)Math.Sin(theta) * 10f, -(float)Math.Cos(theta) * 10f);
+                            level.MakeBullet(Owner.X, Owner.Y, -(float)Math.Sin(theta) * 10f, -(float)Math.Cos(theta) * 10f);
+                            bulletTimer = 0;
+                            theta += Math.PI / 8d;
+                        }
+                        if (theta > Math.PI * 2d) theta -= Math.PI * 2d;
+                        if (theta < Math.PI / 4d || theta > Math.PI * 7d / 4d)
+                        {
+                            ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = "up";
+                        }
+                        else if (theta < Math.PI * 3d / 4d)
+                        {
+                            ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = "right";
+                        }
+                        else if (theta < Math.PI * 5d / 4d)
+                        {
+                            ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = "down";
+                        }
+                        else
+                        {
+                            ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = "left";
                         }
                     }
                 }
