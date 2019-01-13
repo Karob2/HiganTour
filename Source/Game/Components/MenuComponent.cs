@@ -19,7 +19,7 @@ namespace LifeDeath.Components
                 {
                     ((Game1)Lichen.GlobalServices.Game).ChangeScene(1);
                 }
-                if (Lichen.GlobalServices.InputManager.Held(Lichen.Input.GameCommand.MenuRight))
+                if (((Game1)Lichen.GlobalServices.Game).getMM() && Lichen.GlobalServices.InputManager.Held(Lichen.Input.GameCommand.MenuRight))
                 {
                     ((Game1)Lichen.GlobalServices.Game).ChangeScene(3);
                 }
