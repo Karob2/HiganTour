@@ -43,7 +43,7 @@ namespace LifeDeath.Scenes
                 .AddUpdateComponent(new Components.MenuComponent())
                 .AttachTo(container);
             new Entity(0, 80)
-               .AddRenderComponent(new TextComponent(font, "Press Esc To Return To The Main Menu"))
+               .AddRenderComponent(new TextComponent(font, "Press X To Return To The Main Menu"))
                .AddUpdateComponent(new Components.MenuComponent())
                .AttachTo(container);
         }
