@@ -4,6 +4,7 @@ using Lichen.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace LifeDeath
 {
@@ -124,6 +125,63 @@ namespace LifeDeath
         }
 
         public bool getMR() { return MR; }
+
+
+        public int SN;
+
+        Song bgm;
+
+        public void SwitchSong()
+        {
+            SN++;
+
+            if (SN > 4) { SN = 0; }
+
+            switch (SN)
+            {
+
+                case 0:
+                    bgm = GlobalServices.GlobalSongs.Register("lifedeath:Stage");
+
+                    MediaPlayer.Volume = 0.5f;
+                    MediaPlayer.Play(bgm);
+                    MediaPlayer.IsRepeating = true;
+                    break;
+                case 1:
+                    bgm = GlobalServices.GlobalSongs.Register("lifedeath:Stage");
+
+                    MediaPlayer.Volume = 0.5f;
+                    MediaPlayer.Play(bgm);
+                    MediaPlayer.IsRepeating = true;
+                    break;
+                case 2:
+                    bgm = GlobalServices.GlobalSongs.Register("lifedeath:Stage");
+
+                    MediaPlayer.Volume = 0.5f;
+                    MediaPlayer.Play(bgm);
+                    MediaPlayer.IsRepeating = true;
+                    break;
+                case 3:
+                    bgm = GlobalServices.GlobalSongs.Register("lifedeath:Stage");
+
+                    MediaPlayer.Volume = 0.5f;
+                    MediaPlayer.Play(bgm);
+                    MediaPlayer.IsRepeating = true;
+                    break;
+
+                case 4:
+                    bgm = GlobalServices.GlobalSongs.Register("lifedeath:Stage");
+
+                    MediaPlayer.Volume = 0.5f;
+                    MediaPlayer.Play(bgm);
+                    MediaPlayer.IsRepeating = true;
+                    break;
+            }
+        }
+        public void MRPause() {
+
+            MediaPlayer.Pause();
+        }
 
     }
 }
