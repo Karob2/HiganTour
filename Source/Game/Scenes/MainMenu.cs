@@ -32,7 +32,7 @@ namespace LifeDeath.Scenes
                 .AttachTo(container);
 
             new Entity(0, 40)
-                .AddRenderComponent(new TextComponent(font, "Press Enter to Begin"))
+                .AddRenderComponent(new TextComponent(font, "Press Z to Begin"))
                 .AddUpdateComponent(new Components.MenuComponent())
                 .AttachTo(container);
 
