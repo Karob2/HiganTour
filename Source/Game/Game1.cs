@@ -1,4 +1,4 @@
-﻿using Lichen;
+using Lichen;
 using Lichen.Libraries;
 using Lichen.Entities;
 using Microsoft.Xna.Framework;
@@ -16,7 +16,9 @@ namespace LifeDeath
         Scenes.Scene mainMenu;
         Scenes.Scene level;
         Scenes.Scene gameOver;
+        Scenes.Scene MusicRoom;
 
+        public bool MR = false;
 
         public Game1()
         {
@@ -50,6 +52,9 @@ namespace LifeDeath
             gameOver = new Scenes.GameOver();
             gameOver.Preload(root);
             gameOver.Load();
+            MusicRoom = new Scenes.MusicRoom();
+            MusicRoom.Preload(root);
+            MusicRoom.Load();
             ChangeScene(0);
         }
 
@@ -101,12 +106,24 @@ namespace LifeDeath
                     level.Deactivate();
                     gameOver.Activate();
                     break;
+                case 3:
+                    mainMenu.Deactivate();
+                    level.Deactivate();
+                    gameOver.Deactivate();
+                    MusicRoom.Activate();
+                    MR = true;
+                    break;
                 default:
                     mainMenu.Activate();
                     level.Deactivate();
                     gameOver.Deactivate();
+                    MusicRoom.Deactivate();
+                    MR = false;
                     break;
             }
         }
+
+        public bool getMR() { return MR; }
+
     }
 }
