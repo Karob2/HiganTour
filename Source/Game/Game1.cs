@@ -11,7 +11,7 @@ namespace LifeDeath
     public class Game1 : Game
     {
         GraphicsDeviceManager graphicsManager;
-        const string gameName = "thfgj3-lifedeath";
+        const string gameName = "Higan Tour";
         const string companyName = "";
         Entity root;
         Scenes.Scene mainMenu;
