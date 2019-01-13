@@ -52,15 +52,15 @@ namespace Lichen.Input
             Set(GameCommand.Down, Keys.Down, Keys.S);
             Set(GameCommand.Left, Keys.Left, Keys.A);
             Set(GameCommand.Right, Keys.Right, Keys.D);
-            Set(GameCommand.Action1, Keys.Enter, Keys.J);
-            Set(GameCommand.Action2, Keys.Escape, Keys.K);
+            Set(GameCommand.Action1, Keys.Z, Keys.J);
+            Set(GameCommand.Action2, Keys.X, Keys.K);
             // Menu controls that shouldn't be configurable in-game (at least the first values):
             Set(GameCommand.MenuUp, Keys.Up, Keys.W);
             Set(GameCommand.MenuDown, Keys.Down, Keys.S);
             Set(GameCommand.MenuLeft, Keys.Left, Keys.A);
             Set(GameCommand.MenuRight, Keys.Right, Keys.D);
-            Set(GameCommand.MenuConfirm, Keys.Enter, Keys.J);
-            Set(GameCommand.MenuCancel, Keys.Escape, Keys.K);
+            Set(GameCommand.MenuConfirm, Keys.Enter);
+            Set(GameCommand.MenuCancel, Keys.Escape);
             Set(GameCommand.Console, Keys.OemTilde);
             // Controls that perhaps shouldn't be configurable in the cfg file either.
             Set(GameCommand.ConsoleConfirm, Keys.Enter);

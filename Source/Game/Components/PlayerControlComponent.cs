@@ -98,6 +98,17 @@ namespace LifeDeath.Components
             Owner.X += d.X * 6f;
             Owner.Y += d.Y * 6f;
 
+            if (Owner.X < 20f)
+            {
+                Owner.X = 20f;
+                if (d.X < 0f) d.X = 0f;
+            }
+            if (Owner.X > 1280f - 20f)
+            {
+                Owner.X = 1280f - 20f;
+                if (d.X > 0f) d.X = 0f;
+            }
+
             foreach (Entity actor in Owner.ActorList)
             {
                 if (Object.ReferenceEquals(actor, Owner)) continue;
