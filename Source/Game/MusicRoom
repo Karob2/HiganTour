@@ -1,0 +1,97 @@
+using Lichen;
+using Lichen.Entities;
+using Lichen.Libraries;
+using Microsoft.Xna.Framework.Media;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace LifeDeath.Scenes
+{
+
+    public class MusicRoom : Scene
+    {
+        Font font;
+
+        public int SN = 0;
+
+        Song bgm;
+
+        public void SwitchSong()
+        {
+            SN++;
+
+            if (SN > 5) { SN = 0; }
+
+            switch (SN)
+            {
+                case 1:
+                    bgm = GlobalServices.GlobalSongs.Register("lifedeath:Stage");
+
+                    break;
+                case 2:
+
+
+                    break;
+                case 3:
+
+                    break;
+
+                case 4:
+
+                    break;
+
+                case 5:
+
+                    break;
+                default:
+
+                    break;
+            }
+        }
+
+        //MediaPlayer.Play(Song song);
+
+        // Create a reference set of entities and load necessary assets.
+        public override void Preload(Entity root)
+        {
+            this.root = root;
+
+            font = GlobalServices.GlobalFonts.Register("lifedeath:sans");
+        }
+
+        
+
+        // Create the scene's entities by cloning reference entities.
+        public override void Load()
+        {
+
+            container = new Entity();
+            container.AttachTo(root);
+
+            new Entity(0, 0)
+                .AddRenderComponent(new TextComponent(font, "Music Room"))
+                .AttachTo(container);
+
+            new Entity(0, 40)
+                .AddRenderComponent(new TextComponent(font, "Use W To Swith Between Songs"))
+                .AddUpdateComponent(new Components.MenuComponent())
+                .AttachTo(container);
+            new Entity(0, 80)
+               .AddRenderComponent(new TextComponent(font, "Press Esc To Return To The Main Menu"))
+               .AddUpdateComponent(new Components.MenuComponent())
+               .AttachTo(container);
+        }
+
+        // Delete the scene. (Reference entities and assets remain.)
+        public override void Unload()
+        {
+            // TODO: Should this also undo the preloading?
+            container = null;
+            // TODO: Is that enough to destroy the scene entities? Or do I need to parse through them all?
+            //     Is garbage collection hindered by parent and child referencing each other?
+        }
+    }
+}
