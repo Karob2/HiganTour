@@ -21,7 +21,7 @@ namespace LifeDeath.Components
                 }
                 if (Lichen.GlobalServices.InputManager.Held(Lichen.Input.GameCommand.MenuRight))
                 {
-                    ((Game1)Lichen.GlobalServices.Game).ChangeScene(2);
+                    ((Game1)Lichen.GlobalServices.Game).ChangeScene(3);
                 }
             }
             if (((Game1)Lichen.GlobalServices.Game).getMR())
@@ -34,7 +34,11 @@ namespace LifeDeath.Components
 
                 if (Lichen.GlobalServices.InputManager.JustPressed(Lichen.Input.GameCommand.MenuUp))
                 {
-                    //((Game1)Lichen.GlobalServices.Game).SwitchSong();
+                    ((Game1)Lichen.GlobalServices.Game).SwitchSong();
+                }
+                if (Lichen.GlobalServices.InputManager.JustPressed(Lichen.Input.GameCommand.MenuDown))
+                {
+                    ((Game1)Lichen.GlobalServices.Game).MRPause();
                 }
             }
         }
