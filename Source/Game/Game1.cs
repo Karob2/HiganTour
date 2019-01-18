@@ -149,7 +149,7 @@ namespace LifeDeath
             }
         }
 
-        public bool getMR() { return MR; }
+        public bool GetMR() { return MR; }
 
 
         public int SN;
@@ -165,6 +165,8 @@ namespace LifeDeath
             switch (SN)
             {
                 case 0:
+                    ((Scenes.MusicRoom) MusicRoom).Background(1);
+
                     bgm = GlobalServices.GlobalSongs.Register("lifedeath:Main_Menu");
 
                     MediaPlayer.Volume = 0.5f;
@@ -172,6 +174,8 @@ namespace LifeDeath
                     MediaPlayer.IsRepeating = true;
                     break;
                 case 1:
+                    ((Scenes.MusicRoom)MusicRoom).Background(1);
+
                     bgm = GlobalServices.GlobalSongs.Register("lifedeath:Stage");
 
                     MediaPlayer.Volume = 0.5f;
@@ -179,6 +183,8 @@ namespace LifeDeath
                     MediaPlayer.IsRepeating = true;
                     break;
                 case 2:
+                    ((Scenes.MusicRoom)MusicRoom).Background(2);
+
                     bgm = GlobalServices.GlobalSongs.Register("lifedeath:Another_Stage");
 
                     MediaPlayer.Volume = 0.5f;
@@ -186,6 +192,8 @@ namespace LifeDeath
                     MediaPlayer.IsRepeating = true;
                     break;
                 case 3:
+                    ((Scenes.MusicRoom)MusicRoom).Background(3);
+
                     bgm = GlobalServices.GlobalSongs.Register("lifedeath:Boss_Battle");
 
                     MediaPlayer.Volume = 0.5f;
@@ -194,6 +202,8 @@ namespace LifeDeath
                     break;
 
                 case 4:
+                    ((Scenes.MusicRoom)MusicRoom).Background(1);
+
                     bgm = GlobalServices.GlobalSongs.Register("lifedeath:Game_Over");
 
                     MediaPlayer.Volume = 0.5f;
@@ -203,6 +213,8 @@ namespace LifeDeath
             }
         }
         public void MRPause() {
+
+            ((Scenes.MusicRoom)MusicRoom).Background(0);
 
             MediaPlayer.Pause();
         }
