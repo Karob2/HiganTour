@@ -13,10 +13,10 @@ namespace LifeDeath.Components
         public void Update()
         {
 
-            if (!((Game1)Lichen.GlobalServices.Game).getMR())
+            if (!((Game1)Lichen.GlobalServices.Game).GetMR())
             {
 
-                if (Lichen.GlobalServices.InputManager.Held(Lichen.Input.GameCommand.MenuConfirm))
+                if (Lichen.GlobalServices.InputManager.JustPressed(Lichen.Input.GameCommand.MenuConfirm))
                 {
                     ((Game1)Lichen.GlobalServices.Game).ChangeScene(1);
                 }
@@ -25,10 +25,10 @@ namespace LifeDeath.Components
                     ((Game1)Lichen.GlobalServices.Game).ChangeScene(3);
                 }
             }
-            if (((Game1)Lichen.GlobalServices.Game).getMR())
+            if (((Game1)Lichen.GlobalServices.Game).GetMR())
             {
 
-                if (Lichen.GlobalServices.InputManager.Held(Lichen.Input.GameCommand.MenuCancel))
+                if (Lichen.GlobalServices.InputManager.JustPressed(Lichen.Input.GameCommand.MenuCancel))
                 {
                     ((Game1)Lichen.GlobalServices.Game).ChangeScene(0);
                 }
