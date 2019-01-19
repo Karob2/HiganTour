@@ -156,16 +156,29 @@ namespace LifeDeath
 
         Song bgm;
 
-        public void SwitchSong()
+        public void SwitchSong(bool up)
         {
-            SN++;
 
-            if (SN > 4) { SN = 0; }
+            if (up)
+            {
+                SN++;
+            } else {
+                SN--;
+            }
+
+            if (SN > 5) { SN = 0; }
+            if (SN < 0) { SN = 5; }
 
             switch (SN)
             {
                 case 0:
+                    MRPause();
+                    break;
+
+                case 1:
                     ((Scenes.MusicRoom) MusicRoom).Background(1);
+
+                    ((Scenes.MusicRoom)MusicRoom).Menu(1);
 
                     bgm = GlobalServices.GlobalSongs.Register("lifedeath:Main_Menu");
 
@@ -173,8 +186,10 @@ namespace LifeDeath
                     MediaPlayer.Play(bgm);
                     MediaPlayer.IsRepeating = true;
                     break;
-                case 1:
+                case 2:
                     ((Scenes.MusicRoom)MusicRoom).Background(1);
+
+                    ((Scenes.MusicRoom)MusicRoom).Menu(2);
 
                     bgm = GlobalServices.GlobalSongs.Register("lifedeath:Stage");
 
@@ -182,8 +197,10 @@ namespace LifeDeath
                     MediaPlayer.Play(bgm);
                     MediaPlayer.IsRepeating = true;
                     break;
-                case 2:
+                case 3:
                     ((Scenes.MusicRoom)MusicRoom).Background(2);
+
+                    ((Scenes.MusicRoom)MusicRoom).Menu(3);
 
                     bgm = GlobalServices.GlobalSongs.Register("lifedeath:Another_Stage");
 
@@ -191,8 +208,10 @@ namespace LifeDeath
                     MediaPlayer.Play(bgm);
                     MediaPlayer.IsRepeating = true;
                     break;
-                case 3:
+                case 4:
                     ((Scenes.MusicRoom)MusicRoom).Background(3);
+
+                    ((Scenes.MusicRoom)MusicRoom).Menu(4);
 
                     bgm = GlobalServices.GlobalSongs.Register("lifedeath:Boss_Battle");
 
@@ -201,8 +220,10 @@ namespace LifeDeath
                     MediaPlayer.IsRepeating = true;
                     break;
 
-                case 4:
+                case 5:
                     ((Scenes.MusicRoom)MusicRoom).Background(1);
+
+                    ((Scenes.MusicRoom)MusicRoom).Menu(5);
 
                     bgm = GlobalServices.GlobalSongs.Register("lifedeath:Game_Over");
 
@@ -213,6 +234,7 @@ namespace LifeDeath
             }
         }
         public void MRPause() {
+            ((Scenes.MusicRoom)MusicRoom).Menu(0);
 
             ((Scenes.MusicRoom)MusicRoom).Background(0);
 
