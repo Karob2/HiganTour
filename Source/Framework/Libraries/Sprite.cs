@@ -1,15 +1,9 @@
-﻿using System;
+﻿using Lichen.Util;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-using Lichen.Util;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace Lichen.Libraries
 {
@@ -75,14 +69,14 @@ namespace Lichen.Libraries
         public List<Frame> Frames { get; set; }
     }
 
-    [DataContract]
+    [JsonObject]
     public class _Sprite
     {
-        [DataMember]
+        [JsonProperty]
         public _FrameRange DefaultFrame { get; set; }
-        [DataMember]
+        [JsonProperty]
         public string DefaultAnimation { get; set; }
-        [DataMember]
+        [JsonProperty]
         public List<_Animation> Animations { get; set; }
 
         public void Finalize(TextureLibrary textureLibrary, Pathfinder defaultPath)
@@ -170,28 +164,29 @@ namespace Lichen.Libraries
         }
     }
 
-    [DataContract]
+    [JsonObject]
     public class _FrameRange
     {
-        [DataMember]
+        [JsonProperty]
         public string Spritesheet { get; set; }
-        [DataMember]
+        [JsonProperty]
         public int? X { get; set; }
-        [DataMember]
+        [JsonProperty]
         public int? Y { get; set; }
-        [DataMember]
+        [JsonProperty]
         public int? Width { get; set; }
-        [DataMember]
+        [JsonProperty]
         public int? Height { get; set; }
-        [DataMember]
+        [JsonProperty]
         public float? AnchorX { get; set; }
-        [DataMember]
+        [JsonProperty]
         public float? AnchorY { get; set; }
-        [DataMember]
+        [JsonProperty]
         public float? Frametime { get; set; }
-        [DataMember]
+        [JsonProperty]
         public int? Count { get; set; }
 
+        [JsonIgnore]
         public Texture2D Texture { get; set; }
 
         public List<Frame> Solidify()
@@ -220,14 +215,14 @@ namespace Lichen.Libraries
         }
     }
 
-    [DataContract]
+    [JsonObject]
     public class _Animation
     {
-        [DataMember]
+        [JsonProperty]
         public string Name { get; set; }
-        [DataMember]
+        [JsonProperty]
         public float? Speed { get; set; }
-        [DataMember]
+        [JsonProperty]
         public List<_FrameRange> FrameRanges { get; set; }
 
         public Animation Solidify()

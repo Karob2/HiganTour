@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Input;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,12 +10,13 @@ using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace Lichen.Input
 {
+    [JsonObject]
     public class InputConfig
     {
+        [JsonProperty]
         public List<InputNode> InputNodes { get; set; }
 
         public InputConfig()
@@ -89,6 +92,7 @@ namespace Lichen.Input
             InputConfig inputConfig = Util.JsonHelper<InputConfig>.Load(path);
             foreach (InputNode inputNode in inputConfig.InputNodes)
             {
+                inputNode.PostSet();
                 inputNodeList[(int)inputNode.GameCommand] = inputNode;
             }
             Reset();
@@ -102,6 +106,7 @@ namespace Lichen.Input
                 // Hacky way to prevent certain keys from being written to the XML file (so users don't change them).
                 if ((int)command >= (int)GameCommand.MenuUp) continue;
 
+                inputNodeList[(int)command].PreGet();
                 inputConfig.InputNodes.Add(inputNodeList[(int)command]);
             }
             Util.JsonHelper<InputConfig>.Save(path, inputConfig);
