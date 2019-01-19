@@ -29,6 +29,8 @@ namespace LifeDeath.Scenes
         Entity bCContainer2;
         Entity bCContainer3;
 
+        Entity menuDot;
+
         // Create a reference set of entities and load necessary assets.
         public override void Preload(Entity root)
         {
@@ -80,6 +82,38 @@ namespace LifeDeath.Scenes
             }
         }
 
+        public void Menu(int menu) {
+
+            switch (menu) {
+
+                case 0:
+
+                    menuDot.SetPosition(150, 44);
+                    break;
+                case 1:
+
+                    menuDot.SetPosition(150, 84);
+                    break;
+                case 2:
+
+                    menuDot.SetPosition(150, 124);
+                    break;
+                case 3:
+
+                    menuDot.SetPosition(150, 164);
+                    break;
+                case 4:
+
+                    menuDot.SetPosition(150, 204);
+                    break;
+                case 5:
+
+                    menuDot.SetPosition(150, 244);
+                    break;
+            }
+
+        }
+
         // Create the scene's entities by cloning reference entities.
         public override void Load()
         {
@@ -91,24 +125,47 @@ namespace LifeDeath.Scenes
                 .AttachTo(container);
 
             bCContainer1 = new Entity()
-                .AttachTo(camera);
+                .AttachTo(camera).SetVisible(false);
 
             bCContainer2 = new Entity()
-                .AttachTo(camera);
+                .AttachTo(camera).SetVisible(false);
 
             bCContainer3 = new Entity()
-                .AttachTo(camera);
+                .AttachTo(camera).SetVisible(false);
 
             new Entity(0, 0)
                 .AddRenderComponent(new TextComponent(font, "Music Room"))
                 .AttachTo(container);
 
             new Entity(0, 40)
-                .AddRenderComponent(new TextComponent(font, "Use Up To Swith Between Songs And Down To Pause"))
+                .AddRenderComponent(new TextComponent(font, "Pause"))
                 .AddUpdateComponent(new Components.MenuComponent())
                 .AttachTo(container);
             new Entity(0, 80)
-               .AddRenderComponent(new TextComponent(font, "Press Esc To Return To The Main Menu"))
+               .AddRenderComponent(new TextComponent(font, "Main Menu Theme"))
+               .AddUpdateComponent(new Components.MenuComponent())
+               .AttachTo(container);
+
+            new Entity(0, 120)
+                .AddRenderComponent(new TextComponent(font, "Stage 1 Theme"))
+                .AddUpdateComponent(new Components.MenuComponent())
+                .AttachTo(container);
+            new Entity(0, 160)
+               .AddRenderComponent(new TextComponent(font, "Stage 2 Theme"))
+               .AddUpdateComponent(new Components.MenuComponent())
+               .AttachTo(container);
+
+            new Entity(0, 200)
+                .AddRenderComponent(new TextComponent(font, "Boss Theme"))
+                .AddUpdateComponent(new Components.MenuComponent())
+                .AttachTo(container);
+            new Entity(0, 240)
+               .AddRenderComponent(new TextComponent(font, "Game Over Theme"))
+               .AddUpdateComponent(new Components.MenuComponent())
+               .AttachTo(container);
+
+           menuDot = new Entity(150, 40)
+               .AddRenderComponent(new TextComponent(font, "*"))
                .AddUpdateComponent(new Components.MenuComponent())
                .AttachTo(container);
 
