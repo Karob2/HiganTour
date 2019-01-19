@@ -94,10 +94,44 @@ namespace Lichen.Libraries
         // --If an asset reference is found in another library, the reference is copied to the local library.
         public T Register(K key)
         {
+            // If asset is already loaded, use the loaded copy.
+            if (Lookup(key, out T item))
+            {
+                return item;
+            }
+
+            // Otherwise, load the asset and store a reference in the local library.
+            Book<T> book = new Book<T>(Load(key), CopyState.unique);
+            list.Add(key, book);
+            return book.Item;
+        }
+
+        // This method finds the reference to a loaded asset, and throws an exception if no reference was found.
+        // --The local library is checked first.
+        // --If an asset reference is found in another library, the reference is copied to the local library.
+        public T Lookup(K key)
+        {
+            // If asset is already loaded, use the loaded copy.
+            if (Lookup(key, out T item))
+            {
+                return item;
+            }
+
+            // Otherwise, fail.
+            throw new Exception("Failed to find reference to asset '" + key.ToString() + "'. Did you forget to Register() it?");
+        }
+
+        // Internal method for Register and Lookup.
+        bool Lookup(K key, out T item)
+        {
             Book<T> book;
 
             // Search for loaded asset in local library and return if found.
-            if (list.TryGetValue(key, out book)) return book.Item;
+            if (list.TryGetValue(key, out book))
+            {
+                item = book.Item;
+                return true;
+            }
 
             // Search for loaded asset in all libraries and copy reference to local library if found.
             foreach (Library<K, T> tLibrary in libraries)
@@ -107,14 +141,14 @@ namespace Lichen.Libraries
                 {
                     list.Add(key, new Book<T>(book.Item, CopyState.copy));
                     book.CopyState = CopyState.source;
-                    return book.Item;
+                    item = book.Item;
+                    return true;
                 }
             }
 
-            // Otherwise, load the asset and store a reference in the local library.
-            book = new Book<T>(Load(key), CopyState.unique);
-            list.Add(key, book);
-            return book.Item;
+            // Otherwise, fail.
+            item = default(T);
+            return false;
         }
 
         protected virtual T Load(K key) { return default(T);  }
