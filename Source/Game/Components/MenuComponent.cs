@@ -30,16 +30,18 @@ namespace LifeDeath.Components
 
                 if (Lichen.GlobalServices.InputManager.JustPressed(Lichen.Input.GameCommand.MenuCancel))
                 {
+                    ((Game1)Lichen.GlobalServices.Game).MRPause();
+
                     ((Game1)Lichen.GlobalServices.Game).ChangeScene(0);
                 }
 
                 if (Lichen.GlobalServices.InputManager.JustPressed(Lichen.Input.GameCommand.MenuUp))
                 {
-                    ((Game1)Lichen.GlobalServices.Game).SwitchSong();
+                    ((Game1)Lichen.GlobalServices.Game).SwitchSong(false);
                 }
                 if (Lichen.GlobalServices.InputManager.JustPressed(Lichen.Input.GameCommand.MenuDown))
                 {
-                    ((Game1)Lichen.GlobalServices.Game).MRPause();
+                    ((Game1)Lichen.GlobalServices.Game).SwitchSong(true);
                 }
             }
         }
