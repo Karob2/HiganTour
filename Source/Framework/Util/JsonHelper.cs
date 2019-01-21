@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
 using System.IO;
-using System.Runtime.Serialization.Json;
 using System.Text;
-using System.Xml.Linq;
+using System;
+using System.Collections.Generic;
 
 namespace Lichen.Util
 {
@@ -12,6 +11,16 @@ namespace Lichen.Util
     {
         public static T Load(string path)
         {
+            
+            string json;
+            using (StreamReader streamReader = new StreamReader(path, Encoding.UTF8))
+            {
+                json = streamReader.ReadToEnd();
+            }
+            T item = JsonConvert.DeserializeObject<T>(json);
+            return item;
+            
+            /*
             byte[] json = null;
             FileStream fs = new FileStream(path, FileMode.Open);
             // TODO: Replace this unreliable byte size limit with a "file size too large" error.
@@ -27,10 +36,20 @@ namespace Lichen.Util
             ms.Close();
             T item = (T)obj;
             return item;
+            */
         }
 
         public static void Save(string path, T item)
         {
+            
+            string json;
+            json = JsonConvert.SerializeObject(item);
+            using (StreamWriter streamWriter = new StreamWriter(path, false, Encoding.UTF8))
+            {
+                streamWriter.Write(json);
+            }
+            
+            /*
             DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
             MemoryStream ms = new MemoryStream();
             serializer.WriteObject(ms, item);
@@ -40,6 +59,7 @@ namespace Lichen.Util
             FileStream fs = new FileStream(path, FileMode.Create);
             // TODO: Change the way the size limit works.
             fs.Write(json, 0, Math.Min(json.Length, 32768));
+            */
         }
 
         static void RemoveComments(byte[] source, MemoryStream target)

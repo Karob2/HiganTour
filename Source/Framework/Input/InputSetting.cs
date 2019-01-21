@@ -1,27 +1,17 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Input;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace Lichen.Input
 {
-    //[DataContract]
     public class UniversalInputCombo
     {
         List<UniversalInput> inputList;
         bool invalidPress;
 
-        //public List<UniversalInput> InputList { get { return inputList; } set { inputList = value; } }
-
-        [XmlAttribute]
-        //[DataMember]
         public string Value { get { return ToString(); } set { FromString(value); } }
 
         public UniversalInputCombo()
@@ -181,7 +171,7 @@ namespace Lichen.Input
         }
     }
 
-    [DataContract]
+    [JsonObject]
     public class InputNode
     {
         GameCommand gameCommand;
@@ -193,11 +183,10 @@ namespace Lichen.Input
         int tickCount;
         float heldTime;
 
-        [XmlIgnore]
+        [JsonIgnore]
         public GameCommand GameCommand { get { return gameCommand; } set { gameCommand = value; } }
 
-        [XmlAttribute]
-        [DataMember]
+        [JsonProperty]
         public string Command
         {
             get
@@ -212,9 +201,11 @@ namespace Lichen.Input
             }
         }
 
-        //        public List<UniversalInputCombo> InputCombos { get { return inputCombos; } set { inputCombos = value; } }
+        //public List<UniversalInputCombo> InputCombos { get { return inputCombos; } set { inputCombos = value; } }
 
-        [DataMember]
+        [JsonProperty]
+        public List<string> InputCombos { get; set; }
+        /*
         public List<string> InputCombos {
             get
             {
@@ -232,6 +223,26 @@ namespace Lichen.Input
                 {
                     inputCombos.Add(new UniversalInputCombo() { Value = ic });
                 }
+            }
+        }
+        */
+
+        public void PreGet()
+        {
+            List<string> ic = new List<string>();
+            foreach (UniversalInputCombo uic in inputCombos)
+            {
+                ic.Add(uic.Value);
+            }
+            InputCombos = ic;
+        }
+
+        public void PostSet()
+        {
+            inputCombos = new List<UniversalInputCombo>();
+            foreach (string ic in InputCombos)
+            {
+                inputCombos.Add(new UniversalInputCombo() { Value = ic });
             }
         }
 
