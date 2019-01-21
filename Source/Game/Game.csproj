@@ -33,6 +33,3 @@
     <Exec Command="XCOPY &quot;$(SolutionDir)Content&quot; &quot;$(TargetDir)\Content\&quot; /S /Y" />
   </Target>
 </Project>
-
-make netcore branch work with vscode
-copy changes from netcore experiments
