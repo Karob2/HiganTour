@@ -54,7 +54,7 @@ namespace Lichen.Libraries
             else
             {
                 fx = null;
-                Error.LogErrorAndShutdown("Import type not supported yet.");
+                Error.LogErrorAndShutdown("Sound effect file type not supported yet.");
             }
             return fx;
         }

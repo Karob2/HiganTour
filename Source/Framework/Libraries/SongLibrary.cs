@@ -43,30 +43,15 @@ namespace Lichen.Libraries
                 contentManager.RootDirectory = pathfinder.ContentPath;
                 song = contentManager.Load<Song>(pathfinder.ContentFile);
             }
-            else
+            else if (pathfinder.Ext.Equals("ogg"))
             {
-                //FileStream fileStream = new FileStream(pathfinder.Path, FileMode.Open);
-                //song = Song.FromStream(GlobalServices.Game.GraphicsDevice, fileStream);
-                //fileStream.Dispose();
                 song = Song.FromUri(pathfinder.Path, new Uri(pathfinder.Path, UriKind.Relative));
             }
-            /*
-            string fullPath = GlobalServices.ContentDirectory + "/" + path;
-            if (File.Exists(fullPath + ".xnb"))
-            {
-                texture = contentManager.Load<Texture2D>(fullPath + ".xnb");
-            }
             else
             {
-                if (File.Exists(fullPath + ".jpg"))
-                    fullPath = fullPath + ".jpg";
-                else
-                    fullPath = fullPath + ".png";
-                FileStream fileStream = new FileStream(fullPath, FileMode.Open);
-                texture = Texture2D.FromStream(GlobalServices.Game.GraphicsDevice, fileStream);
-                fileStream.Dispose();
+                song = null;
+                Error.LogErrorAndShutdown("Song file type not supported yet.");
             }
-            */
             return song;
         }
 
