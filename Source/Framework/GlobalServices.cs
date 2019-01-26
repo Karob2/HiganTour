@@ -66,6 +66,9 @@ namespace Lichen
             SpriteBatch = new SpriteBatch(game.GraphicsDevice);
 
             ContentDirectory = "Content";
+#if DEBUG
+            ContentDirectory = "../../../../Content";
+#endif
             //GlobalContent.RootDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), ContentDirectory);
             //System.Diagnostics.Debug.WriteLine(Path.GetFullPath(ContentDirectory));
             // TODO: How does this perform on linux? (And any other target OS.)
@@ -159,6 +162,7 @@ namespace Lichen
         {
             DeltaDrawSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
             Game.GraphicsDevice.Clear(Color.Black);
+            //SpriteBatch.Begin(blendState: BlendState.NonPremultiplied);
             SpriteBatch.Begin();
         }
 
