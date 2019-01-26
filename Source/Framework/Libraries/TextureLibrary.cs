@@ -46,6 +46,14 @@ namespace Lichen.Libraries
             {
                 FileStream fileStream = new FileStream(pathfinder.Path, FileMode.Open);
                 texture = Texture2D.FromStream(GlobalServices.Game.GraphicsDevice, fileStream);
+
+                // Premultiply the alpha.
+                Color[] buffer = new Color[texture.Width * texture.Height];
+                texture.GetData(buffer);
+                for (int i = 0; i < buffer.Length; i++)
+                    buffer[i] = Color.FromNonPremultiplied(buffer[i].R, buffer[i].G, buffer[i].B, buffer[i].A);
+                texture.SetData(buffer);
+
                 fileStream.Dispose();
             }
             /*
