@@ -67,7 +67,7 @@ namespace Lichen
 
             ContentDirectory = "Content";
 #if DEBUG
-            ContentDirectory = "../../../../Content";
+            ContentDirectory = Path.Combine("..", "..", "..", "..", "Content");
 #endif
             //GlobalContent.RootDirectory = Path.Combine(System.IO.Directory.GetCurrentDirectory(), ContentDirectory);
             //System.Diagnostics.Debug.WriteLine(Path.GetFullPath(ContentDirectory));

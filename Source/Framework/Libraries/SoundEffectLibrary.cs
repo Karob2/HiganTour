@@ -43,6 +43,14 @@ namespace Lichen.Libraries
                 contentManager.RootDirectory = pathfinder.ContentPath;
                 fx = contentManager.Load<SoundEffect>(pathfinder.ContentFile);
             }
+            else if (pathfinder.Ext.Equals("ogg"))
+            {
+                fx = AudioHelper.SoundEffectFromOgg(pathfinder.Path);
+            }
+            else if (pathfinder.Ext.Equals("wav"))
+            {
+                fx = AudioHelper.SoundEffectFromWav(pathfinder.Path);
+            }
             else
             {
                 fx = null;
