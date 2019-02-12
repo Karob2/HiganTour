@@ -2,9 +2,10 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RuntimeFrameworkVersion>2.1.0</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>2.1.8</RuntimeFrameworkVersion>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <TrimUnusedDependencies>true</TrimUnusedDependencies>
   </PropertyGroup>
   <PropertyGroup>
     <Company />
@@ -34,28 +35,31 @@
     <None Include="app.config" />
     <None Include="app.manifest" />
   </ItemGroup>
-<!--
   <ItemGroup>
-    <Reference Include="Lichen.Framework">
-      <HintPath>C:\Projects\mono\thfgj3-lifedeath\Source\Framework\bin\release\netstandard2.0\Framework.dll</HintPath>
-    </Reference>
+    <TrimFilesRootFiles Include="mscorlib.dll" />
+    <!--<LinkerRootAssemblies Include="mscorlib" />-->
   </ItemGroup>
--->
+
   <ItemGroup>
-<!--
     <PackageReference Include="Microsoft.Packaging.Tools.Trimming" Version="1.1.0-preview1-27119-01" />
-    <PackageReference Include="ILLink.Tasks" Version="0.1.5-preview-1841731" />
--->
-    <PackageReference Update="Microsoft.NETCore.App" Version="2.1.0" />
+    <!--<PackageReference Include="ILLink.Tasks" Version="0.1.5-preview-1841731" />-->
+    <PackageReference Update="Microsoft.NETCore.App" Version="2.1.8" />
     <PackageReference Include="MonoGame.Content.Builder" Version="3.7.0.4" />
     <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.7.0.7" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="NSubsys" Version="0.7.0-build20180604-0047" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Framework\Framework.csproj">
       <Project>{9daaa09d-df84-4060-81fb-8d1ac7be0d55}</Project>
       <Name>Framework</Name>
     </ProjectReference>
+    <!--
+    <Reference Include="Lichen.Framework">
+      <HintPath>C:\Projects\mono\thfgj3-lifedeath\Source\Framework\bin\release\netstandard2.0\Framework.dll</HintPath>
+    </Reference>
+    -->
   </ItemGroup>
+
 </Project>
