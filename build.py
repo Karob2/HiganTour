@@ -4,6 +4,12 @@ import sys
 import shutil
 import json
 
+release_ref = [
+    ["win", "win-x64", 0],
+    ["linux", "linux-x64", 0],
+    ["osx", "osx-x64", 0]
+    ]
+
 cmd_ref = [
     ["clean", 0],
     ["publish", 0],
@@ -12,10 +18,28 @@ cmd_ref = [
     ["icon", 0]
     ]
 
+program_name = "Game"
+
+root = os.getcwd()
+
 def main():
-    if (len(sys.argv) != 2):
+    if (len(sys.argv) < 2 or len(sys.argv) > 3):
         showUsage()
-    cmd = sys.argv[1]
+
+    release = sys.argv[1]
+    found = 0
+    for n in range(0, len(release_ref)):
+        #print(cmd_ref[n][0])
+        if (release == "all" or release == release_ref[n][0]):
+            release_ref[n][2] = 1
+            found = 1
+    if (found == 0):
+        showUsage()
+
+    if len(sys.argv) == 3:
+        cmd = sys.argv[2]
+    else:
+        cmd = "all"
     found = 0
     for n in range(0, len(cmd_ref)):
         #print(cmd_ref[n][0])
@@ -25,8 +49,6 @@ def main():
     if (found == 0):
         showUsage()
 
-    root = os.getcwd()
-
     #clean
     if (cmd_ref[0][1] == 1):
         print()
@@ -34,36 +56,43 @@ def main():
         print()
         runProcess("dotnet clean Source/")
 
+    for n in range(0, len(release_ref)):
+        if release_ref[n][2] == 1:
+            build_release(release_ref[n][1])
+
+def build_release(release_name):
+    publish_name = "publish-" + release_name
+
     #publish
     if (cmd_ref[1][1] == 1):
         print()
-        print(">>> Building self-contained project.")
+        print(">>> Building self-contained project (" + release_name + ").")
         print()
-        removeDir("publish-win-x64")
-        removeDir("Source/Game/publish")
-        runProcess("dotnet publish -r win-x64 -c release -o publish Source/")
-        shutil.move("Source/Game/publish", "publish-win-x64")
+        removeDir(publish_name)
+        removeDir(os.path.join("Source", program_name, publish_name))
+        runProcess("dotnet publish -r " + release_name + " -c release -o " + publish_name + " Source/")
+        shutil.move(os.path.join("Source", program_name, publish_name), publish_name)
 
     #content
     if (cmd_ref[2][1] == 1):
         print()
-        print(">>> Copying resources to Content folder.")
+        print(">>> Copying resources to Content folder (" + release_name + ").")
         print()
         checkDir("Source/Content")
-        checkDir("publish-win-x64")
-        removeDir("publish-win-x64/Content")
-        shutil.copytree("Source/Content", "publish-win-x64/Content")
+        checkDir(publish_name)
+        removeDir(os.path.join(publish_name, "Content"))
+        shutil.copytree("Source/Content", os.path.join(publish_name, "Content"))
 
     #pack
     if (cmd_ref[3][1] == 1):
         print()
-        print(">>> Packing DLLs into lib directory.")
+        print(">>> Packing DLLs into lib directory (" + release_name + ").")
         print()
-        changeDir("publish-win-x64")
-        with open("Game.runtimeconfig.json", 'w') as file:
+        changeDir(publish_name)
+        with open(program_name + ".runtimeconfig.json", 'w') as file:
             file.write("{\"runtimeOptions\":{\"additionalProbingPaths\":[\"lib\"]}}")
-        checkFile("Game.deps.json")
-        with open("Game.deps.json") as f:
+        checkFile(program_name + ".deps.json")
+        with open(program_name + ".deps.json") as f:
             data = json.load(f)
         for keyTarget in data["targets"]:
             dataTarget = data["targets"][keyTarget]
@@ -76,7 +105,7 @@ def main():
                         #print("......<" + filename[0] + "> " + filename[1] + " <" + filename[2] + ">")
                         if filename[2] != ".dll" and filename[2] != ".so" and filename[2] != ".dylib":
                             skip = True
-                        if filename[1] == "Game" or filename[1] == "hostfxr" or filename[1] == "libhostfxr" or filename[1] == "hostpolicy" or filename[1] == "libhostpolicy":
+                        if filename[1] == program_name or filename[1] == "hostfxr" or filename[1] == "libhostfxr" or filename[1] == "hostpolicy" or filename[1] == "libhostpolicy":
                             skip = True
                         if skip == True:
                             print("Skipping " + keyItem)
@@ -91,31 +120,40 @@ def main():
     #icon
     if (cmd_ref[4][1] == 1):
         print()
-        print(">>> Injecting icon into executable.")
+        print(">>> Injecting icon into binary executable (" + release_name + ").")
         print()
-        print(sys.platform)
+        safe = True
         if sys.platform != "win32":
             print()
-            print("Not implemented on your platform! Skipping...")
-        else:
+            print("Not implemented on your platform (" + sys.platform + ")! Skipping...")
+            safe = False
+        if release_name != "win-x64":
+            print()
+            print("Cannot inject icon to " + release_name + " type binary. Skipping...")
+            safe = False
+        if safe == True:
             # since rcedit bungles file ownership, make a copy of the exe to restore default ownership properties
-            runProcess("Tools/rcedit-x64.exe publish-win-x64/Game.exe --set-icon Source/Game/Icon.ico")
-            os.rename("publish-win-x64/Game.exe", "publish-win-x64/_Game.exe")
-            shutil.copy2("publish-win-x64/_Game.exe", "publish-win-x64/Game.exe")
-            os.remove("publish-win-x64/_Game.exe")
+            forig = publish_name + "/" + program_name + ".exe"
+            fdummy = publish_name + "/_" + program_name + ".exe"
+            runProcess("Tools/rcedit-x64.exe " + forig + " --set-icon Source/" + program_name + "/Icon.ico")
+            os.rename(forig, fdummy)
+            shutil.copy2(fdummy, forig)
+            os.remove(fdummy)
 
     print()
     print("Success!")
 
 def showUsage():
-        print("Usage: python build.py [command]")
+        print("Usage: python build.py [release] [command]")
+        print("Releases:")
+        print("    win, linux, osx, all")
         print("Commands:")
         print("    clean   Clean the project.")
         print("    publish Build release version.")
         print("    content Copy content to release folder.")
         print("    pack    Pack dlls into subdirectories.")
         print("    icon    Inject program icon.")
-        print("    all     Run all commands.")
+        print("    [blank] Run all commands.")
         exit()
 
 def changeDir(str):
