@@ -9,8 +9,7 @@ cmd_ref = [
     ["publish", 0],
     ["content", 0],
     ["pack", 0],
-    ["icon", 0],
-    ["zip", 0]
+    ["icon", 0]
     ]
 
 def main():
@@ -30,10 +29,16 @@ def main():
 
     #clean
     if (cmd_ref[0][1] == 1):
+        print()
+        print(">>> Cleaning source.")
+        print()
         runProcess("dotnet clean Source/")
 
     #publish
     if (cmd_ref[1][1] == 1):
+        print()
+        print(">>> Building self-contained project.")
+        print()
         removeDir("publish-win-x64")
         removeDir("Source/Game/publish")
         runProcess("dotnet publish -r win-x64 -c release -o publish Source/")
@@ -41,6 +46,9 @@ def main():
 
     #content
     if (cmd_ref[2][1] == 1):
+        print()
+        print(">>> Copying resources to Content folder.")
+        print()
         checkDir("Source/Content")
         checkDir("publish-win-x64")
         removeDir("publish-win-x64/Content")
@@ -48,6 +56,9 @@ def main():
 
     #pack
     if (cmd_ref[3][1] == 1):
+        print()
+        print(">>> Packing DLLs into lib directory.")
+        print()
         changeDir("publish-win-x64")
         with open("Game.runtimeconfig.json", 'w') as file:
             file.write("{\"runtimeOptions\":{\"additionalProbingPaths\":[\"lib\"]}}")
@@ -80,12 +91,18 @@ def main():
     #icon
     if (cmd_ref[4][1] == 1):
         print()
-        print("Not implemented!")
-
-    #zip
-    if (cmd_ref[5][1] == 1):
+        print(">>> Injecting icon into executable.")
         print()
-        print("Not implemented!")
+        print(sys.platform)
+        if sys.platform != "win32":
+            print()
+            print("Not implemented on your platform! Skipping...")
+        else:
+            # since rcedit bungles file ownership, make a copy of the exe to restore default ownership properties
+            runProcess("Tools/rcedit-x64.exe publish-win-x64/Game.exe --set-icon Source/Game/Icon.ico")
+            os.rename("publish-win-x64/Game.exe", "publish-win-x64/_Game.exe")
+            shutil.copy2("publish-win-x64/_Game.exe", "publish-win-x64/Game.exe")
+            os.remove("publish-win-x64/_Game.exe")
 
     print()
     print("Success!")
@@ -98,7 +115,6 @@ def showUsage():
         print("    content Copy content to release folder.")
         print("    pack    Pack dlls into subdirectories.")
         print("    icon    Inject program icon.")
-        print("    zip     Send release build to archive.")
         print("    all     Run all commands.")
         exit()
 
@@ -106,7 +122,6 @@ def changeDir(str):
     try:
         os.chdir(str)
     except:
-        print()
         print("Folder '" + str + "' not found.")
         print()
         print("Process failed with errors.")
@@ -114,7 +129,6 @@ def changeDir(str):
 
 def checkDir(str):
     if (os.path.isdir(str) == False):
-        print()
         print("Directory '" + str + "' does not exist.")
         print()
         print("Process failed with errors.")
@@ -130,7 +144,6 @@ def removeDir(str):
 
 def checkFile(str):
     if (os.path.isfile(str) == False):
-        print()
         print("File '" + str + "' does not exist.")
         print()
         print("Process failed with errors.")
@@ -157,17 +170,18 @@ def splitFilename(str):
     return splitname
 
 def runProcess(str):
-    print()
     print("Execute '" + str + "'")
     result = subprocess.run(str, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     print()
     print("stdout=")
-    print(result.stdout)
+    #print(result.stdout)
+    print(result.stdout.decode("unicode_escape"))
     if (result.returncode != 0):
         print("Command failed!")
         print()
         print("stderr=")
-        print(result.stderr)
+        #print(result.stderr)
+        print(result.stderr.decode("unicode_escape"))
         print()
         print("Process failed with errors.")
         quit()
