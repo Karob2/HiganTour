@@ -2,6 +2,7 @@ import os
 import subprocess
 import sys
 import shutil
+import json
 
 cmd_ref = [
     ["clean", 0],
@@ -26,36 +27,55 @@ def main():
         showUsage()
 
     root = os.getcwd()
-    changeDir("Source")
-
-    #changeDir("Content")
-    #for f in os.walk('.'):
-    #    print(f)
-    #changeDir(root)
-    #changeDir("Source")
 
     #clean
     if (cmd_ref[0][1] == 1):
-        runProcess("dotnet clean")
+        runProcess("dotnet clean Source/")
 
     #publish
     if (cmd_ref[1][1] == 1):
-        if (os.path.isdir("Game/bin/Release/netcoreapp2.1/win-x64")):
-            shutil.rmtree("Game/bin/Release/netcoreapp2.1/win-x64")
-        runProcess("dotnet publish -r win-x64 -c release /p:TrimUnusedDependencies=true")
+        removeDir("publish-win-x64")
+        removeDir("Source/Game/publish")
+        runProcess("dotnet publish -r win-x64 -c release -o publish Source/")
+        shutil.move("Source/Game/publish", "publish-win-x64")
 
     #content
     if (cmd_ref[2][1] == 1):
-        checkDir("Content")
-        checkDir("Game/bin/Release/netcoreapp2.1/win-x64/publish")
-        if (os.path.isdir("Game/bin/Release/netcoreapp2.1/win-x64/publish/Content")):
-            shutil.rmtree("Game/bin/Release/netcoreapp2.1/win-x64/publish/Content")
-        shutil.copytree("Content", "Game/bin/Release/netcoreapp2.1/win-x64/publish/Content")
+        checkDir("Source/Content")
+        checkDir("publish-win-x64")
+        removeDir("publish-win-x64/Content")
+        shutil.copytree("Source/Content", "publish-win-x64/Content")
 
     #pack
     if (cmd_ref[3][1] == 1):
-        print()
-        print("Not implemented!")
+        changeDir("publish-win-x64")
+        with open("Game.runtimeconfig.json", 'w') as file:
+            file.write("{\"runtimeOptions\":{\"additionalProbingPaths\":[\"lib\"]}}")
+        checkFile("Game.deps.json")
+        with open("Game.deps.json") as f:
+            data = json.load(f)
+        for keyTarget in data["targets"]:
+            dataTarget = data["targets"][keyTarget]
+            for keyGroup in dataTarget:
+                for keySubgroup in dataTarget[keyGroup]:
+                    if keySubgroup != "runtime" and keySubgroup != "native": continue
+                    for keyItem in dataTarget[keyGroup][keySubgroup]:
+                        skip = False
+                        filename = splitFilename(keyItem)
+                        #print("......<" + filename[0] + "> " + filename[1] + " <" + filename[2] + ">")
+                        if filename[2] != ".dll" and filename[2] != ".so" and filename[2] != ".dylib":
+                            skip = True
+                        if filename[1] == "Game" or filename[1] == "hostfxr" or filename[1] == "libhostfxr" or filename[1] == "hostpolicy" or filename[1] == "libhostpolicy":
+                            skip = True
+                        if skip == True:
+                            print("Skipping " + keyItem)
+                            continue
+                        targetDir = os.path.join("lib", keyGroup.lower(), filename[0])
+                        targetFile = os.path.join("lib", keyGroup.lower(), keyItem)
+                        sourceFile = filename[1] + filename[2]
+                        makeDir(targetDir)
+                        shutil.move(sourceFile, targetFile)
+        changeDir(root)
 
     #icon
     if (cmd_ref[4][1] == 1):
@@ -99,6 +119,42 @@ def checkDir(str):
         print()
         print("Process failed with errors.")
         quit()
+
+def makeDir(str):
+    if (os.path.isdir(str) == False):
+        os.makedirs(str)
+
+def removeDir(str):
+    if (os.path.isdir(str)):
+        shutil.rmtree(str)
+
+def checkFile(str):
+    if (os.path.isfile(str) == False):
+        print()
+        print("File '" + str + "' does not exist.")
+        print()
+        print("Process failed with errors.")
+        quit()
+
+def splitFilename(str):
+    nExt = 0
+    nPath = 0
+    splitname = [0, 0, 0]
+    for i in range(0, len(str)):
+        if str[i] == ".":
+            nExt = i
+        if str[i] == "/" or str[i] == "\\":
+            nPath = i + 1
+    if nExt <= nPath:
+        splitname[0] = str[:nPath]
+        splitname[1] = str[nPath:]
+        splitname[2] = ""
+        return splitname
+
+    splitname[0] = str[:nPath]
+    splitname[1] = str[nPath:nExt]
+    splitname[2] = str[nExt:]
+    return splitname
 
 def runProcess(str):
     print()
