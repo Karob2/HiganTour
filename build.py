@@ -142,6 +142,7 @@ def build_release(release_name):
 
     print()
     print("Success!")
+    print("You may also want to remove *.pdb files if debugging the release builds is not necessary.")
 
 def showUsage():
         print("Usage: python build.py [release] [command]")
