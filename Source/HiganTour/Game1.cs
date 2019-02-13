@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-namespace LifeDeath
+namespace HiganTour
 {
     public class Game1 : Game
     {
@@ -44,11 +44,11 @@ namespace LifeDeath
         protected override void LoadContent()
         {
             // Preload music.
-            GlobalServices.GlobalSongs.Register("lifedeath:Main_Menu");
-            GlobalServices.GlobalSongs.Register("lifedeath:Stage");
-            GlobalServices.GlobalSongs.Register("lifedeath:Another_Stage");
-            GlobalServices.GlobalSongs.Register("lifedeath:Boss_Battle");
-            GlobalServices.GlobalSongs.Register("lifedeath:Game_Over");
+            GlobalServices.GlobalSongs.Register("higantour:Main_Menu");
+            GlobalServices.GlobalSongs.Register("higantour:Stage");
+            GlobalServices.GlobalSongs.Register("higantour:Another_Stage");
+            GlobalServices.GlobalSongs.Register("higantour:Boss_Battle");
+            GlobalServices.GlobalSongs.Register("higantour:Game_Over");
             
             // Preload all scene-specific assets.
             root = new Entity();
@@ -112,7 +112,7 @@ namespace LifeDeath
                     ((Scenes.Level)level).Reset();
                     gameOver.Deactivate();
                     MusicRoom.Deactivate();
-                    bgm = GlobalServices.GlobalSongs.Lookup("lifedeath:Stage");
+                    bgm = GlobalServices.GlobalSongs.Lookup("higantour:Stage");
                     MediaPlayer.Volume = 0.5f;
                     MediaPlayer.Play(bgm);
                     MediaPlayer.IsRepeating = true;
@@ -123,7 +123,7 @@ namespace LifeDeath
                     gameOver.Deactivate();
                     MusicRoom.Deactivate();
                     ((Scenes.MainMenu)mainMenu).SetMode(1);
-                    bgm = GlobalServices.GlobalSongs.Lookup("lifedeath:Game_Over");
+                    bgm = GlobalServices.GlobalSongs.Lookup("higantour:Game_Over");
                     MediaPlayer.Volume = 0.5f;
                     MediaPlayer.Play(bgm);
                     MediaPlayer.IsRepeating = true;
@@ -136,7 +136,7 @@ namespace LifeDeath
                     MR = true;
                     MediaPlayer.Stop();
                     /*
-                    bgm = GlobalServices.GlobalSongs.Lookup("lifedeath:Another_Stage");
+                    bgm = GlobalServices.GlobalSongs.Lookup("higantour:Another_Stage");
                     MediaPlayer.Volume = 0.5f;
                     MediaPlayer.Play(bgm);
                     MediaPlayer.IsRepeating = true;
@@ -149,7 +149,7 @@ namespace LifeDeath
                     MusicRoom.Deactivate();
                     ((Scenes.MainMenu)mainMenu).SetMode(0);
                     MR = false;
-                    bgm = GlobalServices.GlobalSongs.Lookup("lifedeath:Main_Menu");
+                    bgm = GlobalServices.GlobalSongs.Lookup("higantour:Main_Menu");
                     MediaPlayer.Volume = 0.5f;
                     MediaPlayer.Play(bgm);
                     MediaPlayer.IsRepeating = true;
@@ -188,7 +188,7 @@ namespace LifeDeath
 
                     ((Scenes.MusicRoom)MusicRoom).Menu(1);
 
-                    bgm = GlobalServices.GlobalSongs.Lookup("lifedeath:Main_Menu");
+                    bgm = GlobalServices.GlobalSongs.Lookup("higantour:Main_Menu");
 
                     MediaPlayer.Volume = 0.5f;
                     MediaPlayer.Play(bgm);
@@ -199,7 +199,7 @@ namespace LifeDeath
 
                     ((Scenes.MusicRoom)MusicRoom).Menu(2);
 
-                    bgm = GlobalServices.GlobalSongs.Lookup("lifedeath:Stage");
+                    bgm = GlobalServices.GlobalSongs.Lookup("higantour:Stage");
 
                     MediaPlayer.Volume = 0.5f;
                     MediaPlayer.Play(bgm);
@@ -210,7 +210,7 @@ namespace LifeDeath
 
                     ((Scenes.MusicRoom)MusicRoom).Menu(3);
 
-                    bgm = GlobalServices.GlobalSongs.Lookup("lifedeath:Another_Stage");
+                    bgm = GlobalServices.GlobalSongs.Lookup("higantour:Another_Stage");
 
                     MediaPlayer.Volume = 0.5f;
                     MediaPlayer.Play(bgm);
@@ -221,7 +221,7 @@ namespace LifeDeath
 
                     ((Scenes.MusicRoom)MusicRoom).Menu(4);
 
-                    bgm = GlobalServices.GlobalSongs.Lookup("lifedeath:Boss_Battle");
+                    bgm = GlobalServices.GlobalSongs.Lookup("higantour:Boss_Battle");
 
                     MediaPlayer.Volume = 0.5f;
                     MediaPlayer.Play(bgm);
@@ -233,7 +233,7 @@ namespace LifeDeath
 
                     ((Scenes.MusicRoom)MusicRoom).Menu(5);
 
-                    bgm = GlobalServices.GlobalSongs.Lookup("lifedeath:Game_Over");
+                    bgm = GlobalServices.GlobalSongs.Lookup("higantour:Game_Over");
 
                     MediaPlayer.Volume = 0.5f;
                     MediaPlayer.Play(bgm);

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 
-namespace LifeDeath.Scenes
+namespace HiganTour.Scenes
 {
     public class Level : Scene
     {
@@ -50,35 +50,35 @@ namespace LifeDeath.Scenes
             actorList = new List<Entity>();
 
             player = new Entity()
-                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:spirit4")))
+                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:spirit4")))
                 .AddChainComponent("control", new Components.PlayerControlComponent(this));
             //.AddChainComponent("motion", )
             /*
             new Entity(0, 0)
-                .AddRenderComponent(new TextComponent(GlobalServices.GlobalFonts.Register("lifedeath:sans"), "Player 1"))
+                .AddRenderComponent(new TextComponent(GlobalServices.GlobalFonts.Register("higantour:sans"), "Player 1"))
                 .AttachTo(player);
                 */
             enemy = new Entity()
-                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:fairy_sm")))
+                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:fairy_sm")))
                 .AddChainComponent("control", new Components.AI.SeekerAIComponent(this));
 
             death = new Entity()
-                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:death_sm")));
+                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:death_sm")));
 
             warning = new Entity()
-                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:fae_warn")));
+                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:fae_warn")));
 
             bullet = new Entity()
-                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:bullet")))
+                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:bullet")))
                 .AddChainComponent("control", new Components.AI.BulletComponent(this, -200, 0, 0, 0));
 
-            Sprite lycorisSprite = GlobalServices.GlobalSprites.Register("lifedeath:redlily");
+            Sprite lycorisSprite = GlobalServices.GlobalSprites.Register("higantour:redlily");
             lycoris = new Entity()
                 .AddRenderComponent(new SpriteComponent(lycorisSprite));
 
-            font = GlobalServices.GlobalFonts.Register("lifedeath:sans");
-//            bgm = GlobalServices.GlobalSongs.Register("lifedeath:Stage");
-            PlayerSfx = GlobalServices.GlobalSoundEffects.Register("lifedeath:leaves");
+            font = GlobalServices.GlobalFonts.Register("higantour:sans");
+//            bgm = GlobalServices.GlobalSongs.Register("higantour:Stage");
+            PlayerSfx = GlobalServices.GlobalSoundEffects.Register("higantour:leaves");
             PlayerSfxInstance = PlayerSfx.CreateInstance();
         }
 

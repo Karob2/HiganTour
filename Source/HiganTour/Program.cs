@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LifeDeath
+namespace HiganTour
 {
     /// <summary>
     /// The main class.

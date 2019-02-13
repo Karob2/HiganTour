@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LifeDeath.Scenes
+namespace HiganTour.Scenes
 {
     public class MainMenu : Scene
     {
@@ -22,9 +22,9 @@ namespace LifeDeath.Scenes
         {
             this.root = root;
 
-            font = GlobalServices.GlobalFonts.Register("lifedeath:sans");
+            font = GlobalServices.GlobalFonts.Register("higantour:sans");
 
-            Sprite lycorisSprite = GlobalServices.GlobalSprites.Register("lifedeath:redlily");
+            Sprite lycorisSprite = GlobalServices.GlobalSprites.Register("higantour:redlily");
             lycoris = new Entity()
                 .AddRenderComponent(new SpriteComponent(lycorisSprite));
         }
@@ -39,11 +39,11 @@ namespace LifeDeath.Scenes
                 .AttachTo(container);
 
             title = new Entity(640, 250)
-                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:title")))
+                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:title")))
                 .AttachTo(camera);
 
             gameover = new Entity(640, 250)
-                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("lifedeath:gameover")))
+                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:gameover")))
                 .AttachTo(camera).SetVisible(false);
 
             new Entity(0, 40)

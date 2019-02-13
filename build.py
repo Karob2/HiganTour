@@ -18,7 +18,7 @@ cmd_ref = [
     ["icon", 0]
     ]
 
-program_name = "Game"
+program_name = "HiganTour"
 
 root = os.getcwd()
 

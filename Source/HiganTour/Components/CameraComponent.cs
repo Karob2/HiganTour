@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Lichen.Entities;
 
-namespace LifeDeath.Components
+namespace HiganTour.Components
 {
     class CameraComponent : Lichen.Entities.Component, Lichen.Entities.IUpdateComponent
     {

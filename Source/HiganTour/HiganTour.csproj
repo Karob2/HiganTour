@@ -51,13 +51,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Framework\Framework.csproj">
+    <ProjectReference Include="..\Lichen\Lichen.csproj">
       <Project>{9daaa09d-df84-4060-81fb-8d1ac7be0d55}</Project>
-      <Name>Framework</Name>
+      <Name>Lichen</Name>
     </ProjectReference>
     <!--
-    <Reference Include="Lichen.Framework">
-      <HintPath>C:\Projects\mono\thfgj3-lifedeath\Source\Framework\bin\release\netstandard2.0\Framework.dll</HintPath>
+    <Reference Include="Lichen.Lichen">
+      <HintPath>C:\Projects\mono\thfgj3-lifedeath\Source\Lichen\bin\release\netstandard2.0\Lichen.dll</HintPath>
     </Reference>
     -->
   </ItemGroup>

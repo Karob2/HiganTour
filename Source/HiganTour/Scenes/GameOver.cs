@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LifeDeath.Scenes
+namespace HiganTour.Scenes
 {
     public class GameOver : Scene
     {
@@ -18,7 +18,7 @@ namespace LifeDeath.Scenes
         {
             this.root = root;
 
-            font = GlobalServices.GlobalFonts.Register("lifedeath:sans");
+            font = GlobalServices.GlobalFonts.Register("higantour:sans");
         }
 
         // Create the scene's entities by cloning reference entities.

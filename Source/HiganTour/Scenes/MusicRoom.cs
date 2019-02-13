@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LifeDeath.Scenes
+namespace HiganTour.Scenes
 {
 
     public class MusicRoom : Scene
@@ -36,10 +36,10 @@ namespace LifeDeath.Scenes
         {
             this.root = root;
 
-            font = GlobalServices.GlobalFonts.Register("lifedeath:sans");
+            font = GlobalServices.GlobalFonts.Register("higantour:sans");
 
 
-            Sprite lycorisSprite = GlobalServices.GlobalSprites.Register("lifedeath:redlily");
+            Sprite lycorisSprite = GlobalServices.GlobalSprites.Register("higantour:redlily");
 
             lycoris = new Entity()
                         .AddRenderComponent(new SpriteComponent(lycorisSprite));

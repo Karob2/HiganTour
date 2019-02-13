@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Lichen.Entities;
 using Microsoft.Xna.Framework;
 
-namespace LifeDeath.Components.AI
+namespace HiganTour.Components.AI
 {
     class BulletComponent : Lichen.Entities.Component, Lichen.Entities.IUpdateComponent
     {

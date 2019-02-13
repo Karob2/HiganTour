@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LifeDeath.Scenes
+namespace HiganTour.Scenes
 {
     public class Scene
     {

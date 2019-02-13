@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/Game/bin/Debug/netcoreapp2.1/Game.dll",
+            "program": "${workspaceFolder}/HiganTour/bin/Debug/netcoreapp2.1/HiganTour.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/Game/bin/Debug/netcoreapp2.1/",
+            "cwd": "${workspaceFolder}/HiganTour/bin/Debug/netcoreapp2.1/",
             // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
             "console": "internalConsole",
             "stopAtEntry": false,

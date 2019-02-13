@@ -8,7 +8,7 @@ using Lichen.Entities;
 using Lichen.Util;
 using Microsoft.Xna.Framework;
 
-namespace LifeDeath.Components
+namespace HiganTour.Components
 {
     class PlayerControlComponent : Lichen.Entities.Component, Lichen.Entities.IUpdateComponent
     {
