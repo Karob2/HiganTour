@@ -56,12 +56,12 @@ namespace HiganTour.Components
                 ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = "hiding";
                 vector.X = 0;
                 vector.Y = 0;
-                level.Hiding = true;
+                level.Hiding++;
             }
             else
             {
                 ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = "default";
-                level.Hiding = false;
+                level.Hiding = 0;
                 if (vector.Y > 0)
                 {
                     level.Karma -= 0.5f;

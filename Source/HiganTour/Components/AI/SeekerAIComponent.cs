@@ -19,6 +19,8 @@ namespace HiganTour.Components.AI
         int mode;
         string color = "red_";
 
+        float spawnX, spawnY;
+
         public SeekerAIComponent(Scenes.Level level)
         {
             this.level = level;
@@ -33,7 +35,8 @@ namespace HiganTour.Components.AI
             this.mode = mode;
             bulletTimer = 0;
             theta = 0d;
-
+            spawnX = Owner.X;
+            spawnY = Owner.Y;
 
             ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).SetSprite(GlobalServices.GlobalSprites.Lookup("higantour:fairy_sm"));
             if (mode == 1)
@@ -73,45 +76,66 @@ namespace HiganTour.Components.AI
 
         public void Update()
         {
-            if (!level.Hiding && Math.Abs(Owner.Y - level.Player.Y) < 600)
+            if (Math.Abs(Owner.Y - level.Player.Y) < 600)
             {
-                Vector2 vector = new Vector2(target.X - Owner.X, target.Y - Owner.Y);
+                float focusX = target.X;
+                float focusY = target.Y;
+                float slowdown = 1f;
+                if (level.Hiding <= 20)
+                {
+                    slowdown = (20f - level.Hiding) / 20f;
+                }
+                if (level.Hiding > 20)
+                {
+                    focusX = spawnX;
+                    focusY = spawnY;
+                }
+
+                Vector2 vector = new Vector2(focusX - Owner.X, focusY - Owner.Y);
                 if (vector.X != 0 || vector.Y != 0)
                 {
                     vector.Normalize();
+                }
 
-                    // Slowly walks toward player.
-                    if (mode == 1)
+                // Slowly walks toward player.
+                if (mode == 1)
+                {
+                    FaceTarget(focusX, focusY);
+                    Owner.X += vector.X * 2f * slowdown;
+                    Owner.Y += vector.Y * 2f * slowdown;
+                }
+
+                // Stands still and shoot volleys of 3 bullets toward player.
+                if (mode == 2 && (level.Hiding == 0 || bulletTimer >= 80))
+                {
+                    FaceTarget(focusX, focusY);
+                    bulletTimer++;
+                    if (bulletTimer == 90 || bulletTimer == 80)
                     {
-                        FacePlayer();
-                        Owner.X += vector.X * 2f;
-                        Owner.Y += vector.Y * 2f;
+                        level.MakeBullet(Owner.X, Owner.Y, vector.X * 10f, vector.Y * 10f);
                     }
-
-                    // Stands still and shoot volleys of 3 bullets toward player.
-                    if (mode == 2)
+                    if (bulletTimer >= 100)
                     {
-                        FacePlayer();
-                        bulletTimer++;
-                        if (bulletTimer == 90 || bulletTimer == 80)
-                        {
-                            level.MakeBullet(Owner.X, Owner.Y, vector.X * 10f, vector.Y * 10f);
-                        }
-                        if (bulletTimer >= 100)
-                        {
-                            level.MakeBullet(Owner.X, Owner.Y, vector.X * 10f, vector.Y * 10f);
-                            bulletTimer = 0;
-                        }
+                        level.MakeBullet(Owner.X, Owner.Y, vector.X * 10f, vector.Y * 10f);
+                        bulletTimer = 0;
                     }
+                }
 
-                    // Occasionally dashes toward player.
-                    if (mode == 3)
+                // Occasionally dashes toward player.
+                if (mode == 3)
+                {
+                    if (level.Hiding > 20)
+                    {
+                        if (bulletTimer > 40) bulletTimer = 40;
+                        ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = "kedama_idle";
+                    }
+                    else
                     {
                         bulletTimer++;
                         if (bulletTimer >= 60)
                         {
-                            Owner.X += vector.X * 10f;
-                            Owner.Y += vector.Y * 10f;
+                            Owner.X += vector.X * 10f * slowdown;
+                            Owner.Y += vector.Y * 10f * slowdown;
                             //FacePlayer();
                             ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = "kedama_active";
                         }
@@ -123,72 +147,72 @@ namespace HiganTour.Components.AI
                         }
                         if (bulletTimer >= 80) bulletTimer = 0;
                     }
+                }
 
-                    // Madly dashes horizontally toward the player.
-                    if (mode == 4)
+                // Madly dashes horizontally toward the player.
+                if (mode == 4)
+                {
+                    if (focusX < Owner.X)
                     {
-                        if (level.Player.X < Owner.X)
-                        {
-                            //((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = color + "left";
-                            ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = "scythe_left";
-                        }
-                        else
-                        {
-                            //((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = color + "right";
-                            ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = "scythe_right";
-                        }
-                        if (Math.Abs(Owner.Y - level.Player.Y) < 200f)
-                        {
-                            Owner.X += vector.X * 20f;
-                            //Owner.Y += vector.Y * 20f;
-                        }
+                        //((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = color + "left";
+                        ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = "scythe_left";
                     }
-
-                    // Moves vertically to try to trap the player.
-                    if (mode == 5)
+                    else
                     {
-                        Owner.X += vector.X;
-                        Owner.Y += vector.Y;
-                        if (level.Player.Y < Owner.Y)
-                        {
-                            //((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = color + "up";
-                            Owner.Y -= Math.Min(5f, Owner.Y - level.Player.Y);
-                        }
-                        else
-                        {
-                            //((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = color + "down";
-                            Owner.Y += Math.Min(5f, level.Player.Y - Owner.Y);
-                        }
+                        //((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = color + "right";
+                        ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = "scythe_right";
                     }
-
-                    // Shoots bullets in a double rotating pattern.
-                    if (mode == 6)
+                    if (Math.Abs(Owner.Y - focusY) < 200f)
                     {
-                        bulletTimer++;
-                        if (bulletTimer >= 20)
-                        {
-                            level.MakeBullet(Owner.X, Owner.Y, (float)Math.Sin(theta) * 10f, -(float)Math.Cos(theta) * 10f);
-                            level.MakeBullet(Owner.X, Owner.Y, -(float)Math.Sin(theta) * 10f, -(float)Math.Cos(theta) * 10f);
-                            bulletTimer = 0;
-                            theta += Math.PI / 8d;
-                        }
-                        if (theta > Math.PI * 2d) theta -= Math.PI * 2d;
-                        if (theta < Math.PI / 4d || theta > Math.PI * 7d / 4d)
-                        {
-                            ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = color + "up";
-                        }
-                        else if (theta < Math.PI * 3d / 4d)
-                        {
-                            ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = color + "right";
-                        }
-                        else if (theta < Math.PI * 5d / 4d)
-                        {
-                            ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = color + "down";
-                        }
-                        else
-                        {
-                            ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = color + "left";
-                        }
+                        Owner.X += vector.X * 20f * slowdown;
+                        //Owner.Y += vector.Y * 20f;
+                    }
+                }
+
+                // Moves vertically to try to trap the player.
+                if (mode == 5 && level.Hiding <= 20)
+                {
+                    Owner.X += vector.X * slowdown;
+                    Owner.Y += vector.Y * slowdown;
+                    if (focusY < Owner.Y)
+                    {
+                        //((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = color + "up";
+                        Owner.Y -= Math.Min(5f, Owner.Y - focusY) * slowdown;
+                    }
+                    else
+                    {
+                        //((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = color + "down";
+                        Owner.Y += Math.Min(5f, focusY - Owner.Y) * slowdown;
+                    }
+                }
+
+                // Shoots bullets in a double rotating pattern.
+                if (mode == 6)
+                {
+                    bulletTimer++;
+                    if (bulletTimer >= 20)
+                    {
+                        level.MakeBullet(Owner.X, Owner.Y, (float)Math.Sin(theta) * 10f, -(float)Math.Cos(theta) * 10f);
+                        level.MakeBullet(Owner.X, Owner.Y, -(float)Math.Sin(theta) * 10f, -(float)Math.Cos(theta) * 10f);
+                        bulletTimer = 0;
+                        theta += Math.PI / 8d;
+                    }
+                    if (theta > Math.PI * 2d) theta -= Math.PI * 2d;
+                    if (theta < Math.PI / 4d || theta > Math.PI * 7d / 4d)
+                    {
+                        ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = color + "up";
+                    }
+                    else if (theta < Math.PI * 3d / 4d)
+                    {
+                        ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = color + "right";
+                    }
+                    else if (theta < Math.PI * 5d / 4d)
+                    {
+                        ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = color + "down";
+                    }
+                    else
+                    {
+                        ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = color + "left";
                     }
                 }
             }
@@ -202,10 +226,10 @@ namespace HiganTour.Components.AI
             }
         }
 
-        public void FacePlayer()
+        public void FaceTarget(float targetX, float targetY)
         {
-            float dx = level.Player.X - Owner.X;
-            float dy = level.Player.Y - Owner.Y;
+            float dx = targetX - Owner.X;
+            float dy = targetY - Owner.Y;
             if (Math.Abs(dx) > Math.Abs(dy))
             {
                 if (dx < 0)

@@ -20,7 +20,7 @@ namespace HiganTour.Scenes
             get { return player; }
             set { player = value; }
         }
-        public bool Hiding { get; set; }
+        public int Hiding { get; set; }
         Entity enemy, bullet, warning, death;
         int warningTimer;
         public float Karma { get; set; }
@@ -176,7 +176,7 @@ namespace HiganTour.Scenes
             warningTimer++;
             if (warningTimer > 30) warning.Visible = false;
 
-            if (Hiding)
+            if (Hiding > 0)
             {
                 Karma -= 0.5f;
                 KarmaChanged = true;

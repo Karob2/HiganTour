@@ -93,7 +93,7 @@ namespace HiganTour.Components
                     ddy = -(nearestActor.Y - y) * 2f / nearestDistance * multiplier;
                 }
 
-                if (Object.ReferenceEquals(nearestActor, level.Player) && level.Hiding)
+                if (Object.ReferenceEquals(nearestActor, level.Player) && level.Hiding > 0)
                 {
                     ddx = -ddx;
                     ddy = -ddy;
