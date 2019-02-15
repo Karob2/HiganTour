@@ -26,6 +26,11 @@ namespace HiganTour.Scenes
             container.SetVisible(false);
         }
 
+        public bool IsActive()
+        {
+            return container.Active;
+        }
+
         public virtual void Preload(Entity root) { }
         public virtual void Load() { }
         public virtual void Unload() { }

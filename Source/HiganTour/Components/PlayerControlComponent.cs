@@ -113,7 +113,7 @@ namespace HiganTour.Components
             foreach (Entity actor in Owner.ActorList)
             {
                 if (Object.ReferenceEquals(actor, Owner)) continue;
-                if (Lichen.Util.MathHelper.Distance(Owner, actor) < 50d)
+                if (Lichen.Util.MathHelper.Distance(Owner, actor) < 50d && !level.DebugMode)
                 {
                     ((Game1)Lichen.GlobalServices.Game).ChangeScene(2);
                     return;

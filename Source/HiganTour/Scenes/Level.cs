@@ -43,6 +43,8 @@ namespace HiganTour.Scenes
         int furthestDistance;
         float distanceTraveled;
 
+        public bool DebugMode { get; set; } = false;
+
         // Create a reference set of entities and load necessary assets.
         public override void Preload(Entity root)
         {
@@ -185,7 +187,7 @@ namespace HiganTour.Scenes
             death.X = player.X;
             death.Y = player.Y - Karma * 8f;
             KarmaChanged = false;
-            if (Karma < 8f)
+            if (Karma < 8f && !DebugMode)
             {
                 ((Game1)Lichen.GlobalServices.Game).ChangeScene(2);
             }
@@ -304,6 +306,13 @@ namespace HiganTour.Scenes
             warning.Visible = false;
             warningTimer = 0;
             Karma = 100f;
+        }
+
+        public void SetDebugMode()
+        {
+            DebugMode = true;
+            furthestDistance = 0;
+            distanceTraveled = 500f * 20f;
         }
     }
 }

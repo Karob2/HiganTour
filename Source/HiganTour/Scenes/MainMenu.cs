@@ -46,14 +46,21 @@ namespace HiganTour.Scenes
                 .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:gameover")))
                 .AttachTo(camera).SetVisible(false);
 
-            new Entity(0, 40)
+            new Entity(20, 20)
+                .AddRenderComponent(new TextComponent(font, "v0.3-pre"))
+                .AttachTo(container);
+
+            new Entity(20, 60)
                 .AddRenderComponent(new TextComponent(font, "Press Enter to Begin"))
                 .AddUpdateComponent(new Components.MenuComponent())
                 .AttachTo(container);
 
-            new Entity(0, 80)
+            new Entity(20, 100)
                .AddRenderComponent(new TextComponent(font, "Press M to Enter the Music Room"))
-               .AddUpdateComponent(new Components.MenuComponent())
+               .AttachTo(container);
+
+            new Entity(20, 140)
+               .AddRenderComponent(new TextComponent(font, "Press F11 to enter Debug Mode"))
                .AttachTo(container);
 
             random = new Random();

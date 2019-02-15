@@ -81,6 +81,20 @@ namespace HiganTour
                 && Keyboard.GetState().IsKeyDown(Keys.Escape))
                 GlobalServices.ExitGame();
 
+            if (Keyboard.GetState().IsKeyDown(Keys.F11))
+            {
+                if (!level.IsActive())
+                {
+                    ChangeScene(1);
+                    ((Scenes.Level)level).SetDebugMode();
+                }
+                else if (!((Scenes.Level)level).DebugMode)
+                {
+                    ((Scenes.Level)level).SetDebugMode();
+                }
+            }
+
+
             GlobalServices.Update(gameTime);
 
             root.Update(); // Update main components.
