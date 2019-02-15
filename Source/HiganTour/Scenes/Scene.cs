@@ -12,23 +12,23 @@ namespace HiganTour.Scenes
     public class Scene
     {
         protected Entity root;
-        protected Entity container;
+        protected Entity sceneContainer;
 
         public void Activate()
         {
-            container.SetActive(true);
-            container.SetVisible(true);
+            sceneContainer.SetActive(true);
+            sceneContainer.SetVisible(true);
         }
 
         public void Deactivate()
         {
-            container.SetActive(false);
-            container.SetVisible(false);
+            sceneContainer.SetActive(false);
+            sceneContainer.SetVisible(false);
         }
 
         public bool IsActive()
         {
-            return container.Active;
+            return sceneContainer.Active;
         }
 
         public virtual void Preload(Entity root) { }

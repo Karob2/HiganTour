@@ -18,7 +18,7 @@ namespace HiganTour.Scenes
         Font font;
 
         Entity camera;
-        
+
         Random random;
 
         Entity lycoris;
@@ -82,9 +82,11 @@ namespace HiganTour.Scenes
             }
         }
 
-        public void Menu(int menu) {
+        public void Menu(int menu)
+        {
 
-            switch (menu) {
+            switch (menu)
+            {
 
                 case 0:
 
@@ -117,12 +119,12 @@ namespace HiganTour.Scenes
         // Create the scene's entities by cloning reference entities.
         public override void Load()
         {
-            container = new Entity()
+            sceneContainer = new Entity()
                 .AttachTo(root);
 
             camera = new Entity()
                 .SetRenderByDepth(true)
-                .AttachTo(container);
+                .AttachTo(sceneContainer);
 
             bCContainer1 = new Entity()
                 .AttachTo(camera).SetVisible(false);
@@ -135,39 +137,39 @@ namespace HiganTour.Scenes
 
             new Entity(0, 0)
                 .AddRenderComponent(new TextComponent(font, "Music Room"))
-                .AttachTo(container);
+                .AttachTo(sceneContainer);
 
             new Entity(0, 40)
                 .AddRenderComponent(new TextComponent(font, "Pause"))
                 .AddUpdateComponent(new Components.MenuComponent())
-                .AttachTo(container);
+                .AttachTo(sceneContainer);
             new Entity(0, 80)
                .AddRenderComponent(new TextComponent(font, "Main Menu Theme"))
                .AddUpdateComponent(new Components.MenuComponent())
-               .AttachTo(container);
+               .AttachTo(sceneContainer);
 
             new Entity(0, 120)
                 .AddRenderComponent(new TextComponent(font, "Stage 1 Theme"))
                 .AddUpdateComponent(new Components.MenuComponent())
-                .AttachTo(container);
+                .AttachTo(sceneContainer);
             new Entity(0, 160)
                .AddRenderComponent(new TextComponent(font, "Stage 2 Theme"))
                .AddUpdateComponent(new Components.MenuComponent())
-               .AttachTo(container);
+               .AttachTo(sceneContainer);
 
             new Entity(0, 200)
                 .AddRenderComponent(new TextComponent(font, "Boss Theme"))
                 .AddUpdateComponent(new Components.MenuComponent())
-                .AttachTo(container);
+                .AttachTo(sceneContainer);
             new Entity(0, 240)
                .AddRenderComponent(new TextComponent(font, "Game Over Theme"))
                .AddUpdateComponent(new Components.MenuComponent())
-               .AttachTo(container);
+               .AttachTo(sceneContainer);
 
-           menuDot = new Entity(150, 40)
-               .AddRenderComponent(new TextComponent(font, "*"))
-               .AddUpdateComponent(new Components.MenuComponent())
-               .AttachTo(container);
+            menuDot = new Entity(150, 40)
+                .AddRenderComponent(new TextComponent(font, "*"))
+                .AddUpdateComponent(new Components.MenuComponent())
+                .AttachTo(sceneContainer);
 
 
             random = new Random();
@@ -213,7 +215,7 @@ namespace HiganTour.Scenes
         public override void Unload()
         {
             // TODO: Should this also undo the preloading?
-            container = null;
+            sceneContainer = null;
             // TODO: Is that enough to destroy the scene entities? Or do I need to parse through them all?
             //     Is garbage collection hindered by parent and child referencing each other?
         }

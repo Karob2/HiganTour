@@ -88,13 +88,13 @@ namespace HiganTour.Scenes
         // Create the scene's entities by cloning reference entities.
         public override void Load()
         {
-            container = new Entity()
-                .AttachTo(root);
+            sceneContainer = new Entity()
+                .AttachTo(root).MakeContainer();
 
             camera = new Entity()
                 .SetRenderByDepth(true)
                 .AddUpdateComponent(new Components.CameraComponent(player))
-                .AttachTo(container);
+                .AttachTo(sceneContainer);
 
             /*
             zone1 = new Entity().AttachTo(container);
@@ -144,7 +144,7 @@ namespace HiganTour.Scenes
                 enemies.Add(enemy.Clone().AttachTo(enemyContainer).AddActor(actorList));
             }
 
-            warning.AttachTo(container).SetPosition(0, -10);
+            warning.AttachTo(sceneContainer).SetPosition(0, -10);
             death.AttachTo(camera);
         }
 
@@ -253,7 +253,7 @@ namespace HiganTour.Scenes
         public override void Unload()
         {
             // TODO: Should this also undo the preloading?
-            container = null;
+            sceneContainer = null;
             // TODO: Is that enough to destroy the scene entities? Or do I need to parse through them all?
             //     Is garbage collection hindered by parent and child referencing each other?
         }

@@ -6,6 +6,7 @@ namespace Lichen.Entities
 {
     public class Entity
     {
+        public Entity Container { get; set; }
         public Entity Parent { get; set; }
         public LinkedList<Entity> Children { get; set; }
         public float X { get; set; }
@@ -150,6 +151,8 @@ namespace Lichen.Entities
         {
             Parent = entity;
             entity.Children.AddLast(this);
+            // Inherit container from parent.
+            Container = entity.Container;
             return this;
         }
 
@@ -157,6 +160,15 @@ namespace Lichen.Entities
         {
             Children.AddLast(entity);
             entity.Parent = this;
+            // Inherit container from parent.
+            entity.Container = Container;
+            return this;
+        }
+
+        public Entity MakeContainer()
+        {
+            // Set self as container so that children will inherit it.
+            Container = this;
             return this;
         }
 

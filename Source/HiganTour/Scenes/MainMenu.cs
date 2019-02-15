@@ -32,11 +32,11 @@ namespace HiganTour.Scenes
         // Create the scene's entities by cloning reference entities.
         public override void Load()
         {
-            container = new Entity();
-            container.AttachTo(root);
+            sceneContainer = new Entity();
+            sceneContainer.AttachTo(root);
             camera = new Entity()
                 .SetRenderByDepth(true)
-                .AttachTo(container);
+                .AttachTo(sceneContainer);
 
             title = new Entity(640, 250)
                 .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:title")))
@@ -48,20 +48,20 @@ namespace HiganTour.Scenes
 
             new Entity(20, 20)
                 .AddRenderComponent(new TextComponent(font, "v0.3-pre"))
-                .AttachTo(container);
+                .AttachTo(sceneContainer);
 
             new Entity(20, 60)
                 .AddRenderComponent(new TextComponent(font, "Press Enter to Begin"))
                 .AddUpdateComponent(new Components.MenuComponent())
-                .AttachTo(container);
+                .AttachTo(sceneContainer);
 
             new Entity(20, 100)
                .AddRenderComponent(new TextComponent(font, "Press M to Enter the Music Room"))
-               .AttachTo(container);
+               .AttachTo(sceneContainer);
 
             new Entity(20, 140)
                .AddRenderComponent(new TextComponent(font, "Press F11 to enter Debug Mode"))
-               .AttachTo(container);
+               .AttachTo(sceneContainer);
 
             random = new Random();
             double phi = (Math.Sqrt(5d) - 1d) / 2d;
@@ -96,7 +96,7 @@ namespace HiganTour.Scenes
         public override void Unload()
         {
             // TODO: Should this also undo the preloading?
-            container = null;
+            sceneContainer = null;
             // TODO: Is that enough to destroy the scene entities? Or do I need to parse through them all?
             //     Is garbage collection hindered by parent and child referencing each other?
         }

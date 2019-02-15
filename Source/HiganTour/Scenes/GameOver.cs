@@ -24,24 +24,24 @@ namespace HiganTour.Scenes
         // Create the scene's entities by cloning reference entities.
         public override void Load()
         {
-            container = new Entity();
-            container.AttachTo(root);
+            sceneContainer = new Entity();
+            sceneContainer.AttachTo(root);
 
             new Entity(0, 0)
                 .AddRenderComponent(new TextComponent(font, "Game Over"))
-                .AttachTo(container);
+                .AttachTo(sceneContainer);
 
             new Entity(0, 40)
                 .AddRenderComponent(new TextComponent(font, "Press Enter to Try Again"))
                 .AddUpdateComponent(new Components.MenuComponent())
-                .AttachTo(container);
+                .AttachTo(sceneContainer);
         }
 
         // Delete the scene. (Reference entities and assets remain.)
         public override void Unload()
         {
             // TODO: Should this also undo the preloading?
-            container = null;
+            sceneContainer = null;
             // TODO: Is that enough to destroy the scene entities? Or do I need to parse through them all?
             //     Is garbage collection hindered by parent and child referencing each other?
         }
