@@ -14,6 +14,11 @@ namespace Lichen.Entities
 
         public SpriteComponent(Libraries.Sprite sprite)
         {
+            SetSprite(sprite);
+        }
+
+        public void SetSprite(Libraries.Sprite sprite)
+        {
             Sprite = sprite;
             CurrentAnimation = sprite.DefaultAnimation;
             CurrentFrame = 0;

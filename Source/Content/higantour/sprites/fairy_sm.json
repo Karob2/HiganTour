@@ -8,58 +8,178 @@
     },
     "Animations": [
         {
-            "Name": "down",
+            "Name": "red_down",
             "Speed": 3,
             "FrameRanges": [
                 {
                     "X": 0,
-                    "Y": 256
-                },
-                {
-                    "X": 128,
-                    "Y": 256
+                    "Y": 256,
+                    "Count": 2
                 }
             ]
         },
         {
-            "Name": "up",
+            "Name": "red_up",
             "Speed": 3,
             "FrameRanges": [
                 {
                     "X": 0,
-                    "Y": 0
-                },
-                {
-                    "X": 128,
-                    "Y": 0
+                    "Y": 0,
+                    "Count": 2
                 }
             ]
         },
         {
-            "Name": "left",
+            "Name": "red_left",
             "Speed": 3,
             "FrameRanges": [
                 {
                     "X": 0,
-                    "Y": 384
-                },
-                {
-                    "X": 128,
-                    "Y": 384
+                    "Y": 384,
+                    "Count": 2
                 }
             ]
         },
         {
-            "Name": "right",
+            "Name": "red_right",
             "Speed": 3,
             "FrameRanges": [
                 {
                     "X": 0,
-                    "Y": 128
-                },
+                    "Y": 128,
+                    "Count": 2
+                }
+            ]
+        },
+        {
+            "Name": "green_down",
+            "Speed": 3,
+            "FrameRanges": [
                 {
-                    "X": 128,
-                    "Y": 128
+                    "X": 256,
+                    "Y": 256,
+                    "Count": 2
+                }
+            ]
+        },
+        {
+            "Name": "green_up",
+            "Speed": 3,
+            "FrameRanges": [
+                {
+                    "X": 256,
+                    "Y": 0,
+                    "Count": 2
+                }
+            ]
+        },
+        {
+            "Name": "green_left",
+            "Speed": 3,
+            "FrameRanges": [
+                {
+                    "X": 256,
+                    "Y": 384,
+                    "Count": 2
+                }
+            ]
+        },
+        {
+            "Name": "green_right",
+            "Speed": 3,
+            "FrameRanges": [
+                {
+                    "X": 256,
+                    "Y": 128,
+                    "Count": 2
+                }
+            ]
+        },
+        {
+            "Name": "blue_down",
+            "Speed": 3,
+            "FrameRanges": [
+                {
+                    "X": 512,
+                    "Y": 256,
+                    "Count": 2
+                }
+            ]
+        },
+        {
+            "Name": "blue_up",
+            "Speed": 3,
+            "FrameRanges": [
+                {
+                    "X": 512,
+                    "Y": 0,
+                    "Count": 2
+                }
+            ]
+        },
+        {
+            "Name": "blue_left",
+            "Speed": 3,
+            "FrameRanges": [
+                {
+                    "X": 512,
+                    "Y": 384,
+                    "Count": 2
+                }
+            ]
+        },
+        {
+            "Name": "blue_right",
+            "Speed": 3,
+            "FrameRanges": [
+                {
+                    "X": 512,
+                    "Y": 128,
+                    "Count": 2
+                }
+            ]
+        },
+        {
+            "Name": "black_down",
+            "Speed": 3,
+            "FrameRanges": [
+                {
+                    "X": 768,
+                    "Y": 256,
+                    "Count": 2
+                }
+            ]
+        },
+        {
+            "Name": "black_up",
+            "Speed": 3,
+            "FrameRanges": [
+                {
+                    "X": 768,
+                    "Y": 0,
+                    "Count": 2
+                }
+            ]
+        },
+        {
+            "Name": "black_left",
+            "Speed": 3,
+            "FrameRanges": [
+                {
+                    "X": 768,
+                    "Y": 384,
+                    "Count": 2
+                }
+            ]
+        },
+        {
+            "Name": "black_right",
+            "Speed": 3,
+            "FrameRanges": [
+                {
+                    "X": 768,
+                    "Y": 128,
+                    "Count": 2
                 }
             ]
         }

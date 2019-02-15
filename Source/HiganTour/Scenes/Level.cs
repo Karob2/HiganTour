@@ -61,6 +61,7 @@ namespace HiganTour.Scenes
             enemy = new Entity()
                 .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:fairy_sm")))
                 .AddChainComponent("control", new Components.AI.SeekerAIComponent(this));
+            GlobalServices.GlobalSprites.Register("higantour:enemy");
 
             death = new Entity()
                 .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:death_sm")));
@@ -163,7 +164,7 @@ namespace HiganTour.Scenes
             if (newDistance > furthestDistance)
             {
                 furthestDistance = newDistance;
-                MakeEnemy((float)random.NextDouble() * 980f + 50f, player.Y - 700f);
+                MakeEnemy((float)random.NextDouble() * 1180f + 50f, player.Y - 700f);
                 /*
                 enemies[currentEnemy].SetPosition(player.X, player.Y - 400f).AttachTo(enemyContainer)
                     .AddActor(actorList);
@@ -192,9 +193,18 @@ namespace HiganTour.Scenes
 
         public void MakeEnemy(float x, float y)
         {
+            int mode = furthestDistance % (Math.Min(furthestDistance / 4 + 1, 6)) + 1;
+            mode = furthestDistance % 6 + 1;
+            //mode = 4;
+            if (mode == 4)
+            {
+                if (x < 640f) x = 50f;
+                else x = 1230f;
+            }
+
             Entity enemy = enemies[currentEnemy];
-            ((Components.AI.SeekerAIComponent)enemy.UpdateChains["control"].First()).SetAIMode(furthestDistance);
             enemy.SetPosition(x, y);
+            ((Components.AI.SeekerAIComponent)enemy.UpdateChains["control"].First()).SetAIMode(mode);
             enemy.Visible = true;
             enemy.Active = true;
 

@@ -1,0 +1,62 @@
+{
+    "DefaultFrame": {
+        "Spritesheet": "enemy",
+        "Width": 128,
+        "Height": 128,
+        "AnchorX": 64,
+        "AnchorY": 64
+    },
+    "Animations": [
+        {
+            "Name": "spinner",
+            "Speed": 16,
+            "FrameRanges": [
+                {
+                    "X": 0,
+                    "Y": 0,
+                    "Count": 8
+                }
+            ]
+        },
+        {
+            "Name": "scythe_right",
+            "FrameRanges": [
+                {
+                    "X": 0,
+                    "Y": 128
+                }
+            ]
+        },
+        {
+            "Name": "scythe_left",
+            "FrameRanges": [
+                {
+                    "X": 128,
+                    "Y": 128
+                }
+            ]
+        },
+        {
+            "Name": "kedama_idle",
+            "Speed": 3,
+            "FrameRanges": [
+                {
+                    "X": 256,
+                    "Y": 128,
+                    "Count": 2
+                }
+            ]
+        },
+        {
+            "Name": "kedama_active",
+            "Speed": 3,
+            "FrameRanges": [
+                {
+                    "X": 512,
+                    "Y": 128,
+                    "Count": 2
+                }
+            ]
+        }
+    ]
+}
