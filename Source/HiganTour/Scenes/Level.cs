@@ -164,7 +164,7 @@ namespace HiganTour.Scenes
             if (newDistance > furthestDistance)
             {
                 furthestDistance = newDistance;
-                MakeEnemy((float)random.NextDouble() * 1180f + 50f, player.Y - 700f);
+                MakeEnemy();
                 /*
                 enemies[currentEnemy].SetPosition(player.X, player.Y - 400f).AttachTo(enemyContainer)
                     .AddActor(actorList);
@@ -191,17 +191,20 @@ namespace HiganTour.Scenes
             }
         }
 
-        public void MakeEnemy(float x, float y)
+        public void MakeEnemy()
         {
+            float x = (float)random.NextDouble() * 1180f + 50f;
+            float y = player.Y - 700f;
+
             int mode = furthestDistance % (Math.Min(furthestDistance / 4 + 1, 6)) + 1;
-            mode = furthestDistance % 6 + 1;
+            //mode = furthestDistance % 6 + 1;
             //mode = 4;
+
             if (mode == 4)
             {
                 if (x < 640f) x = 50f;
                 else x = 1230f;
             }
-
             Entity enemy = enemies[currentEnemy];
             enemy.SetPosition(x, y);
             ((Components.AI.SeekerAIComponent)enemy.UpdateChains["control"].First()).SetAIMode(mode);
@@ -214,6 +217,19 @@ namespace HiganTour.Scenes
             warning.X = x;
             warningTimer = 0;
             warning.Visible = true;
+
+            int ninjaCount = (furthestDistance - 20) / 10;
+            for (int i = 0; i < ninjaCount; i++)
+            {
+                x = (float)random.NextDouble() * 1180f + 50f;
+                enemy = enemies[currentEnemy];
+                enemy.SetPosition(x, y);
+                ((Components.AI.SeekerAIComponent)enemy.UpdateChains["control"].First()).SetAIMode(1);
+                enemy.Visible = true;
+                enemy.Active = true;
+                currentEnemy++;
+                if (currentEnemy >= 20) currentEnemy = 0;
+            }
         }
 
         public void MakeBullet(float x, float y, float vx, float vy)

@@ -78,7 +78,8 @@ namespace HiganTour.Components
 
                 if (dodgeTimer <= 0 && GlobalServices.InputManager.Held(Lichen.Input.GameCommand.Action1))
                 {
-                    dodgeTimer = 60 * 1;
+                    //dodgeTimer = 60 * 1;
+                    dodgeTimer = 30;
                     vector.X = vector.X * 8f;
                     vector.Y = vector.Y * 8f;
                     d.X = vector.X;
