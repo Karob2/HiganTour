@@ -92,7 +92,12 @@ namespace HiganTour.Components.AI
                 }
 
                 Vector2 vector = new Vector2(focusX - Owner.X, focusY - Owner.Y);
-                if (vector.X != 0 || vector.Y != 0)
+                if (vector.Length() < 5f)
+                {
+                    slowdown = 0f;
+                }
+                //if (vector.X != 0 || vector.Y != 0)
+                else
                 {
                     vector.Normalize();
                 }
@@ -164,7 +169,28 @@ namespace HiganTour.Components.AI
                     }
                     if (Math.Abs(Owner.Y - focusY) < 200f)
                     {
-                        Owner.X += vector.X * 20f * slowdown;
+                        /*
+                        float lag = 0f;
+                        if (Owner.X < focusX - 5f) lag = -5f;
+                        else if (Owner.X > focusX + 5f) lag = 5f;
+                        else slowdown = 0f;
+                        Owner.X += Math.Max(Math.Min(focusX - Owner.X + lag, 20f * slowdown), -20f * slowdown);
+                        */
+
+                        if (Owner.X < focusX - 5f)
+                        {
+                            float dist = (focusX - 5f) - Owner.X;
+                            float speed = Math.Max(20f * Math.Min(dist, 100f) / 100f, 0f) * slowdown;
+                            Owner.X += speed;
+                        }
+                        else if (Owner.X > focusX + 5f)
+                        {
+                            float dist = Owner.X - (focusX + 5f);
+                            float speed = Math.Max(20f * Math.Min(dist, 100f) / 100f, 0f) * slowdown;
+                            Owner.X -= speed;
+                        }
+
+                        //Owner.X += vector.X * 20f * slowdown;
                         //Owner.Y += vector.Y * 20f;
                     }
                 }
