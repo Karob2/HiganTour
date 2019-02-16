@@ -89,7 +89,9 @@ namespace HiganTour.Scenes
         public override void Load()
         {
             sceneContainer = new Entity()
-                .AttachTo(root).MakeContainer();
+                .AttachTo(root).MakeScene();
+            sceneContainer.Scene.AddUpdateChain("control");
+            sceneContainer.Scene.AddUpdateChain("motion");
 
             camera = new Entity()
                 .SetRenderByDepth(true)

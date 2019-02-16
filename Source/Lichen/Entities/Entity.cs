@@ -7,8 +7,9 @@ namespace Lichen.Entities
     public class Entity
     {
         // TODO: Rename "Container" to "Scene"? OR REMOVE IT
-        public Entity Container { get; set; }
+        //public Entity Container { get; set; }
         public Scene Scene { get; set; }
+        public bool IsScene { get; set; }
         public Entity Parent { get; set; }
         public LinkedList<Entity> Children { get; set; }
         public float X { get; set; }
@@ -154,7 +155,7 @@ namespace Lichen.Entities
             Parent = entity;
             entity.Children.AddLast(this);
             // Inherit container from parent.
-            Container = entity.Container;
+            //Container = entity.Container;
             Scene = entity.Scene;
             return this;
         }
@@ -164,15 +165,19 @@ namespace Lichen.Entities
             Children.AddLast(entity);
             entity.Parent = this;
             // Inherit container from parent.
-            entity.Container = Container;
+            //entity.Container = Container;
             entity.Scene = Scene;
             return this;
         }
 
-        public Entity MakeContainer()
+        public Entity MakeScene(Scene scene = null)
         {
             // Set self as container so that children will inherit it.
-            Container = this;
+            //Container = this;
+            if (scene == null) Scene = new Scene();
+            else Scene = scene;
+            Scene.SetEntity(this);
+            IsScene = true;
             return this;
         }
 
@@ -281,8 +286,17 @@ namespace Lichen.Entities
                 LinkedListNode<Entity> child = Children.First;
                 while (child != null)
                 {
-                    child.Value.Update(chain);
+                    // Scenes handle their own chains during their regular Update.
+                    if (chain == null || !child.Value.IsScene) child.Value.Update(chain);
                     child = child.Next;
+                }
+            }
+
+            if (chain == null && IsScene)
+            {
+                foreach (string sceneChain in Scene.GetUpdateChains())
+                {
+                    this.Update(sceneChain);
                 }
             }
         }

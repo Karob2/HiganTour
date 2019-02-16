@@ -8,7 +8,6 @@ namespace Lichen.Entities
     public class Scene
     {
         Entity root;
-        public Entity Root { get { return root; } set { root = value; } }
         Dictionary<string, EntityList> entityGroups;
         //public bool Active { get; set; } = true;
         //public bool Visible { get; set; } = true;
@@ -16,10 +15,20 @@ namespace Lichen.Entities
 
         public Scene(List<string> chains = null)
         {
-            root = new Entity();
+            //root = new Entity();
             entityGroups = new Dictionary<string, EntityList>();
             if (chains == null) updateChains = new List<string>();
             else updateChains = chains;
+        }
+
+        public Entity GetEntity()
+        {
+            return root;
+        }
+
+        public void SetEntity(Entity entity)
+        {
+            root = entity;
         }
 
         public Scene AddUpdateChain(string chain)
@@ -28,21 +37,17 @@ namespace Lichen.Entities
             return this;
         }
 
+        public List<string> GetUpdateChains()
+        {
+            return updateChains;
+        }
+
         public void Render(Entity sceneHost)
         {
             // Set root's parent to scene's host (temporary one-way relationship, as host does not have root as a child).
             // This allows root to inherit visibility and position from the scene's host.
             root.Parent = sceneHost;
             root.Render();
-            /*
-            if (Visible)
-            {
-                // for each entity in scene
-                // set entity parent to parent (temporary one-way relationship, as parent does not have this as a child)
-                // render entity
-                foreach ()
-            }
-            */
         }
 
         public void Update(Entity sceneHost)

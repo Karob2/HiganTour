@@ -99,8 +99,8 @@ namespace HiganTour
 
             root.Update(); // Update main components.
             // TODO: Remove these after switching to the new scene handling system.
-            root.Update("control"); // Update control components.
-            root.Update("motion"); // Update motion components.
+            //root.Update("control"); // Update control components.
+            //root.Update("motion"); // Update motion components.
 
             base.Update(gameTime);
         }
