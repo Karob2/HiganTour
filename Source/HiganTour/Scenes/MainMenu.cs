@@ -33,10 +33,14 @@ namespace HiganTour.Scenes
         public override void Load()
         {
             sceneContainer = new Entity();
-            sceneContainer.AttachTo(root);
+            SceneComponent sc = new SceneComponent();
+            sc.GetScene().AddUpdateChain("motion");
+            sceneContainer.AttachTo(root)
+                .AddUpdateComponent(sc)
+                .AddRenderComponent(sc);
             camera = new Entity()
                 .SetRenderByDepth(true)
-                .AttachTo(sceneContainer);
+                .AttachTo(sc.GetSceneRoot());
 
             title = new Entity(640, 250)
                 .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:title")))
@@ -48,20 +52,20 @@ namespace HiganTour.Scenes
 
             new Entity(20, 20)
                 .AddRenderComponent(new TextComponent(font, "v0.3-pre"))
-                .AttachTo(sceneContainer);
+                .AttachTo(sc.GetSceneRoot());
 
             new Entity(20, 60)
                 .AddRenderComponent(new TextComponent(font, "Press Enter to Begin"))
                 .AddUpdateComponent(new Components.MenuComponent())
-                .AttachTo(sceneContainer);
+                .AttachTo(sc.GetSceneRoot());
 
             new Entity(20, 100)
                .AddRenderComponent(new TextComponent(font, "Press M to Enter the Music Room"))
-               .AttachTo(sceneContainer);
+               .AttachTo(sc.GetSceneRoot());
 
             new Entity(20, 140)
                .AddRenderComponent(new TextComponent(font, "Press F11 to enter Debug Mode"))
-               .AttachTo(sceneContainer);
+               .AttachTo(sc.GetSceneRoot());
 
             random = new Random();
             double phi = (Math.Sqrt(5d) - 1d) / 2d;

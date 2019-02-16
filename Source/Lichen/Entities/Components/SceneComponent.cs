@@ -19,6 +19,16 @@ namespace Lichen.Entities
             this.scene = scene;
         }
 
+        public Scene GetScene()
+        {
+            return scene;
+        }
+
+        public Entity GetSceneRoot()
+        {
+            return scene.Root;
+        }
+
         public void Render()
         {
             scene.Render(Owner);
