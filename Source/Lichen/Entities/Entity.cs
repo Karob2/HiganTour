@@ -6,7 +6,9 @@ namespace Lichen.Entities
 {
     public class Entity
     {
+        // TODO: Rename "Container" to "Scene"? OR REMOVE IT
         public Entity Container { get; set; }
+        public Scene Scene { get; set; }
         public Entity Parent { get; set; }
         public LinkedList<Entity> Children { get; set; }
         public float X { get; set; }
@@ -153,6 +155,7 @@ namespace Lichen.Entities
             entity.Children.AddLast(this);
             // Inherit container from parent.
             Container = entity.Container;
+            Scene = entity.Scene;
             return this;
         }
 
@@ -162,6 +165,7 @@ namespace Lichen.Entities
             entity.Parent = this;
             // Inherit container from parent.
             entity.Container = Container;
+            entity.Scene = Scene;
             return this;
         }
 
@@ -172,6 +176,7 @@ namespace Lichen.Entities
             return this;
         }
 
+        // Only use this in update loops, not in render loops.
         public bool IsVisible()
         {
             return inheritedVisibility;

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace HiganTour.Scenes
 {
 
-    public class MusicRoom : Scene
+    public class MusicRoom : SceneBase
     {
 
         Font font;

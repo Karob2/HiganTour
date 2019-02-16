@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HiganTour.Scenes
 {
-    public class GameOver : Scene
+    public class GameOver : SceneBase
     {
         Font font;
 

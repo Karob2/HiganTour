@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace HiganTour.Scenes
 {
-    public class Level : Scene
+    public class Level : SceneBase
     {
         Entity camera;
         Entity player;

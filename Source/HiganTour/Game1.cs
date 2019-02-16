@@ -14,10 +14,10 @@ namespace HiganTour
         const string gameName = "Higan Tour";
         const string companyName = "";
         Entity root;
-        Scenes.Scene mainMenu;
-        Scenes.Scene level;
-        Scenes.Scene gameOver;
-        Scenes.Scene MusicRoom;
+        Scenes.SceneBase mainMenu;
+        Scenes.SceneBase level;
+        Scenes.SceneBase gameOver;
+        Scenes.SceneBase MusicRoom;
 
         public bool MR = false;
 
@@ -98,6 +98,7 @@ namespace HiganTour
             GlobalServices.Update(gameTime);
 
             root.Update(); // Update main components.
+            // TODO: Remove these after switching to the new scene handling system.
             root.Update("control"); // Update control components.
             root.Update("motion"); // Update motion components.
 

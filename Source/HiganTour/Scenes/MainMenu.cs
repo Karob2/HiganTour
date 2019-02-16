@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HiganTour.Scenes
 {
-    public class MainMenu : Scene
+    public class MainMenu : SceneBase
     {
         Entity camera;
         Entity lycoris;
