@@ -102,6 +102,8 @@ namespace HiganTour
             //root.Update("control"); // Update control components.
             //root.Update("motion"); // Update motion components.
 
+            GlobalServices.PostUpdate();
+
             base.Update(gameTime);
         }
 

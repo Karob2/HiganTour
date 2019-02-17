@@ -4,12 +4,60 @@ using System.Text;
 
 namespace Lichen.Entities
 {
+    public enum EntityState
+    {
+        Creating,
+        Created,
+        Disabling,
+        Disabled,
+        Deleting,
+        Deleted
+        // I want to add a deletion/creation queue to GlobalServices. The problem is that it wouldn't know what groups the entity belongs to. I guess each entity needs to store what groups it belongs to, alongside its tag list (HashSet).
+        // Disabling maintains all values, tags, groups. Deleting purges everything and puts an entity in a state where it really can be discarded from memory.
+        // The point of disabling is to still allow an asset to be reused, like how I always have 30 or so enemies, but most of them are not in use and can be overwritten.
+    }
+
     public class Entity
     {
         // TODO: Rename "Container" to "Scene"? OR REMOVE IT
         //public Entity Container { get; set; }
-        public Scene Scene { get; set; }
+        Scene scene;
+        public Scene Scene
+        {
+            get
+            {
+                return scene;
+            }
+            // Recursively also set all descendants to store the scene value.
+            set
+            {
+                // TODO: This fails to remove the entities from the previous scene's groups. Maybe I should never transfer entities across scenes.
+                scene = value;
+                if (Children.Count != 0)
+                {
+                    LinkedListNode<Entity> child = Children.First;
+                    while (child != null)
+                    {
+                        child.Value.Scene = value;
+                        child = child.Next;
+                    }
+                }
+            }
+        }
         public bool IsScene { get; set; }
+        public EntityState State { get; set; } = EntityState.Created;
+        public bool Exists
+        {
+            get
+            {
+                if (State == EntityState.Creating || State == EntityState.Disabled || State == EntityState.Deleted) return false;
+                return true;
+            }
+        }
+
+        HashSet<string> groups;
+        HashSet<string> tags;
+
         public Entity Parent { get; set; }
         public LinkedList<Entity> Children { get; set; }
         public float X { get; set; }
@@ -43,6 +91,9 @@ namespace Lichen.Entities
             Children = new LinkedList<Entity>();
             ComponentList = new Dictionary<Type, Component>();
             UpdateChains = new Dictionary<String, UpdateChain>();
+
+            //tags = new HashSet<string>();
+            //groups = new HashSet<string>();
         }
 
         public Entity(float x, float y) : this()
@@ -181,6 +232,43 @@ namespace Lichen.Entities
             return this;
         }
 
+        public Entity AddToGroup(string groupName)
+        {
+            if (scene == null) return this;
+
+            if (groups == null)
+            {
+                groups = new HashSet<string>();
+            }
+            else
+            {
+                // Check if already in group.
+                if (groups.Contains(groupName)) return this;
+            }
+
+            scene.AddToGroup(groupName, this);
+            groups.Add(groupName);
+            return this;
+        }
+
+        public void RemoveFromGroups()
+        {
+            if (groups == null) return;
+
+            foreach (string groupName in groups)
+            {
+                scene.RemoveFromGroup(groupName, this);
+            }
+            groups.Clear();
+        }
+
+        public Entity AddTag(string tagName)
+        {
+            if (tags == null) tags = new HashSet<string>();
+            tags.Add(tagName);
+            return this;
+        }
+
         // Only use this in update loops, not in render loops.
         public bool IsVisible()
         {
@@ -189,6 +277,9 @@ namespace Lichen.Entities
 
         public void Render()
         {
+            if (!Exists) return;
+            if (!Visible) return;
+
             if (RenderByDepth)
             {
                 List<Entity> renderList = new List<Entity>();
@@ -202,7 +293,6 @@ namespace Lichen.Entities
                 return;
             }
 
-            if (!Visible) return;
             if (Parent != null)
             {
                 relativeX = Parent.RelativeX + X;
@@ -227,7 +317,9 @@ namespace Lichen.Entities
 
         public void BuildSortedRenderList(List<Entity> renderList)
         {
+            if (!Exists) return;
             if (!Visible) return;
+
             if (Parent != null)
             {
                 relativeX = Parent.RelativeX + X;
@@ -243,7 +335,7 @@ namespace Lichen.Entities
                 renderList.Add(this);
                 RenderBackupOrder = RenderBackupCount;
                 RenderBackupCount++;
-                RenderOrder = -Y;
+                RenderOrder = -Y; // TODO: Should have custom sort order (Z?), not forced to sort by Y.
             }
             if (Children.Count != 0)
             {
@@ -258,7 +350,9 @@ namespace Lichen.Entities
 
         public void Update(string chain = null)
         {
+            if (!Exists) return;
             if (!Active) return;
+
             if (Parent != null)
             {
                 inheritedVisibility = Parent.InheritedVisibility;
@@ -312,6 +406,21 @@ namespace Lichen.Entities
             entity.Y = Y;
             entity.Active = Active;
             entity.Visible = Visible;
+
+            if (groups != null)
+            {
+                foreach (string groupName in groups)
+                {
+                    entity.AddToGroup(groupName);
+                }
+            }
+            if (tags != null)
+            {
+                foreach (string tagName in tags)
+                {
+                    entity.AddTag(tagName);
+                }
+            }
 
             if (UpdateComponent != null) entity.AddUpdateComponent((IUpdateComponent)UpdateComponent.Clone());
             if (RenderComponent != null) entity.AddRenderComponent((IRenderComponent)RenderComponent.Clone());

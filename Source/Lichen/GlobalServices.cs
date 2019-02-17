@@ -50,6 +50,8 @@ namespace Lichen
         public static Libraries.SongLibrary GlobalSongs { get; set; }
         public static Libraries.SoundEffectLibrary GlobalSoundEffects { get; set; }
 
+        public static Entities.EntityProvider GlobalEntityProvider { get; set; }
+
         public static Input.InputManager InputManager { get; set; }
 
         public static Input.TextHandler TextHandler { get; set; }
@@ -147,6 +149,8 @@ namespace Lichen
             GlobalSoundEffects = new Libraries.SoundEffectLibrary();
             Libraries.SoundEffectLibrary.AddLibrary(GlobalSoundEffects);
 
+            GlobalEntityProvider = new Entities.EntityProvider();
+
             InputManager = new Input.InputManager(GetSaveDirectory("inputconfig.json"));
 
             TextHandler = new Input.TextHandler();
@@ -156,6 +160,11 @@ namespace Lichen
         {
             DeltaSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
             InputManager.Update();
+        }
+
+        public static void PostUpdate()
+        {
+            GlobalEntityProvider.ProcessQueue();
         }
 
         public static void StartDrawing(GameTime gameTime)

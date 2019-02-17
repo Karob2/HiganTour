@@ -8,7 +8,7 @@ namespace Lichen.Entities
     public class Scene
     {
         Entity root;
-        Dictionary<string, EntityList> entityGroups;
+        Dictionary<string, EntityGroup> entityGroups;
         //public bool Active { get; set; } = true;
         //public bool Visible { get; set; } = true;
         List<string> updateChains;
@@ -16,7 +16,7 @@ namespace Lichen.Entities
         public Scene(List<string> chains = null)
         {
             //root = new Entity();
-            entityGroups = new Dictionary<string, EntityList>();
+            entityGroups = new Dictionary<string, EntityGroup>();
             if (chains == null) updateChains = new List<string>();
             else updateChains = chains;
         }
@@ -65,36 +65,54 @@ namespace Lichen.Entities
         }
 
         // Creates a new group if necessary.
-        public EntityList GetGroup(string groupName)
+        public EntityGroup GetGroup(string groupName)
         {
-            EntityList list;
+            EntityGroup list;
             if (!entityGroups.TryGetValue(groupName, out list))
             {
-                list = new EntityList();
+                list = new EntityGroup();
                 entityGroups.Add(groupName, list);
             }
             return list;
         }
 
-        public void CreateGroup(string groupName, Entity entity)
+        public EntityGroup CreateGroup(string groupName, int maxSize)
         {
+            EntityGroup group;
 
+            // If group already exists, just return the handle to it.
+            // TODO: How to handle differing maxSize values?
+            if (entityGroups.TryGetValue(groupName, out group)) return group;
+
+            group = new EntityGroup(maxSize);
+            entityGroups.Add(groupName, group);
+            return group;
         }
 
-        public void AddToGroup(string groupName, Entity entity)
+        public bool AddToGroup(string groupName, Entity entity)
         {
+            EntityGroup group;
+            if (!entityGroups.TryGetValue(groupName, out group)) return false;
+            group.AppendEntity(entity);
+            return true;
+        }
 
+        public void RemoveFromGroup(string groupName, Entity entity)
+        {
+            EntityGroup group;
+            if (!entityGroups.TryGetValue(groupName, out group)) return;
+            group.RemoveEntity(entity);
         }
 
         /*
         // If list already exists, returns that list instead of making a new one.
         // TODO: How to handle differing maxSize values?
-        public EntityList CreateTag(string name, int maxSize = 0)
+        public EntityGroup CreateTag(string name, int maxSize = 0)
         {
-            EntityList list;
+            EntityGroup list;
             if (!tagList.TryGetValue(name, out list))
             {
-                list = new EntityList(maxSize);
+                list = new EntityGroup(maxSize);
                 tagList.Add(name, list);
             }
             return list;
@@ -104,13 +122,13 @@ namespace Lichen.Entities
 
     //class EntityTagPair
 
-    public class EntityList
+    public class EntityGroup
     {
         List<Entity> list;
-        List<Entity> addList;
+        //List<Entity> addList;
         int maxSize;
 
-        public EntityList(int maxSize = 0)
+        public EntityGroup(int maxSize = 0)
         {
             this.maxSize = maxSize;
         }
@@ -125,6 +143,11 @@ namespace Lichen.Entities
                 return true;
             }
             return false;
+        }
+
+        public void RemoveEntity(Entity entity)
+        {
+            list.Remove(entity);
         }
 
         //public bool InsertEntity
