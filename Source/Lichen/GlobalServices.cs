@@ -51,6 +51,8 @@ namespace Lichen
         public static Libraries.SoundEffectLibrary GlobalSoundEffects { get; set; }
 
         public static Entities.EntityProvider GlobalEntityProvider { get; set; }
+        public static Dictionary<string, Entities.Entity> EntityLibrary { get; set; }
+
 
         public static Input.InputManager InputManager { get; set; }
 
@@ -150,6 +152,7 @@ namespace Lichen
             Libraries.SoundEffectLibrary.AddLibrary(GlobalSoundEffects);
 
             GlobalEntityProvider = new Entities.EntityProvider();
+            EntityLibrary = new Dictionary<string, Entities.Entity>();
 
             InputManager = new Input.InputManager(GetSaveDirectory("inputconfig.json"));
 

@@ -20,13 +20,15 @@ namespace HiganTour.Scenes
         // Create a reference set of entities and load necessary assets.
         public override void Preload(Entity root)
         {
-            this.root = root;
+            this.root = root; // TODO: Is there a better way?
 
             font = GlobalServices.GlobalFonts.Register("higantour:sans");
 
+            /*
             Sprite lycorisSprite = GlobalServices.GlobalSprites.Register("higantour:redlily");
             lycoris = new Entity()
                 .AddRenderComponent(new SpriteComponent(lycorisSprite));
+                */
         }
 
         // Create the scene's entities by cloning reference entities.
@@ -65,6 +67,7 @@ namespace HiganTour.Scenes
                .AddRenderComponent(new TextComponent(font, "Press F11 to enter Debug Mode"))
                .AttachTo(sceneContainer);
 
+            /*
             random = new Random();
             double phi = (Math.Sqrt(5d) - 1d) / 2d;
             double theta = random.NextDouble();
@@ -78,6 +81,9 @@ namespace HiganTour.Scenes
                 theta += phi;
                 if (theta > 1d) theta -= 1d;
             }
+            */
+            Entity lycorisField = GlobalServices.EntityLibrary["lycoris-field"].Clone();
+            lycorisField.AttachTo(camera);
         }
 
         public void SetMode(int mode)

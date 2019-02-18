@@ -30,6 +30,11 @@ namespace HiganTour.Components
 
         public void Update()
         {
+            if (camera == null)
+            {
+                camera = Owner.Parent.Parent;
+            }
+
             float pos = 0;
             if (camera != null) pos = camera.Y;
 
