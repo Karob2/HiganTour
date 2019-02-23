@@ -34,9 +34,11 @@ namespace HiganTour.Scenes
         // Create the scene's entities by cloning reference entities.
         public override void Load()
         {
-            sceneContainer = new Entity();
-            sceneContainer.AttachTo(root).MakeScene();
-            sceneContainer.Scene.AddUpdateChain("motion");
+            sceneContainer = new Entity()
+                .AddUpdateComponent(new Components.MenuComponent()) // This component handles the key input.
+                .AttachTo(root)
+                .MakeScene("mainmenu");
+            sceneContainer.OwnScene.AddUpdateChain("motion");
 
             camera = new Entity()
                 .SetRenderByDepth(true)
@@ -56,7 +58,6 @@ namespace HiganTour.Scenes
 
             new Entity(20, 60)
                 .AddRenderComponent(new TextComponent(font, "Press Enter to Begin"))
-                .AddUpdateComponent(new Components.MenuComponent())
                 .AttachTo(sceneContainer);
 
             new Entity(20, 100)

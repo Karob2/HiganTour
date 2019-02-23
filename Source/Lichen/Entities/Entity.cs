@@ -4,56 +4,38 @@ using System.Text;
 
 namespace Lichen.Entities
 {
+    // I want to add a deletion/creation queue to GlobalServices. The problem is that it wouldn't know what groups the entity belongs to. I guess each entity needs to store what groups it belongs to, alongside its tag list (HashSet).
+    // Disabling maintains all values, tags, groups. Deleting purges everything and puts an entity in a state where it really can be discarded from memory.
+    // The point of disabling is to still allow an asset to be reused, like how I always have 30 or so enemies, but most of them are not in use and can be overwritten.
     public enum EntityState
     {
-        Creating,
-        Created,
-        Disabling,
+        Enabled,
         Disabled,
-        Deleting,
         Deleted
-        // I want to add a deletion/creation queue to GlobalServices. The problem is that it wouldn't know what groups the entity belongs to. I guess each entity needs to store what groups it belongs to, alongside its tag list (HashSet).
-        // Disabling maintains all values, tags, groups. Deleting purges everything and puts an entity in a state where it really can be discarded from memory.
-        // The point of disabling is to still allow an asset to be reused, like how I always have 30 or so enemies, but most of them are not in use and can be overwritten.
+    }
+
+    public enum EntityProperty
+    {
+        Active,
+        Visible,
+        Scene,
+        State
     }
 
     public class Entity
     {
         // TODO: Rename "Container" to "Scene"? OR REMOVE IT
         //public Entity Container { get; set; }
-        Scene scene;
-        public Scene Scene
-        {
-            get
-            {
-                return scene;
-            }
-            // Recursively also set all descendants to store the scene value.
-            set
-            {
-                // TODO: This fails to remove the entities from the previous scene's groups. Maybe I should never transfer entities across scenes.
-                scene = value;
-                if (Children.Count != 0)
-                {
-                    LinkedListNode<Entity> child = Children.First;
-                    while (child != null)
-                    {
-                        child.Value.Scene = value;
-                        child = child.Next;
-                    }
-                }
-            }
-        }
+        private Scene scene;
+        public Scene Scene { get { return scene; } set { PropagateScene(value); } }
+        private Scene ownScene;
+        public Scene OwnScene { get { return ownScene; } }
         public bool IsScene { get; set; }
-        public EntityState State { get; set; } = EntityState.Created;
-        public bool Exists
-        {
-            get
-            {
-                if (State == EntityState.Creating || State == EntityState.Disabled || State == EntityState.Deleted) return false;
-                return true;
-            }
-        }
+        private EntityState state = EntityState.Enabled;
+        public EntityState State { get { return state; } set { PropagateState(value); } }
+        private EntityState nextState;
+        public EntityState NextState { get { return nextState; } set { nextState = value; } }
+        public bool Enabled { get { return (state == EntityState.Enabled); } }
 
         HashSet<string> groups;
         HashSet<string> tags;
@@ -66,10 +48,14 @@ namespace Lichen.Entities
         private float relativeY;
         public float RelativeX { get { return relativeX; } }
         public float RelativeY { get { return relativeY; } }
-        public bool Active { get; set; } = true;
-        public bool Visible { get; set; } = true;
-        private bool inheritedVisibility;
+        private bool active = true;
+        private bool visible = true;
+        public bool Active { get { return active; } set { PropagateActivity(value); } }
+        public bool Visible { get { return visible; } set { PropagateVisibility(value); } }
+        private bool inheritedVisibility = true;
+        private bool inheritedActivity = true;
         public bool InheritedVisibility { get { return inheritedVisibility; } }
+        public bool InheritedActivity { get { return inheritedActivity; } }
         // UpdateComponent: For components that have code to run every frame, such as updating motion and collisions, and responding to player input.
         // RenderComponent: For components that need to be drawn every frame.
         // ComponentList: For components that do not Update or Render, such as data holders.
@@ -85,6 +71,91 @@ namespace Lichen.Entities
         public static int RenderBackupCount { get; set; }
 
         public List<Entity> ActorList { get; set; }
+
+        // TODO: This fails to remove the entities from the previous scene's groups. Maybe I should never transfer entities across scenes.
+        public void PropagateScene(Scene scene)
+        {
+            if (this.scene == scene) return;
+            this.scene = scene;
+            PropagateProperty(EntityProperty.Scene);
+        }
+
+        public void PropagateState(EntityState state)
+        {
+            if (this.state == state) return;
+            this.state = state;
+            PropagateProperty(EntityProperty.State);
+        }
+
+        public void PropagateActivity(bool active)
+        {
+            if (this.active == active) return;
+            this.active = active;
+            PropagateProperty(EntityProperty.Active);
+        }
+
+        public void PropagateVisibility(bool visible)
+        {
+            if (this.visible == visible) return;
+            this.visible = visible;
+            PropagateProperty(EntityProperty.Visible);
+        }
+
+        public void PropagateAll()
+        {
+            PropagateProperty(EntityProperty.Scene);
+            PropagateProperty(EntityProperty.State);
+            PropagateProperty(EntityProperty.Active);
+            PropagateProperty(EntityProperty.Visible);
+        }
+
+        // Recursively set all descendants to have the same property value.
+        public void PropagateProperty(EntityProperty property)
+        {
+            if (IsScene) return;
+            if (Children.Count != 0)
+            {
+                LinkedListNode<Entity> child = Children.First;
+                while (child != null)
+                {
+                    // Only propagate if the child was changed.
+                    if (child.Value.InheritProperty(property))
+                    {
+                        child.Value.PropagateProperty(property);
+                    }
+                    child = child.Next;
+                }
+            }
+        }
+
+        // Returns false if the property was already equal to the parent's property.
+        public bool InheritProperty(EntityProperty property)
+        {
+            bool test;
+
+            switch (property)
+            {
+                case EntityProperty.Scene:
+                    if (scene == Parent.Scene) return false;
+                    scene = Parent.Scene;
+                    break;
+                case EntityProperty.State:
+                    if (state == Parent.State) return false;
+                    state = Parent.State;
+                    break;
+                case EntityProperty.Active:
+                    test = Parent.Active && Parent.InheritedActivity;
+                    if (inheritedActivity == test) return false;
+                    inheritedActivity = test;
+                    break;
+                case EntityProperty.Visible:
+                    test = Parent.Visible && Parent.InheritedVisibility;
+                    if (inheritedVisibility == test) return false;
+                    inheritedVisibility = test;
+                    break;
+            }
+            return true;
+        }
 
         public Entity()
         {
@@ -106,14 +177,14 @@ namespace Lichen.Entities
         {
             X = x;
             Y = y;
-            Active = active;
-            Visible = visible;
+            this.active = active;
+            this.visible = visible;
         }
 
         public Entity(bool active, bool visible) : this()
         {
-            Active = active;
-            Visible = visible;
+            this.active = active;
+            this.visible = visible;
         }
 
         public Entity SetPosition(float x, float y)
@@ -123,24 +194,30 @@ namespace Lichen.Entities
             return this;
         }
 
+        /*
         public Entity SetActive()
         {
             Active = true;
             return this;
         }
+        */
         public Entity SetActive(bool active)
         {
+            // The property automatically sets all children's inheritedActivity.
             Active = active;
             return this;
         }
 
+        /*
         public Entity SetVisible()
         {
             Visible = true;
             return this;
         }
+        */
         public Entity SetVisible(bool visible)
         {
+            // The property automatically sets all children's inheritedVisibility.
             Visible = visible;
             return this;
         }
@@ -207,7 +284,15 @@ namespace Lichen.Entities
             entity.Children.AddLast(this);
             // Inherit container from parent.
             //Container = entity.Container;
-            Scene = entity.Scene;
+            //Scene = entity.Scene;
+            if (entity.IsScene)
+            {
+                this.PropagateScene(entity.OwnScene);
+            }
+            else
+            {
+                entity.PropagateAll();
+            }
             return this;
         }
 
@@ -217,18 +302,36 @@ namespace Lichen.Entities
             entity.Parent = this;
             // Inherit container from parent.
             //entity.Container = Container;
-            entity.Scene = Scene;
+            //entity.Scene = Scene;
+            if (this.IsScene)
+            {
+                entity.PropagateScene(this.ownScene);
+            }
+            else
+            {
+                this.PropagateAll();
+            }
             return this;
         }
 
-        public Entity MakeScene(Scene scene = null)
+        public Entity MakeScene(string sceneName, Scene scene = null)
         {
             // Set self as container so that children will inherit it.
             //Container = this;
-            if (scene == null) Scene = new Scene();
-            else Scene = scene;
-            Scene.SetEntity(this);
+            if (ownScene == null) ownScene = new Scene(sceneName);
+            else ownScene = scene;
+            ownScene.SetEntity(this);
             IsScene = true;
+
+            if (Children.Count != 0)
+            {
+                LinkedListNode<Entity> child = Children.First;
+                while (child != null)
+                {
+                    child.Value.PropagateScene(ownScene);
+                    child = child.Next;
+                }
+            }
             return this;
         }
 
@@ -269,15 +372,19 @@ namespace Lichen.Entities
             return this;
         }
 
-        // Only use this in update loops, not in render loops.
+        // Even if Visible = true, the entity might be invisible due to an invisible parent, hence InheritedVisibility.
+        // This is basically just a rename of InheritedVisibility, so I'm removing it for now.
+        // TODO: I could rename inherited to this - it's much more... uh, nice.
+        /*
         public bool IsVisible()
         {
             return inheritedVisibility;
         }
+        */
 
         public void Render()
         {
-            if (!Exists) return;
+            if (!Enabled) return;
             if (!Visible) return;
 
             if (RenderByDepth)
@@ -317,7 +424,7 @@ namespace Lichen.Entities
 
         public void BuildSortedRenderList(List<Entity> renderList)
         {
-            if (!Exists) return;
+            if (!Enabled) return;
             if (!Visible) return;
 
             if (Parent != null)
@@ -348,11 +455,13 @@ namespace Lichen.Entities
             }
         }
 
+        // TODO: Having to go through every single Active entity for each update chain is wasteful.
         public void Update(string chain = null)
         {
-            if (!Exists) return;
+            if (!Enabled) return;
             if (!Active) return;
 
+            /*
             if (Parent != null)
             {
                 inheritedVisibility = Parent.InheritedVisibility;
@@ -361,6 +470,7 @@ namespace Lichen.Entities
             {
                 inheritedVisibility = Visible;
             }
+            */
             if (chain == null)
             {
                 if (UpdateComponent != null) UpdateComponent.Update();
@@ -388,7 +498,7 @@ namespace Lichen.Entities
 
             if (chain == null && IsScene)
             {
-                foreach (string sceneChain in Scene.GetUpdateChains())
+                foreach (string sceneChain in OwnScene.GetUpdateChains())
                 {
                     this.Update(sceneChain);
                 }

@@ -4,6 +4,7 @@ using System.Text;
 
 namespace Lichen.Entities
 {
+    /*
     public class EntityProvider
     {
         //List<EntityQueueItem> queue;
@@ -17,7 +18,8 @@ namespace Lichen.Entities
         public Entity NewEntity()
         {
             Entity entity = new Entity();
-            entity.State = EntityState.Creating;
+            entity.State = EntityState.Disabled;
+            entity.NextState = EntityState.Enabled;
             queue.Add(entity);
             return entity;
         }
@@ -72,6 +74,7 @@ namespace Lichen.Entities
             queue.Clear();
         }
     }
+    */
 
     /*
     public class EntityQueueItem
