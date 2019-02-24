@@ -77,6 +77,7 @@ namespace Lichen.Entities
         {
             if (this.scene == scene) return;
             this.scene = scene;
+            RebindGroups();
             PropagateProperty(EntityProperty.Scene);
         }
 
@@ -138,6 +139,7 @@ namespace Lichen.Entities
                 case EntityProperty.Scene:
                     if (scene == Parent.Scene) return false;
                     scene = Parent.Scene;
+                    RebindGroups();
                     break;
                 case EntityProperty.State:
                     if (state == Parent.State) return false;
@@ -337,8 +339,6 @@ namespace Lichen.Entities
 
         public Entity AddToGroup(string groupName)
         {
-            if (scene == null) return this;
-
             if (groups == null)
             {
                 groups = new HashSet<string>();
@@ -348,12 +348,13 @@ namespace Lichen.Entities
                 // Check if already in group.
                 if (groups.Contains(groupName)) return this;
             }
-
-            scene.AddToGroup(groupName, this);
             groups.Add(groupName);
+
+            if (scene != null) scene.AddToGroup(groupName, this);
             return this;
         }
 
+        /*
         public void RemoveFromGroups()
         {
             if (groups == null) return;
@@ -363,6 +364,17 @@ namespace Lichen.Entities
                 scene.RemoveFromGroup(groupName, this);
             }
             groups.Clear();
+        }
+        */
+
+        private void RebindGroups()
+        {
+            if (groups == null) return;
+            if (scene == null) return;
+            foreach (string group in groups)
+            {
+                scene.AddToGroup(group, this);
+            }
         }
 
         public Entity AddTag(string tagName)
