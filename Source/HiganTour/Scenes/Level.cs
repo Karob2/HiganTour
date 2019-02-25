@@ -53,7 +53,9 @@ namespace HiganTour.Scenes
 
             player = new Entity()
                 .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:spirit4")))
-                .AddChainComponent("control", new Components.PlayerControlComponent(this));
+                .AddChainComponent("control", new Components.PlayerControlComponent(this))
+                .AddToGroup("movegrass")
+                .AddToGroup("player");
             //.AddChainComponent("motion", )
             /*
             new Entity(0, 0)
@@ -62,7 +64,9 @@ namespace HiganTour.Scenes
                 */
             enemy = new Entity()
                 .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:fairy_sm")))
-                .AddChainComponent("control", new Components.AI.SeekerAIComponent(this));
+                .AddChainComponent("control", new Components.AI.SeekerAIComponent(this))
+                .AddToGroup("movegrass")
+                .AddToGroup("enemy");
             GlobalServices.GlobalSprites.Register("higantour:enemy");
 
             death = new Entity()
@@ -73,7 +77,8 @@ namespace HiganTour.Scenes
 
             bullet = new Entity()
                 .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:bullet")))
-                .AddChainComponent("control", new Components.AI.BulletComponent(this, -200, 0, 0, 0));
+                .AddChainComponent("control", new Components.AI.BulletComponent(this, -200, 0, 0, 0))
+                .AddToGroup("bullet");
 
             Sprite lycorisSprite = GlobalServices.GlobalSprites.Register("higantour:redlily");
             lycoris = new Entity()
@@ -96,7 +101,8 @@ namespace HiganTour.Scenes
             camera = new Entity()
                 .SetRenderByDepth(true)
                 .AddUpdateComponent(new Components.CameraComponent(player))
-                .AttachTo(sceneContainer);
+                .AttachTo(sceneContainer)
+                .AddToGroup("camera");
 
             /*
             zone1 = new Entity().AttachTo(container);
@@ -105,6 +111,7 @@ namespace HiganTour.Scenes
             */
 
             random = new Random();
+            /*
             double phi = (Math.Sqrt(5d)-1d)/2d;
             double theta = random.NextDouble();
             for (int i = 0; i < 200; i++)
@@ -118,6 +125,9 @@ namespace HiganTour.Scenes
                 theta += phi;
                 if (theta > 1d) theta -= 1d;
             }
+            */
+            Entity lycorisField = GlobalServices.EntityLibrary["lycoris-field"].Clone();
+            lycorisField.AttachTo(camera);
 
             enemyContainer = new Entity()
                 .AttachTo(camera);
@@ -146,8 +156,8 @@ namespace HiganTour.Scenes
                 enemies.Add(enemy.Clone().AttachTo(enemyContainer).AddActor(actorList));
             }
 
-            warning.AttachTo(sceneContainer).SetPosition(0, -10);
-            death.AttachTo(camera);
+            warning.AttachTo(sceneContainer).SetPosition(0, -10).AddToGroup("warning");
+            death.AttachTo(camera).AddToGroup("death");
         }
 
         public void UpdateDistance(float delta)

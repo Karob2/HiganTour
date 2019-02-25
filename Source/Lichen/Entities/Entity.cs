@@ -110,6 +110,19 @@ namespace Lichen.Entities
             PropagateProperty(EntityProperty.Visible);
         }
 
+        // Only propagate to a specific child.
+        public void PropagateAll(Entity child)
+        {
+            if (IsScene) return; //probably not necessary since the caller already checks
+            foreach (EntityProperty property in Enum.GetValues(typeof(EntityProperty)))
+            {
+                if (child.InheritProperty(property))
+                {
+                    child.PropagateProperty(property);
+                }
+            }
+        }
+
         // Recursively set all descendants to have the same property value.
         public void PropagateProperty(EntityProperty property)
         {
@@ -293,7 +306,7 @@ namespace Lichen.Entities
             }
             else
             {
-                entity.PropagateAll();
+                entity.PropagateAll(this);
             }
             return this;
         }
@@ -311,7 +324,7 @@ namespace Lichen.Entities
             }
             else
             {
-                this.PropagateAll();
+                this.PropagateAll(entity);
             }
             return this;
         }
@@ -377,11 +390,29 @@ namespace Lichen.Entities
             }
         }
 
+        public bool HasGroup(string groupName)
+        {
+            return groups.Contains(groupName);
+        }
+
         public Entity AddTag(string tagName)
         {
             if (tags == null) tags = new HashSet<string>();
             tags.Add(tagName);
             return this;
+        }
+
+        public Entity RemoveTag(string tagName)
+        {
+            if (tags == null) return this;
+            tags.Remove(tagName);
+            return this;
+        }
+
+        public bool HasTag(string tagName)
+        {
+            if (tags == null) return false;
+            return tags.Contains(tagName);
         }
 
         // Even if Visible = true, the entity might be invisible due to an invisible parent, hence InheritedVisibility.

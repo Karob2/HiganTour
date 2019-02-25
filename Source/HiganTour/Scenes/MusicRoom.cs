@@ -180,7 +180,7 @@ namespace HiganTour.Scenes
                 lycoris.Clone()
                     //.SetPosition(random.Next(0, 700), random.Next(0, 700))
                     //.AddChainComponent("motion", new Components.WindyComponent(random.Next(0, 1280), random.Next(0, 720)))
-                    .AddChainComponent("motion", new Components.WindyComponent(null, camera, (float)(theta * 1280d + random.NextDouble() * 200d - 100d), (float)i * 920f / 200f))
+                    .AddChainComponent("motion", new Components.WindyComponent((float)(theta * 1280d + random.NextDouble() * 200d - 100d), (float)i * 920f / 200f))
                     .AttachTo(bCContainer1);
                 theta += phi;
                 if (theta > 1d) theta -= 1d;
@@ -191,7 +191,7 @@ namespace HiganTour.Scenes
                 sprite2.Clone()
                     //.SetPosition(random.Next(0, 700), random.Next(0, 700))
                     //.AddChainComponent("motion", new Components.WindyComponent(random.Next(0, 1280), random.Next(0, 720)))
-                    .AddChainComponent("motion", new Components.WindyComponent(null, camera, (float)(theta * 1280d + random.NextDouble() * 200d - 100d), (float)i * 920f / 200f))
+                    .AddChainComponent("motion", new Components.WindyComponent((float)(theta * 1280d + random.NextDouble() * 200d - 100d), (float)i * 920f / 200f))
                     .AttachTo(bCContainer2);
                 theta += phi;
                 if (theta > 1d) theta -= 1d;
@@ -202,7 +202,7 @@ namespace HiganTour.Scenes
                 sprite3.Clone()
                     //.SetPosition(random.Next(0, 700), random.Next(0, 700))
                     //.AddChainComponent("motion", new Components.WindyComponent(random.Next(0, 1280), random.Next(0, 720)))
-                    .AddChainComponent("motion", new Components.WindyComponent(null, camera, (float)(theta * 1280d + random.NextDouble() * 200d - 100d), (float)i * 920f / 200f))
+                    .AddChainComponent("motion", new Components.WindyComponent((float)(theta * 1280d + random.NextDouble() * 200d - 100d), (float)i * 920f / 200f))
                     .AttachTo(bCContainer3);
                 theta += phi;
                 if (theta > 1d) theta -= 1d;

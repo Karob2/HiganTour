@@ -10,6 +10,7 @@ namespace Lichen.Util
     public static class Error
     {
         static string logPath = "log.txt";
+        static HashSet<string> onceIDs = new HashSet<string>();
 
         public static void StartLog()
         {
@@ -41,6 +42,18 @@ namespace Lichen.Util
             {
                 w.WriteLine(message);
             }
+        }
+
+        public static void DebugPrint(string message)
+        {
+            Debug.WriteLine(message);
+        }
+
+        public static void DebugPrintOnce(string id, string message)
+        {
+            if (onceIDs.Contains(id)) return;
+            onceIDs.Add(id);
+            Debug.WriteLine(message);
         }
 
         public static void LogError(string message)

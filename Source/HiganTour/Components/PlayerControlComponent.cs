@@ -68,6 +68,8 @@ namespace HiganTour.Components
                     level.KarmaChanged = true;
                 }
             }
+            if (level.Hiding > 0) Owner.AddTag("hiding");
+            else Owner.RemoveTag("hiding");
 
             if (vector.X != 0f || vector.Y != 0f)
             {

@@ -1,6 +1,7 @@
 ﻿using Lichen.Entities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Lichen.Entities
@@ -105,18 +106,31 @@ namespace Lichen.Entities
         }
 
         // Creates a new group if necessary.
+        // TODO: In some cases, wouldn't it be better to fail than to silently return null?
+        //       Well, I guess it can't be helped since groups can exist before the scene even does.
         public EntityGroup GetGroup(string groupName)
         {
             EntityGroup list;
             if (!entityGroups.TryGetValue(groupName, out list))
             {
+                /*
                 list = new EntityGroup();
                 entityGroups.Add(groupName, list);
+                */
+                return null;
             }
             return list;
         }
 
-        public EntityGroup CreateGroup(string groupName, int maxSize)
+        // TODO: Misleading name sounds like it's getting the list of groups instead of the list within the group.
+        public List<Entity> GetGroupList(string groupName)
+        {
+            EntityGroup group = GetGroup(groupName);
+            if (group == null) return null;
+            return group.GetList();
+        }
+
+        public EntityGroup CreateGroup(string groupName, int maxSize = 0)
         {
             EntityGroup group;
 
@@ -129,12 +143,16 @@ namespace Lichen.Entities
             return group;
         }
 
-        public bool AddToGroup(string groupName, Entity entity)
+        // Creates a new group if neccessary.
+        public void AddToGroup(string groupName, Entity entity)
         {
             EntityGroup group;
-            if (!entityGroups.TryGetValue(groupName, out group)) return false;
+            if (!entityGroups.TryGetValue(groupName, out group))
+            {
+                group = CreateGroup(groupName);
+            }
             group.AppendEntity(entity);
-            return true;
+            return;
         }
 
         public void RemoveFromGroup(string groupName, Entity entity)
@@ -158,13 +176,28 @@ namespace Lichen.Entities
             return list;
         }
         */
+
+        public List<string> DebugGetGroups()
+        {
+            return entityGroups.Keys.ToList();
+        }
+
+        public void DebugPrintOnce(string id, string message)
+        {
+            Lichen.Util.Error.DebugPrintOnce(Name + ":" + id, Name + ":" + message);
+        }
+
+        public void DebugPrint(string message)
+        {
+            Lichen.Util.Error.DebugPrint(Name + ":" + message);
+        }
     }
 
     //class EntityTagPair
 
     public class EntityGroup
     {
-        List<Entity> list;
+        List<Entity> list = new List<Entity>();
         //List<Entity> addList;
         int maxSize;
 
@@ -191,5 +224,10 @@ namespace Lichen.Entities
         }
 
         //public bool InsertEntity
+
+        public List<Entity> GetList()
+        {
+            return list;
+        }
     }
 }

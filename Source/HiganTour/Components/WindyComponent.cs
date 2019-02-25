@@ -16,34 +16,26 @@ namespace HiganTour.Components
         double theta;
         double xx, yy;
         Random rand;
-        Scenes.Level level;
-        Entity camera;
 
-        public WindyComponent(Scenes.Level level, Entity camera, float x, float y)
+        public WindyComponent(float x, float y)
         {
             this.x = x;
             this.y = y;
-            this.level = level;
-            this.camera = camera;
             rand = new Random(Lichen.GlobalServices.GlobalRandom.Next());
         }
 
         public void Update()
         {
-            if (camera == null)
-            {
-                camera = Owner.Parent.Parent;
-            }
+            Entity camera = null;
+            List<Entity> cam = Owner.Scene.GetGroupList("camera");
+            if (cam != null) camera = cam.ElementAtOrDefault(0);
 
             float pos = 0;
             if (camera != null) pos = camera.Y;
 
-            if (camera != null)
-            {
-                float dist = (float)y + pos + 200f;
-                if (dist >= 0) y = dist % 920f - pos - 200f;
-                else y = (920f + dist % 920f) - pos - 200f;
-            }
+            float dist = (float)y + pos + 200f;
+            if (dist >= 0) y = dist % 920f - pos - 200f;
+            else y = (920f + dist % 920f) - pos - 200f;
             /*
             if (dist > 920f)
             {
@@ -77,12 +69,16 @@ namespace HiganTour.Components
 
             double ddx = 0f;
             double ddy = 0f;
+            List<Entity> actorList = null;
+            // TODO: Super wasteful repeating this for every flower for every frame? Maybe not?
+            if (Owner.Scene != null) actorList = Owner.Scene.GetGroupList("movegrass");
 
-            if (level != null)
+            if (actorList != null)
             {
                 Entity nearestActor = null;
                 double nearestDistance = 1000d;
-                foreach (Entity entity in Owner.ActorList)
+
+                foreach (Entity entity in actorList)
                 {
                     double distance = Math.Sqrt(Math.Pow(entity.X - x, 2) + Math.Pow((entity.Y - y) * 2d, 2));
                     if (distance < nearestDistance)
@@ -91,17 +87,18 @@ namespace HiganTour.Components
                         nearestActor = entity;
                     }
                 }
+
                 if (nearestActor != null && nearestDistance < 200d)
                 {
                     double multiplier = (200d - nearestDistance) / 4d;
                     ddx = -(nearestActor.X - x) / nearestDistance * multiplier;
                     ddy = -(nearestActor.Y - y) * 2f / nearestDistance * multiplier;
-                }
 
-                if (Object.ReferenceEquals(nearestActor, level.Player) && level.Hiding > 0)
-                {
-                    ddx = -ddx;
-                    ddy = -ddy;
+                    if (nearestActor.HasTag("hiding"))
+                    {
+                        ddx = -ddx;
+                        ddy = -ddy;
+                    }
                 }
             }
 
