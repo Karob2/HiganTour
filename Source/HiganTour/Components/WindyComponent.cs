@@ -26,9 +26,7 @@ namespace HiganTour.Components
 
         public void Update()
         {
-            Entity camera = null;
-            List<Entity> cam = Owner.Scene.GetGroupList("camera");
-            if (cam != null) camera = cam.ElementAtOrDefault(0);
+            Entity camera = Owner.Scene.GetEntity("camera");
 
             float pos = 0;
             if (camera != null) pos = camera.Y;
@@ -71,7 +69,7 @@ namespace HiganTour.Components
             double ddy = 0f;
             List<Entity> actorList = null;
             // TODO: Super wasteful repeating this for every flower for every frame? Maybe not?
-            if (Owner.Scene != null) actorList = Owner.Scene.GetGroupList("movegrass");
+            if (Owner.Scene != null) actorList = Owner.Scene.GetGroup("movegrass");
 
             if (actorList != null)
             {

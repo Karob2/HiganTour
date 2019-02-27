@@ -39,6 +39,7 @@ namespace Lichen.Entities
 
         HashSet<string> groups;
         HashSet<string> tags;
+        public Util.Databank Data { get; set; }
 
         public Entity Parent { get; set; }
         public LinkedList<Entity> Children { get; set; }
@@ -180,6 +181,7 @@ namespace Lichen.Entities
 
             //tags = new HashSet<string>();
             //groups = new HashSet<string>();
+            Data = new Util.Databank();
         }
 
         public Entity(float x, float y) : this()
@@ -367,6 +369,13 @@ namespace Lichen.Entities
             return this;
         }
 
+        // TODO: Replace this with an actual name functionality.
+        public Entity SetName(string name)
+        {
+            AddToGroup(name);
+            return this;
+        }
+
         /*
         public void RemoveFromGroups()
         {
@@ -395,6 +404,8 @@ namespace Lichen.Entities
             return groups.Contains(groupName);
         }
 
+        // TODO: Possibly convert tag system to bool/flag system. I'm not sure which is better under-the-hood.
+        // Welp, currently I have both, and they have separate roles.
         public Entity AddTag(string tagName)
         {
             if (tags == null) tags = new HashSet<string>();
@@ -414,6 +425,27 @@ namespace Lichen.Entities
             if (tags == null) return false;
             return tags.Contains(tagName);
         }
+
+        /*
+        public int GetInt(string name)
+        {
+            if (integers == null) return 0;
+            return integers.TryGetValue(name, out int output) ? output : 0;
+        }
+
+        public void SetInt(string name, int value)
+        {
+            if (integers == null)
+            {
+                integers = new Dictionary<string, int>();
+                integers.Add(name, value);
+            }
+            else
+            {
+                integers[name] = value;
+            }
+        }
+        */
 
         // Even if Visible = true, the entity might be invisible due to an invisible parent, hence InheritedVisibility.
         // This is basically just a rename of InheritedVisibility, so I'm removing it for now.

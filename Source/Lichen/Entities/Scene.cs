@@ -14,6 +14,7 @@ namespace Lichen.Entities
         //public bool Active { get; set; } = true;
         //public bool Visible { get; set; } = true;
         List<string> updateChains;
+        public Util.Databank Data { get; set; }
 
         public Scene(string sceneName, List<string> chains = null)
         {
@@ -108,7 +109,7 @@ namespace Lichen.Entities
         // Creates a new group if necessary.
         // TODO: In some cases, wouldn't it be better to fail than to silently return null?
         //       Well, I guess it can't be helped since groups can exist before the scene even does.
-        public EntityGroup GetGroup(string groupName)
+        private EntityGroup GetEntityGroup(string groupName)
         {
             EntityGroup list;
             if (!entityGroups.TryGetValue(groupName, out list))
@@ -123,11 +124,18 @@ namespace Lichen.Entities
         }
 
         // TODO: Misleading name sounds like it's getting the list of groups instead of the list within the group.
-        public List<Entity> GetGroupList(string groupName)
+        public List<Entity> GetGroup(string groupName)
         {
-            EntityGroup group = GetGroup(groupName);
+            EntityGroup group = GetEntityGroup(groupName);
             if (group == null) return null;
             return group.GetList();
+        }
+
+        public Entity GetEntity(string entityName)
+        {
+            List<Entity> group = GetGroup(entityName);
+            if (group != null) return group.FirstOrDefault();
+            return null;
         }
 
         public EntityGroup CreateGroup(string groupName, int maxSize = 0)

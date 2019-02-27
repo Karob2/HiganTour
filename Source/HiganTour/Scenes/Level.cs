@@ -35,15 +35,15 @@ namespace HiganTour.Scenes
 
         Font font;
         //Song bgm;
-        public SoundEffect PlayerSfx { get; set; }
-        public SoundEffectInstance PlayerSfxInstance { get; set; }
+        //public SoundEffect PlayerSfx { get; set; }
+        //public SoundEffectInstance PlayerSfxInstance { get; set; }
 
         Random random;
 
         int furthestDistance;
         float distanceTraveled;
 
-        public bool DebugMode { get; set; } = false;
+        public bool debugMode;
 
         // Create a reference set of entities and load necessary assets.
         public override void Preload(Entity root)
@@ -85,9 +85,10 @@ namespace HiganTour.Scenes
                 .AddRenderComponent(new SpriteComponent(lycorisSprite));
 
             font = GlobalServices.GlobalFonts.Register("higantour:sans");
-//            bgm = GlobalServices.GlobalSongs.Register("higantour:Stage");
-            PlayerSfx = GlobalServices.GlobalSoundEffects.Register("higantour:leaves");
-            PlayerSfxInstance = PlayerSfx.CreateInstance();
+            //bgm = GlobalServices.GlobalSongs.Register("higantour:Stage");
+            GlobalServices.GlobalSoundEffects.Register("higantour:leaves");
+            //PlayerSfx = GlobalServices.GlobalSoundEffects.Register("higantour:leaves");
+            //PlayerSfxInstance = PlayerSfx.CreateInstance();
         }
 
         // Create the scene's entities by cloning reference entities.
@@ -158,51 +159,6 @@ namespace HiganTour.Scenes
 
             warning.AttachTo(sceneContainer).SetPosition(0, -10).AddToGroup("warning");
             death.AttachTo(camera).AddToGroup("death");
-        }
-
-        public void UpdateDistance(float delta)
-        {
-            if (delta < 0)
-            {
-                distanceTraveled -= delta;
-            }
-            /*
-            else if (delta > 0)
-            {
-                Karma -= 0.5f;
-                KarmaChanged = true;
-            }
-            */
-
-            int newDistance = (int)(distanceTraveled / 500f);
-            if (newDistance > furthestDistance)
-            {
-                furthestDistance = newDistance;
-                MakeEnemy();
-                /*
-                enemies[currentEnemy].SetPosition(player.X, player.Y - 400f).AttachTo(enemyContainer)
-                    .AddActor(actorList);
-                currentEnemy++;
-                if (currentEnemy >= 20) currentEnemy = 0;
-                */
-            }
-
-            warningTimer++;
-            if (warningTimer > 30) warning.Visible = false;
-
-            if (Hiding > 0)
-            {
-                Karma -= 0.5f;
-                KarmaChanged = true;
-            }
-            if (!KarmaChanged && Karma < 100f) Karma += 0.5f;
-            death.X = player.X;
-            death.Y = player.Y - Karma * 8f;
-            KarmaChanged = false;
-            if (Karma < 8f && !DebugMode)
-            {
-                ((Game1)Lichen.GlobalServices.Game).ChangeScene(2);
-            }
         }
 
         public void MakeEnemy()
@@ -322,7 +278,8 @@ namespace HiganTour.Scenes
 
         public void SetDebugMode()
         {
-            DebugMode = true;
+            debugMode = true;
+            sceneContainer.OwnScene.Data.SetBool("debugmode", true);
             furthestDistance = 0;
             distanceTraveled = 500f * 20f;
         }

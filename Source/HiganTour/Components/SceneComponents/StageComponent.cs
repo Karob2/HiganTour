@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace HiganTour.Components.SceneComponents
 {
+    /*
     public class StageComponent : Lichen.Entities.Component
     {
         public Entity Camera { get; set; }
@@ -40,4 +41,5 @@ namespace HiganTour.Components.SceneComponents
 
         public bool DebugMode { get; set; } = false;
     }
+    */
 }

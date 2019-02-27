@@ -120,7 +120,7 @@ namespace HiganTour
 
         public void ChangeScene(int sceneNumber)
         {
-            ((Scenes.Level)level).PlayerSfxInstance.Stop();
+            //((Scenes.Level)level).PlayerSfxInstance.Stop();
 
             switch (sceneNumber)
             {

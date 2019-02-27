@@ -7,26 +7,35 @@ using Lichen;
 using Lichen.Entities;
 using Lichen.Util;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 
 namespace HiganTour.Components
 {
     class PlayerControlComponent : Lichen.Entities.Component, Lichen.Entities.IUpdateComponent
     {
-        Scenes.Level level;
+        //Scenes.Level level;
         Vector2 d;
         int dodgeTimer;
+        int hiding;
+        float karma;
+        bool karmaChanged;
         //public bool Hiding { get; set; }
+        SoundEffectInstance rustle = GlobalServices.GlobalSoundEffects.Lookup("higantour:leaves").CreateInstance();
 
-        public PlayerControlComponent(Scenes.Level level)
-        {
-            this.level = level;
-        }
+        /*
+                public PlayerControlComponent(Scenes.Level level)
+                {
+                    this.level = level;
+                }
+        */
 
         public void Reset()
         {
             //furthestDistance = 0;
             d.X = 0;
             d.Y = 0;
+            dodgeTimer = 0;
+            hiding = 0;
         }
 
         public void Update()
@@ -53,30 +62,31 @@ namespace HiganTour.Components
 
             if (GlobalServices.InputManager.Held(Lichen.Input.GameCommand.Action2))
             {
+                // TODO: What /is/ a good way to change sprite/animation? Give entities SetAction/RunAction delegates by string (similar to SetInt etc)?
                 ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = "hiding";
                 vector.X = 0;
                 vector.Y = 0;
-                level.Hiding++;
+                hiding++;
             }
             else
             {
                 ((Lichen.Entities.SpriteComponent)Owner.RenderComponent).CurrentAnimation = "default";
-                level.Hiding = 0;
+                hiding = 0;
                 if (vector.Y > 0)
                 {
-                    level.Karma -= 0.5f;
-                    level.KarmaChanged = true;
+                    karma -= 0.5f;
+                    karmaChanged = true;
                 }
             }
-            if (level.Hiding > 0) Owner.AddTag("hiding");
+            if (hiding > 0) Owner.AddTag("hiding");
             else Owner.RemoveTag("hiding");
 
             if (vector.X != 0f || vector.Y != 0f)
             {
                 vector.Normalize();
-                level.PlayerSfxInstance.Volume = 0.4f;
-                level.PlayerSfxInstance.IsLooped = true;
-                level.PlayerSfxInstance.Resume();
+                rustle.Volume = 0.4f;
+                rustle.IsLooped = true;
+                rustle.Resume();
 
                 if (dodgeTimer <= 0 && GlobalServices.InputManager.Held(Lichen.Input.GameCommand.Action1))
                 {
@@ -91,9 +101,9 @@ namespace HiganTour.Components
             else
             {
                 //level.PlayerSfxInstance.Pause();
-                level.PlayerSfxInstance.Volume = 0.1f;
-                level.PlayerSfxInstance.IsLooped = true;
-                level.PlayerSfxInstance.Resume();
+                rustle.Volume = 0.1f;
+                rustle.IsLooped = true;
+                rustle.Resume();
             }
 
             d.X = (d.X * 5f + vector.X) / 6f;
@@ -115,7 +125,7 @@ namespace HiganTour.Components
             foreach (Entity actor in Owner.ActorList)
             {
                 if (Object.ReferenceEquals(actor, Owner)) continue;
-                if (Lichen.Util.MathHelper.Distance(Owner, actor) < 50d && !level.DebugMode)
+                if (Lichen.Util.MathHelper.Distance(Owner, actor) < 50d && !Owner.Scene.Data.GetBool("debugmode"))
                 {
                     ((Game1)Lichen.GlobalServices.Game).ChangeScene(2);
                     return;
