@@ -36,9 +36,11 @@
     <Compile Remove="Components\AI\SeekerAIComponent.cs" />
     <Compile Remove="Components\PlayerControlComponent.cs" />
     <Compile Remove="Components\SceneComponents\LevelUpdateComponent.cs" />
+    <Compile Remove="Components\SceneComponents\StageComponent.cs" />
     <Compile Remove="Scenes\GameOver.cs" />
     <Compile Remove="Scenes\Level.cs" />
     <Compile Remove="Scenes\MusicRoom.cs" />
+    <Compile Remove="Scenes\StageGenerator.cs" />
     <None Include="app.config" />
     <None Include="app.manifest" />
   </ItemGroup>
@@ -71,6 +73,7 @@
 
   <ItemGroup>
     <Folder Include="Components\AI\" />
+    <Folder Include="Components\SceneComponents\" />
   </ItemGroup>
 
 </Project>

@@ -13,6 +13,15 @@
     <InformationalVersion>0.2</InformationalVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Entities\Components\SceneComponent.cs" />
+    <Compile Remove="Entities\Components\TilemapComponent.cs" />
+    <Compile Remove="Entities\EntityProvider.cs" />
+    <Compile Remove="Entities\IUpdateComponent.cs" />
+    <Compile Remove="Entities\UpdateChain.cs" />
+    <Compile Remove="Libraries\Tilemap.cs" />
+    <Compile Remove="Libraries\TilemapLibrary.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL.Core" Version="3.7.0.7" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
   </ItemGroup>

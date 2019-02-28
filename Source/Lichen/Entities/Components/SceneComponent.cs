@@ -5,7 +5,6 @@ using System.Text;
 
 namespace Lichen.Entities
 {
-    /*
     public class SceneComponent : Component, IRenderComponent, IUpdateComponent
     {
         Scene scene;
@@ -30,5 +29,4 @@ namespace Lichen.Entities
             scene.Update(Owner);
         }
     }
-    */
 }

@@ -4,7 +4,6 @@ using System.Text;
 
 namespace Lichen.Entities
 {
-    /*
     public class EntityProvider
     {
         //List<EntityQueueItem> queue;
@@ -74,7 +73,6 @@ namespace Lichen.Entities
             queue.Clear();
         }
     }
-    */
 
     /*
     public class EntityQueueItem
