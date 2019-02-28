@@ -47,6 +47,11 @@ namespace Lichen.Entities
                 if (CurrentFrame >= animation.Frames.Count) CurrentFrame = 0; // TODO: Does not account for when multiple frames should pass.
             }
         }
+
+        public override void AttachTo(Entity entity)
+        {
+            entity.AddComponent(this);
+        }
     }
 }
 

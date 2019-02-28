@@ -10,6 +10,8 @@ namespace Lichen.Entities
 
         public virtual void OnAttach() { }
 
+        public virtual void AttachTo(Entity entity) { }
+
         public Component Clone()
         {
             return (Component)this.MemberwiseClone();

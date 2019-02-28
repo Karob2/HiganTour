@@ -13,7 +13,7 @@ namespace HiganTour.Scenes
     public class MainMenu : SceneBase
     {
         Entity camera;
-        Entity lycoris;
+        //Entity lycoris;
         Entity title, gameover;
         Font font;
         Random random;
@@ -77,7 +77,6 @@ namespace HiganTour.Scenes
                 .SetPosition(20, 140)
                .AddComponent(new TextComponent(font, "Press F11 to enter Debug Mode"));
 
-            Sprite lycorisSprite = GlobalServices.GlobalSprites.Lookup("higantour:redlily");
             random = new Random(0);
             double phi = (Math.Sqrt(5d) - 1d) / 2d;
             double theta = random.NextDouble();
@@ -87,6 +86,8 @@ namespace HiganTour.Scenes
                 //float y = random.Next(0, 720);
                 float x = (float)(theta * 1280d + random.NextDouble() * 200d - 100d);
                 float y = i * 920f / 200f;
+                Scenes.Common.Lycoris.CloneTo(camera).SetPosition(x, y);
+                /*
                 lycoris = camera.MakeChild()
                     //.SetRenderOrder(-1, y)
                     .SetRenderLayer(-1)
@@ -97,6 +98,7 @@ namespace HiganTour.Scenes
                     .SetPosition(x, y);
                     //.AddChainComponent("motion", new Components.WindyComponent(random.Next(0, 1280), random.Next(0, 720)))
                     //.AddChainComponent("motion", new Components.WindyComponent(null, camera, (float)(theta * 1280d + random.NextDouble() * 200d - 100d), (float)i * 920f / 200f))
+                    */
                 theta += phi;
                 if (theta > 1d) theta -= 1d;
             }

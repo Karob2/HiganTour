@@ -11,9 +11,18 @@ namespace HiganTour.Scenes
 {
     public static class Common
     {
+        static Entity lycoris;
+        public static Entity Lycoris { get { return lycoris; } }
+
         public static void Preload()
         {
-            GlobalServices.GlobalSprites.Register("higantour:redlily");
+            lycoris = new Entity()
+                .SetRenderLayer(-1)
+                .AddComponent(new Components.BodyComponent())
+                .AddComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:redlily")))
+                .AddComponent(new Components.WindyComponent());
+
+            //GlobalServices.GlobalSprites.Register("higantour:redlily");
             /*
             Sprite lycorisSprite = GlobalServices.GlobalSprites.Register("higantour:redlily");
             Entity lycoris = new Entity()

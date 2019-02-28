@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Linq;
+using Microsoft.Xna.Framework;
 
 namespace Lichen.Entities
 {
@@ -20,8 +21,85 @@ namespace Lichen.Entities
     {
         Active,
         Visible,
-        //Scene,
+        Scene,
         State
+    }
+
+    public class EntityTemplate
+    {
+        //public Entity Parent { get; set; }
+        public float X { get; set; }
+        public float Y { get; set; }
+        public bool Visible { get; set; }
+        public int RenderLayer { get; set; }
+        public List<Component> Components { get; set; } = new List<Component>();
+
+        public EntityTemplate() { }
+
+        /*
+        public EntityTemplate(Entity parent)
+        {
+            Parent = parent;
+        }
+        */
+
+        public EntityTemplate SetPosition(float x, float y)
+        {
+            X = x;
+            Y = y;
+            return this;
+        }
+
+        public EntityTemplate SetVisible(bool visible = true)
+        {
+            Visible = visible;
+            return this;
+        }
+
+        public EntityTemplate SetRenderLayer(int layer)
+        {
+            RenderLayer = layer;
+            return this;
+        }
+
+        public EntityTemplate AddComponent(Component component)
+        {
+            Components.Add(component);
+            return this;
+        }
+
+        public Entity MakeEntity(Entity parent)
+        {
+            Entity entity = parent.MakeChild();
+            entity.X = X;
+            entity.Y = Y;
+            entity.Visible = Visible;
+            entity.RenderLayer = RenderLayer;
+            //AttachComponents(entity);
+            foreach (Component component in Components)
+            {
+                component.Clone().AttachTo(entity);
+            }
+            return entity;
+        }
+
+        /*
+        public void AttachComponents(Entity entity)
+        {
+            foreach (Component component in Components)
+            {
+                AttachComponent(entity, component);
+            }
+        }
+
+        public void AttachComponent(Entity entity, Component component)
+        {
+            if (component is SpriteComponent)
+            {
+                entity.AddComponent<SpriteComponent>
+            }
+        }
+        */
     }
 
     public class Entity
@@ -76,6 +154,8 @@ namespace Lichen.Entities
         public Dictionary<string,UpdateChain> UpdateChains { get; set; }
         */
         Dictionary<Type, int> components = new Dictionary<Type, int>();
+        // To enable full cloning:
+        List<Component> componentReferences = new List<Component>();
 
         /*
         public bool RenderByDepth { get; set; }
@@ -90,7 +170,6 @@ namespace Lichen.Entities
         //public List<Entity> ActorList { get; set; }
 
         // TODO: This fails to remove the entities from the previous scene's groups. Maybe I should never transfer entities across scenes.
-        /*
         public void PropagateScene(Scene scene)
         {
             if (this.scene == scene) return;
@@ -98,7 +177,6 @@ namespace Lichen.Entities
             RebindGroups();
             PropagateProperty(EntityProperty.Scene);
         }
-        */
 
         public void PropagateState(EntityState state)
         {
@@ -123,7 +201,7 @@ namespace Lichen.Entities
 
         public void PropagateAll()
         {
-            //PropagateProperty(EntityProperty.Scene);
+            PropagateProperty(EntityProperty.Scene);
             PropagateProperty(EntityProperty.State);
             PropagateProperty(EntityProperty.Active);
             PropagateProperty(EntityProperty.Visible);
@@ -168,13 +246,11 @@ namespace Lichen.Entities
 
             switch (property)
             {
-                /*
                 case EntityProperty.Scene:
                     if (scene == Parent.Scene) return false;
                     scene = Parent.Scene;
                     RebindGroups();
                     break;
-                    */
                 case EntityProperty.State:
                     if (state == Parent.State) return false;
                     state = Parent.State;
@@ -193,20 +269,12 @@ namespace Lichen.Entities
             return true;
         }
 
-        // TODO: Since a scene is now required, remove scene =!= null checks from this class.
+        public Entity() { }
+
+        // OLD TODO: Since a scene is now required, remove scene =!= null checks from this class.
         public Entity(Scene scene)
         {
             this.scene = scene;
-            //Children = new LinkedList<Entity>();
-            //components = new Dictionary<Type, int>();
-            /*
-            ComponentList = new Dictionary<Type, Component>();
-            UpdateChains = new Dictionary<String, UpdateChain>();
-            */
-
-            //tags = new HashSet<string>();
-            //groups = new HashSet<string>();
-            //Data = new Util.Databank();
         }
 
         /*
@@ -320,14 +388,20 @@ namespace Lichen.Entities
             // TODO: This doesn't work at all if the entity is not attached to a scene.
             // So either make entities always attached to scenes (and not able to change scenes),
             // Or modify this and also add code in Scene propagation.
-            ComponentGroup<T> group = Scene.GetComponentGroup<T>();
-            // Add to scene's component group by type.
-            group.Add(component, out int componentId);
-            // Add to entity's component list.
-            components.Add(component.GetType(), componentId);
+
             // Give the component a reference back to the entity.
             component.Owner = this;
-            component.OnAttach();
+            componentReferences.Add(component);
+
+            if (scene != null)
+            {
+                ComponentGroup<T> group = Scene.GetComponentGroup<T>();
+                // Add to scene's component group by type.
+                group.Add(component, out int componentId);
+                // Add to entity's component list.
+                components.Add(component.GetType(), componentId);
+                component.OnAttach();
+            }
             /*
             ComponentList.Add(component.GetType(), component);
             component.Owner = this;
@@ -395,7 +469,7 @@ namespace Lichen.Entities
 
         public Entity AttachTo(Entity entity)
         {
-            Debug.Assert(entity.scene == this.scene, "Child belongs to different scene from parent.");
+            Debug.Assert(entity.scene == this.scene || this.scene == null, "Child belongs to different scene from parent.");
 
             Parent = entity;
             entity.Children.AddLast(this);
@@ -419,7 +493,7 @@ namespace Lichen.Entities
 
         public Entity AddChild(Entity entity)
         {
-            Debug.Assert(entity.scene == this.scene, "Child belongs to different scene from parent.");
+            Debug.Assert(entity.scene == this.scene || entity.scene == null, "Child belongs to different scene from parent.");
 
             Children.AddLast(entity);
             entity.Parent = this;
@@ -512,6 +586,12 @@ namespace Lichen.Entities
             foreach (string group in groups)
             {
                 scene.AddToGroup(group, this);
+            }
+            List<Component> refs = componentReferences;
+            componentReferences = new List<Component>();
+            foreach (Component component in refs)
+            {
+                component.AttachTo(this);
             }
         }
 
@@ -732,23 +812,36 @@ namespace Lichen.Entities
         }
 */
 
-        // Creates a clone of entity and all children, but without components. (They have to be manually cloned.)
-        // So this function is kinda useless.
-        /*
-        public Entity EmptyClone()
+        public Entity CloneTo(Entity parent)
         {
-            Entity entity = new Entity(scene);
+            Entity entity = parent.MakeChild();
+            entity.CopyPropertiesFrom(this);
             foreach (Entity child in Children)
             {
-                entity.AddChild(child.EmptyClone());
+                entity.AddChild(child.CloneTo(entity));
             }
+            return this;
+        }
+
+        public Entity Clone()
+        {
+            Entity entity = new Entity(scene);
+            entity.CopyPropertiesFrom(this);
+            foreach (Entity child in Children)
+            {
+                entity.AddChild(child.Clone());
+            }
+            return this;
+        }
+
+        void CopyPropertiesTo(Entity entity)
+        {
             entity.X = X;
             entity.Y = Y;
             entity.Active = Active; // TODO: Does this cause unneccesary propagation? I can call some "entity.CopyFrom(this)".
             entity.Visible = Visible;
             entity.RenderLayer = RenderLayer;
             entity.RenderDepth = RenderDepth;
-            entity.AutoDepth = AutoDepth;
 
             //if (groups != null)
             //{
@@ -765,8 +858,11 @@ namespace Lichen.Entities
                 }
             //}
 
-            // TODO: Seems there's no way to clone components in here for now.
-            /-*
+            foreach (Component component in componentReferences)
+            {
+                component.Clone().AttachTo(entity);
+            }
+            /*
             if (UpdateComponent != null) entity.AddUpdateComponent((IUpdateComponent)UpdateComponent.Clone());
             if (RenderComponent != null) entity.AddRenderComponent((IRenderComponent)RenderComponent.Clone());
             foreach (KeyValuePair<Type, Component> entry in ComponentList)
@@ -780,10 +876,33 @@ namespace Lichen.Entities
                     entity.AddChainComponent(chain.Key, (IUpdateComponent)component.Clone());
                 }
             }
-            *-/
-            return entity;
+            */
         }
-        */
+
+        void CopyPropertiesFrom(Entity entity)
+        {
+            X = entity.X;
+            Y = entity.Y;
+            Active = entity.Active; // TODO: Does this cause unneccesary propagation? I can call some "entity.CopyFrom(this)".
+            Visible = entity.Visible;
+            RenderLayer = entity.RenderLayer;
+            RenderDepth = entity.RenderDepth;
+
+            foreach (string groupName in entity.groups)
+            {
+                AddToGroup(groupName);
+            }
+
+            foreach (string tagName in entity.tags)
+            {
+                AddTag(tagName);
+            }
+
+            foreach (Component component in entity.componentReferences)
+            {
+                component.Clone().AttachTo(this);
+            }
+        }
     }
 
     public class EntitySorter : IComparer<Entity>

@@ -22,5 +22,10 @@ namespace HiganTour.Components
             Owner.X = 0;
             Owner.Y = -target.Y + Lichen.GlobalServices.Game.GraphicsDevice.Viewport.Height / 2f + 100f;
         }
+
+        public override void AttachTo(Entity entity)
+        {
+            entity.AddComponent(this);
+        }
     }
 }

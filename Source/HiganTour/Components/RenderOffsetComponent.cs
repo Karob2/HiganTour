@@ -9,5 +9,10 @@ namespace HiganTour.Components
     {
         public float X { get; set; }
         public float Y { get; set; }
+
+        public override void AttachTo(Entity entity)
+        {
+            entity.AddComponent(this);
+        }
     }
 }

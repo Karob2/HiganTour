@@ -34,6 +34,11 @@ namespace HiganTour.Components
         public override void OnAttach()
         {
         }
+
+        public override void AttachTo(Entity entity)
+        {
+            entity.AddComponent(this);
+        }
     }
 
     /*

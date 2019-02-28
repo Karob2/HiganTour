@@ -25,5 +25,10 @@ namespace Lichen.Entities
                 Font.Render(Value, Owner.CumulativeX, Owner.CumulativeY, Color);
             }
         }
+
+        public override void AttachTo(Entity entity)
+        {
+            entity.AddComponent(this);
+        }
     }
 }
