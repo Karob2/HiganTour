@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HiganTour.Scenes
 {
-    public class SceneBase
+    public abstract class SceneBase
     {
         //protected Entity root;
         public Scene Scene { get; set; }

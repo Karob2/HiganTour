@@ -4,9 +4,8 @@ using System.Text;
 
 namespace Lichen.Entities
 {
-    // TODO: Consider replacing with an interface (ISystem).
-    public class System
+    public abstract class System
     {
-        public virtual void Update(Scene scene) { }
+        public abstract void Update(Scene scene);
     }
 }

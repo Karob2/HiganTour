@@ -4,13 +4,13 @@ using System.Text;
 
 namespace Lichen.Entities
 {
-    public class Component
+    public abstract class Component
     {
         public Entity Owner { get; set; }
 
         public virtual void OnAttach() { }
 
-        public virtual void AttachTo(Entity entity) { }
+        public abstract void AttachTo(Entity entity);
 
         public Component Clone()
         {

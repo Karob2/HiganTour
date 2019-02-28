@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Input;
+using Lichen.Entities;
 
 namespace HiganTour.Components
 {
@@ -45,6 +46,11 @@ namespace HiganTour.Components
                 }
             }
             */
+        }
+
+        public override void AttachTo(Entity entity)
+        {
+            entity.AddComponent(this);
         }
     }
 }
