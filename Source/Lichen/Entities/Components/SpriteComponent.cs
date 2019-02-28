@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Lichen.Entities
 {
-    public class SpriteComponent : Component, IRenderComponent
+    public class SpriteComponent : RenderComponent
     {
         public Libraries.Sprite Sprite { get; set; }
 
@@ -32,7 +32,7 @@ namespace Lichen.Entities
             CurrentTime = 0f;
         }
 
-        public void Update()
+        public override void Render()
         {
             Sprite.Render(Owner.CumulativeX, Owner.CumulativeY, CurrentAnimation, CurrentFrame);
             // TODO: Updating the animation here makes animations stall when invisible, and can make them less precise when Update() happens more often than Render(), which is significant when events are triggered by animation state. Consider adding capability of animation progress to be Update()-driven.

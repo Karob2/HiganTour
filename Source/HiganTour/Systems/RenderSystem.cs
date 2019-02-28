@@ -12,22 +12,15 @@ namespace HiganTour.Systems
         public override void Update(Scene scene)
         {
             //base.Update();
-            ComponentGroup<SpriteComponent> sprites = scene.GetComponentGroup<SpriteComponent>();
-            ComponentGroup<TextComponent> texts = scene.GetComponentGroup<TextComponent>();
+            List<RenderComponent> components = scene.GetComponentFilter<RenderComponent>(true).List;
             List<RenderElement> renderList = new List<RenderElement>();
 
-            foreach (SpriteComponent sprite in sprites.List)
+            foreach (RenderComponent component in components)
             {
-                if (sprite.Owner.Visible == false) continue;
+                if (component.Owner.Visible == false) continue;
                 // TODO: Also check if sprite is offscreen.
                 //sprite.Update();
-                renderList.Add(new RenderElement(sprite.Owner, sprite.Update));
-            }
-            foreach (TextComponent text in texts.List)
-            {
-                if (text.Owner.Visible == false) continue;
-                //text.Update();
-                renderList.Add(new RenderElement(text.Owner, text.Update));
+                renderList.Add(new RenderElement(component));
             }
 
             renderList.Sort(new RenderElementSorter());
@@ -58,13 +51,13 @@ namespace HiganTour.Systems
         public float Depth { get; set; }
         public int AutoDepth { get; set; }
 
-        public RenderElement(Entity entity, Action action)
+        public RenderElement(RenderComponent component)
         {
-            Entity = entity;
-            Action = action;
-            Layer = entity.RenderLayer;
-            Depth = entity.RenderDepth;
-            AutoDepth = entity.AutoDepth;
+            Entity = component.Owner;
+            Action = component.Render;
+            Layer = Entity.RenderLayer;
+            Depth = Entity.RenderDepth;
+            AutoDepth = Entity.AutoDepth;
         }
     }
 

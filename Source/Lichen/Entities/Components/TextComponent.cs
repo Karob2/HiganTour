@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 
 namespace Lichen.Entities
 {
-    public class TextComponent : Component, IRenderComponent
+    public class TextComponent : RenderComponent
     {
         public Libraries.Font Font { get; set; }
         public Color Color { get; set; }
@@ -18,7 +18,7 @@ namespace Lichen.Entities
             Color = Color.White;
         }
 
-        public void Update()
+        public override void Render()
         {
             if (Font != null)
             {

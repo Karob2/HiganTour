@@ -25,11 +25,39 @@ namespace Lichen.Entities
         {
             if (componentGroups.TryGetValue(typeof(T), out ComponentGroup group))
             {
-                return (ComponentGroup<T>)group;
+                return (ComponentGroup<T>)group; //downcasting
             }
             ComponentGroup<T> group2 = new ComponentGroup<T>();
             componentGroups.Add(typeof(T), group2);
             return group2;
+        }
+
+        Dictionary<Type, ComponentGroup> componentFilters = new Dictionary<Type, ComponentGroup>();
+        public ComponentGroup<T> GetComponentFilter<T>(bool create) where T : Component
+        {
+            if (componentFilters.TryGetValue(typeof(T), out ComponentGroup filter))
+            {
+                return (ComponentGroup<T>)filter; //downcasting
+            }
+            if (create == false)
+            {
+                return null;
+            }
+            else
+            {
+                ComponentGroup<T> filter2 = new ComponentGroup<T>();
+                componentFilters.Add(typeof(T), filter2);
+                return filter2;
+            }
+        }
+
+        public void FilterComponent<T>(T component) where T : Component
+        {
+            // For now, allow filter groups to be automatically created when queried.
+            ComponentGroup<T> filter = GetComponentFilter<T>(true);
+            //ComponentGroup<T> filter = GetComponentFilter<T>(false);
+            //if (filter == null) return;
+            filter.List.Add(component);
         }
 
         public Scene(string sceneName = null)//, List<string> chains = null)
@@ -311,6 +339,21 @@ namespace Lichen.Entities
         public List<Entity> GetList()
         {
             return list;
+        }
+    }
+
+    public class ComponentGroup { }
+
+    public class ComponentGroup<T> : ComponentGroup where T : Component
+    {
+        // TODO: Replace this with a re-usable smart collection?
+        List<T> list = new List<T>();
+        public List<T> List { get { return list; } }
+
+        public void Add(T component, out int id)
+        {
+            id = list.Count;
+            list.Add(component);
         }
     }
 }

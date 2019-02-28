@@ -400,6 +400,7 @@ namespace Lichen.Entities
                 group.Add(component, out int componentId);
                 // Add to entity's component list.
                 components.Add(component.GetType(), componentId);
+                component.FilterComponent(); // This leads to downcasting via GetComponentFilter<> whenever an item is successfully filtered. (At the time of this writing, that's once per attach of each RenderComponent inheritor.)
                 component.OnAttach();
             }
             /*
