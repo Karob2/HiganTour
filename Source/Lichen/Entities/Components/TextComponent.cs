@@ -18,11 +18,11 @@ namespace Lichen.Entities
             Color = Color.White;
         }
 
-        public void Render()
+        public void Update()
         {
             if (Font != null)
             {
-                Font.Render(Value, Owner.RelativeX, Owner.RelativeY, Color);
+                Font.Render(Value, Owner.CumulativeX, Owner.CumulativeY, Color);
             }
         }
     }

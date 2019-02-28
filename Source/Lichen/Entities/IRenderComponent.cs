@@ -7,7 +7,7 @@ namespace Lichen.Entities
     public interface IRenderComponent
     {
         Entity Owner { get; set; }
-        void Render();
+        void Update();
         Component Clone();
     }
 }

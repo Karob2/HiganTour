@@ -32,6 +32,14 @@
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="**\*.mgcb" />
+    <Compile Remove="Components\AI\BulletComponent.cs" />
+    <Compile Remove="Components\AI\SeekerAIComponent.cs" />
+    <Compile Remove="Components\PlayerControlComponent.cs" />
+    <Compile Remove="Components\SceneComponents\LevelUpdateComponent.cs" />
+    <Compile Remove="Components\WindyComponent.cs" />
+    <Compile Remove="Scenes\GameOver.cs" />
+    <Compile Remove="Scenes\Level.cs" />
+    <Compile Remove="Scenes\MusicRoom.cs" />
     <None Include="app.config" />
     <None Include="app.manifest" />
   </ItemGroup>
@@ -60,6 +68,10 @@
       <HintPath>C:\Projects\mono\thfgj3-lifedeath\Source\Lichen\bin\release\netstandard2.0\Lichen.dll</HintPath>
     </Reference>
     -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\AI\" />
   </ItemGroup>
 
 </Project>

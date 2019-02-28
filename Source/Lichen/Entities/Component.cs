@@ -13,4 +13,22 @@ namespace Lichen.Entities
             return (Component)this.MemberwiseClone();
         }
     }
+
+    public class ComponentGroup
+    {
+
+    }
+
+    public class ComponentGroup<T> : ComponentGroup where T : Component
+    {
+        // TODO: Replace this with a re-usable smart collection?
+        List<T> list = new List<T>();
+        public List<T> List { get { return list; } }
+
+        public void Add(T component, out int id)
+        {
+            id = list.Count;
+            list.Add(component);
+        }
+    }
 }

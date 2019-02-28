@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace HiganTour.Scenes
 {
+    /*
     public static class Common
     {
         public static void Preload()
@@ -34,4 +35,5 @@ namespace HiganTour.Scenes
             GlobalServices.EntityLibrary.Add("lycoris-field", lycorisField);
         }
     }
+    */
 }

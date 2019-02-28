@@ -12,7 +12,7 @@ namespace HiganTour.Components
     {
         public void Update()
         {
-
+            /*
             if (!((Game1)Lichen.GlobalServices.Game).GetMR())
             {
 
@@ -44,6 +44,7 @@ namespace HiganTour.Components
                     ((Game1)Lichen.GlobalServices.Game).SwitchSong(true);
                 }
             }
+            */
         }
     }
 }

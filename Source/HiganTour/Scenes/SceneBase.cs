@@ -11,7 +11,8 @@ namespace HiganTour.Scenes
 {
     public class SceneBase
     {
-        protected Entity root;
+        //protected Entity root;
+        public Scene Scene { get; set; }
         protected Entity sceneContainer;
 
         public void Activate()
@@ -31,7 +32,10 @@ namespace HiganTour.Scenes
             return sceneContainer.Active;
         }
 
-        public virtual void Preload(Entity root) { }
+        public virtual void Preload(Scene scene)
+        {
+            Scene = scene;
+        }
         public virtual void Load() { }
         public virtual void Unload() { }
     }

@@ -13,11 +13,13 @@ namespace HiganTour
         GraphicsDeviceManager graphicsManager;
         const string gameName = "Higan Tour";
         const string companyName = "";
-        Entity root;
+        //Entity root;
         Scenes.SceneBase mainMenu;
         Scenes.SceneBase level;
         Scenes.SceneBase gameOver;
         Scenes.SceneBase MusicRoom;
+
+        SceneBoard sceneBoard;
 
         public bool MR = false;
 
@@ -49,23 +51,27 @@ namespace HiganTour
             GlobalServices.GlobalSongs.Register("higantour:Another_Stage");
             GlobalServices.GlobalSongs.Register("higantour:Boss_Battle");
             GlobalServices.GlobalSongs.Register("higantour:Game_Over");
-            
+
             // Preload all scene-specific assets.
-            root = new Entity();
-            Scenes.Common.Preload();
+            //root = new Entity();
+            sceneBoard = new SceneBoard();
+            //Scenes.Common.Preload();
             mainMenu = new Scenes.MainMenu();
-            mainMenu.Preload(root);
+            mainMenu.Preload(sceneBoard.New());
             mainMenu.Load();
+            /*
             level = new Scenes.Level();
-            level.Preload(root);
+            level.Preload(sceneBoard.New());
             level.Load();
             gameOver = new Scenes.GameOver();
-            gameOver.Preload(root);
+            gameOver.Preload(sceneBoard.New());
             gameOver.Load();
             MusicRoom = new Scenes.MusicRoom();
-            MusicRoom.Preload(root);
+            MusicRoom.Preload(sceneBoard.New());
             MusicRoom.Load();
-            ChangeScene(0);
+            */
+            //ChangeScene(0);
+            sceneBoard.Switch(mainMenu.Scene);
         }
 
         // Called when exiting the game.
@@ -84,6 +90,7 @@ namespace HiganTour
 
             if (Keyboard.GetState().IsKeyDown(Keys.F11))
             {
+                /*
                 if (!level.IsActive())
                 {
                     ChangeScene(1);
@@ -93,12 +100,13 @@ namespace HiganTour
                 {
                     ((Scenes.Level)level).SetDebugMode();
                 }
+                */
             }
 
 
             GlobalServices.Update(gameTime);
 
-            root.Update(); // Update main components.
+            sceneBoard.Update(); // Update main components.
             // TODO: Remove these after switching to the new scene handling system.
             //root.Update("control"); // Update control components.
             //root.Update("motion"); // Update motion components.
@@ -112,7 +120,7 @@ namespace HiganTour
         protected override void Draw(GameTime gameTime)
         {
             GlobalServices.StartDrawing(gameTime);
-            root.Render();
+            sceneBoard.Render();
             GlobalServices.StopDrawing();
 
             base.Draw(gameTime);
@@ -122,6 +130,7 @@ namespace HiganTour
         {
             //((Scenes.Level)level).PlayerSfxInstance.Stop();
 
+            /*
             switch (sceneNumber)
             {
                 case 1:
@@ -153,12 +162,12 @@ namespace HiganTour
                     MusicRoom.Activate();
                     MR = true;
                     MediaPlayer.Stop();
-                    /*
+                    /-*
                     bgm = GlobalServices.GlobalSongs.Lookup("higantour:Another_Stage");
                     MediaPlayer.Volume = 0.5f;
                     MediaPlayer.Play(bgm);
                     MediaPlayer.IsRepeating = true;
-                    */
+                    *-/
                     break;
                 default:
                     mainMenu.Activate();
@@ -173,8 +182,10 @@ namespace HiganTour
                     MediaPlayer.IsRepeating = true;
                     break;
             }
+            */
         }
 
+        /*
         public bool GetMR() { return MR; }
 
 
@@ -266,6 +277,6 @@ namespace HiganTour
 
             MediaPlayer.Pause();
         }
-
+        */
     }
 }

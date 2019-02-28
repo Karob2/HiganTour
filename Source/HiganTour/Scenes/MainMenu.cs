@@ -18,9 +18,9 @@ namespace HiganTour.Scenes
         Random random;
 
         // Create a reference set of entities and load necessary assets.
-        public override void Preload(Entity root)
+        public override void Preload(Scene scene)
         {
-            this.root = root; // TODO: Is there a better way?
+            this.Scene = scene; // TODO: Is there a better way?
 
             font = GlobalServices.GlobalFonts.Register("higantour:sans");
 
@@ -34,39 +34,41 @@ namespace HiganTour.Scenes
         // Create the scene's entities by cloning reference entities.
         public override void Load()
         {
-            sceneContainer = new Entity()
-                .AddUpdateComponent(new Components.MenuComponent()) // This component handles the key input.
-                .AttachTo(root)
-                .MakeScene("mainmenu");
-            sceneContainer.OwnScene.AddUpdateChain("motion");
+            Entity root = Scene.Root;
 
-            camera = new Entity()
-                .SetRenderByDepth(true)
-                .AttachTo(sceneContainer);
+            Scene.AddUpdateChain("menu");
+            Scene.AddUpdateChain("motion");
+            Scene.AddRenderChain("render");
+            Scene.AddSystem(new Systems.RenderSystem(), "render");
 
-            title = new Entity(640, 250)
-                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:title")))
-                .AttachTo(camera);
+            root.AddComponent(new Components.MenuComponent()); // This component handles the key input.
 
-            gameover = new Entity(640, 250)
-                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:gameover")))
-                .AttachTo(camera).SetVisible(false);
+            camera = root.MakeChild();
 
-            new Entity(20, 20)
-                .AddRenderComponent(new TextComponent(font, "v0.3-pre"))
-                .AttachTo(sceneContainer);
+            title = camera.MakeChild()
+                .SetPosition(640, 250)
+                .AddComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:title")));
 
-            new Entity(20, 60)
-                .AddRenderComponent(new TextComponent(font, "Press Enter to Begin"))
-                .AttachTo(sceneContainer);
+            gameover = camera.MakeChild()
+                .SetPosition(640, 250)
+                .AddComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:gameover")))
+                .SetVisible(false);
 
-            new Entity(20, 100)
-               .AddRenderComponent(new TextComponent(font, "Press M to Enter the Music Room"))
-               .AttachTo(sceneContainer);
+            root.MakeChild()
+                .SetPosition(20, 20)
+                .AddComponent(new TextComponent(font, "v0.3-pre"));
 
-            new Entity(20, 140)
-               .AddRenderComponent(new TextComponent(font, "Press F11 to enter Debug Mode"))
-               .AttachTo(sceneContainer);
+            root.MakeChild()
+                .SetPosition(20, 60)
+                .AddComponent(new TextComponent(font, "Press Enter to Begin"));
+
+            root.MakeChild()
+                .SetPosition(20, 100)
+               .AddComponent(new TextComponent(font, "Press M to Enter the Music Room"));
+
+            root.MakeChild()
+                .SetPosition(20, 140)
+               .AddComponent(new TextComponent(font, "Press F11 to enter Debug Mode"));
 
             /*
             random = new Random();
@@ -83,8 +85,8 @@ namespace HiganTour.Scenes
                 if (theta > 1d) theta -= 1d;
             }
             */
-            Entity lycorisField = GlobalServices.EntityLibrary["lycoris-field"].Clone();
-            lycorisField.AttachTo(camera);
+            //Entity lycorisField = GlobalServices.EntityLibrary["lycoris-field"].Clone();
+            //lycorisField.AttachTo(camera);
         }
 
         public void SetMode(int mode)

@@ -32,9 +32,9 @@ namespace Lichen.Entities
             CurrentTime = 0f;
         }
 
-        public void Render()
+        public void Update()
         {
-            Sprite.Render(Owner.RelativeX, Owner.RelativeY, CurrentAnimation, CurrentFrame);
+            Sprite.Render(Owner.CumulativeX, Owner.CumulativeY, CurrentAnimation, CurrentFrame);
             // TODO: Updating the animation here makes animations stall when invisible, and can make them less precise when Update() happens more often than Render(), which is significant when events are triggered by animation state. Consider adding capability of animation progress to be Update()-driven.
             // TODO: Throw error if CurrentAnimation does not exist in Animations?
             Libraries.Animation animation = Sprite.Animations[CurrentAnimation];

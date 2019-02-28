@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Lichen.Entities
@@ -18,37 +19,43 @@ namespace Lichen.Entities
     {
         Active,
         Visible,
-        Scene,
+        //Scene,
         State
     }
 
     public class Entity
     {
-        // TODO: Rename "Container" to "Scene"? OR REMOVE IT
-        //public Entity Container { get; set; }
         private Scene scene;
-        public Scene Scene { get { return scene; } set { PropagateScene(value); } }
-        private Scene ownScene;
-        public Scene OwnScene { get { return ownScene; } }
-        public bool IsScene { get; set; }
+        public Scene Scene { get { return scene; } }
+        //public Scene Scene { get { return scene; } set { PropagateScene(value); } }
+        //private Scene ownScene;
+        //public Scene OwnScene { get { return ownScene; } }
+        //public bool IsScene { get; set; }
         private EntityState state = EntityState.Enabled;
         public EntityState State { get { return state; } set { PropagateState(value); } }
         private EntityState nextState;
         public EntityState NextState { get { return nextState; } set { nextState = value; } }
         public bool Enabled { get { return (state == EntityState.Enabled); } }
 
-        HashSet<string> groups;
-        HashSet<string> tags;
-        public Util.Databank Data { get; set; }
+        HashSet<string> groups = new HashSet<string>();
+        HashSet<string> tags = new HashSet<string>();
+        public Util.Databank Data { get; set; } = new Util.Databank();
 
         public Entity Parent { get; set; }
-        public LinkedList<Entity> Children { get; set; }
+        public LinkedList<Entity> Children { get; set; } = new LinkedList<Entity>();
         public float X { get; set; }
         public float Y { get; set; }
+        /*
         private float relativeX;
         private float relativeY;
         public float RelativeX { get { return relativeX; } }
         public float RelativeY { get { return relativeY; } }
+        */
+        float cumulativeX;
+        float cumulativeY;
+        public float CumulativeX { get { return cumulativeX; } }
+        public float CumulativeY { get { return cumulativeY; } }
+
         private bool active = true;
         private bool visible = true;
         public bool Active { get { return active; } set { PropagateActivity(value); } }
@@ -61,19 +68,28 @@ namespace Lichen.Entities
         // RenderComponent: For components that need to be drawn every frame.
         // ComponentList: For components that do not Update or Render, such as data holders.
         // UpdateChains: Same as Update, but allows lists of multiple components to be ran together.
+        /*
         public IUpdateComponent UpdateComponent { get; set; }
         public IRenderComponent RenderComponent { get; set; }
         public Dictionary<Type,Component> ComponentList { get; set; }
         public Dictionary<string,UpdateChain> UpdateChains { get; set; }
+        */
+        Dictionary<Type, int> components = new Dictionary<Type, int>();
 
+        /*
         public bool RenderByDepth { get; set; }
         public float RenderOrder { get; set; }
         public int RenderBackupOrder { get; set; }
         public static int RenderBackupCount { get; set; }
+        */
+        public int RenderLayer { get; set; }
+        public float RenderDepth { get; set; }
+        public bool AutoDepth { get; set; } = true;
 
-        public List<Entity> ActorList { get; set; }
+        //public List<Entity> ActorList { get; set; }
 
         // TODO: This fails to remove the entities from the previous scene's groups. Maybe I should never transfer entities across scenes.
+        /*
         public void PropagateScene(Scene scene)
         {
             if (this.scene == scene) return;
@@ -81,6 +97,7 @@ namespace Lichen.Entities
             RebindGroups();
             PropagateProperty(EntityProperty.Scene);
         }
+        */
 
         public void PropagateState(EntityState state)
         {
@@ -105,7 +122,7 @@ namespace Lichen.Entities
 
         public void PropagateAll()
         {
-            PropagateProperty(EntityProperty.Scene);
+            //PropagateProperty(EntityProperty.Scene);
             PropagateProperty(EntityProperty.State);
             PropagateProperty(EntityProperty.Active);
             PropagateProperty(EntityProperty.Visible);
@@ -114,7 +131,7 @@ namespace Lichen.Entities
         // Only propagate to a specific child.
         public void PropagateAll(Entity child)
         {
-            if (IsScene) return; //probably not necessary since the caller already checks
+            //if (IsScene) return; //probably not necessary since the caller already checks
             foreach (EntityProperty property in Enum.GetValues(typeof(EntityProperty)))
             {
                 if (child.InheritProperty(property))
@@ -127,7 +144,7 @@ namespace Lichen.Entities
         // Recursively set all descendants to have the same property value.
         public void PropagateProperty(EntityProperty property)
         {
-            if (IsScene) return;
+            //if (IsScene) return;
             if (Children.Count != 0)
             {
                 LinkedListNode<Entity> child = Children.First;
@@ -150,11 +167,13 @@ namespace Lichen.Entities
 
             switch (property)
             {
+                /*
                 case EntityProperty.Scene:
                     if (scene == Parent.Scene) return false;
                     scene = Parent.Scene;
                     RebindGroups();
                     break;
+                    */
                 case EntityProperty.State:
                     if (state == Parent.State) return false;
                     state = Parent.State;
@@ -173,17 +192,39 @@ namespace Lichen.Entities
             return true;
         }
 
-        public Entity()
+        // TODO: Since a scene is now required, remove scene =!= null checks from this class.
+        public Entity(Scene scene)
         {
-            Children = new LinkedList<Entity>();
+            this.scene = scene;
+            //Children = new LinkedList<Entity>();
+            //components = new Dictionary<Type, int>();
+            /*
             ComponentList = new Dictionary<Type, Component>();
             UpdateChains = new Dictionary<String, UpdateChain>();
+            */
 
             //tags = new HashSet<string>();
             //groups = new HashSet<string>();
-            Data = new Util.Databank();
+            //Data = new Util.Databank();
         }
 
+        /*
+        public Entity(Entity parent)
+        {
+            //jazz
+            this.scene = parent.scene;
+            AttachTo(parent);
+        }
+        */
+
+        public Entity MakeChild()
+        {
+            Entity entity = new Entity(Scene);
+            entity.AttachTo(this);
+            return entity;
+        }
+
+        /*
         public Entity(float x, float y) : this()
         {
             X = x;
@@ -203,6 +244,7 @@ namespace Lichen.Entities
             this.active = active;
             this.visible = visible;
         }
+        */
 
         public Entity SetPosition(float x, float y)
         {
@@ -239,6 +281,7 @@ namespace Lichen.Entities
             return this;
         }
 
+        /*
         public Entity SetRenderOrder(float renderOrder)
         {
             RenderOrder = renderOrder;
@@ -250,14 +293,28 @@ namespace Lichen.Entities
             RenderByDepth = renderByDepth;
             return this;
         }
+        */
 
-        public Entity AddComponent(Component component)
+        public Entity AddComponent<T>(T component) where T : Component
         {
+            // TODO: This doesn't work at all if the entity is not attached to a scene.
+            // So either make entities always attached to scenes (and not able to change scenes),
+            // Or modify this and also add code in Scene propagation.
+            ComponentGroup<T> group = Scene.GetComponentGroup<T>();
+            // Add to scene's component group by type.
+            group.Add(component, out int componentId);
+            // Add to entity's component list.
+            components.Add(component.GetType(), componentId);
+            // Give the component a reference back to the entity.
+            component.Owner = this;
+            /*
             ComponentList.Add(component.GetType(), component);
             component.Owner = this;
+            */
             return this;
         }
 
+        /*
         public Entity AddUpdateComponent(IUpdateComponent component)
         {
             UpdateComponent = component;
@@ -279,7 +336,9 @@ namespace Lichen.Entities
             component.Owner = this;
             return this;
         }
+        */
 
+            /*
         public Entity AddActor(List<Entity> actorList)
         {
             ActorList = actorList;
@@ -292,45 +351,59 @@ namespace Lichen.Entities
             ActorList = actorList;
             return this;
         }
+        */
 
         // TODO: Decide whether or not to keep both AttachTo and AddChild.
 
         public Entity AttachTo(Entity entity)
         {
+            Debug.Assert(entity.scene == this.scene, "Child belongs to different scene from parent.");
+
             Parent = entity;
             entity.Children.AddLast(this);
             // Inherit container from parent.
             //Container = entity.Container;
             //Scene = entity.Scene;
+            /*
             if (entity.IsScene)
             {
                 this.PropagateScene(entity.OwnScene);
             }
             else
             {
+            */
                 entity.PropagateAll(this);
+            /*
             }
+            */
             return this;
         }
 
         public Entity AddChild(Entity entity)
         {
+            Debug.Assert(entity.scene == this.scene, "Child belongs to different scene from parent.");
+
             Children.AddLast(entity);
             entity.Parent = this;
             // Inherit container from parent.
             //entity.Container = Container;
             //entity.Scene = Scene;
+            /*
             if (this.IsScene)
             {
                 entity.PropagateScene(this.ownScene);
             }
             else
             {
+            */
                 this.PropagateAll(entity);
+            /*
             }
+            */
             return this;
         }
 
+        /*
         public Entity MakeScene(string sceneName, Scene scene = null)
         {
             // Set self as container so that children will inherit it.
@@ -351,18 +424,23 @@ namespace Lichen.Entities
             }
             return this;
         }
+        */
 
         public Entity AddToGroup(string groupName)
         {
-            if (groups == null)
+            /*
+             * if (groups == null)
             {
                 groups = new HashSet<string>();
             }
             else
             {
+            */
                 // Check if already in group.
                 if (groups.Contains(groupName)) return this;
+            /*
             }
+            */
             groups.Add(groupName);
 
             if (scene != null) scene.AddToGroup(groupName, this);
@@ -391,7 +469,7 @@ namespace Lichen.Entities
 
         private void RebindGroups()
         {
-            if (groups == null) return;
+            //if (groups == null) return;
             if (scene == null) return;
             foreach (string group in groups)
             {
@@ -408,21 +486,21 @@ namespace Lichen.Entities
         // Welp, currently I have both, and they have separate roles.
         public Entity AddTag(string tagName)
         {
-            if (tags == null) tags = new HashSet<string>();
+            //if (tags == null) tags = new HashSet<string>();
             tags.Add(tagName);
             return this;
         }
 
         public Entity RemoveTag(string tagName)
         {
-            if (tags == null) return this;
+            //if (tags == null) return this;
             tags.Remove(tagName);
             return this;
         }
 
         public bool HasTag(string tagName)
         {
-            if (tags == null) return false;
+            //if (tags == null) return false;
             return tags.Contains(tagName);
         }
 
@@ -456,7 +534,34 @@ namespace Lichen.Entities
             return inheritedVisibility;
         }
         */
+        
+        public void UpdateCumulativePosition()
+        {
+            if (!Enabled) return;
+            if (!Visible) return;
 
+            if (Parent != null)
+            {
+                cumulativeX = Parent.CumulativeX + X;
+                cumulativeY = Parent.CumulativeY + Y;
+            }
+            else
+            {
+                cumulativeX = X;
+                cumulativeY = Y;
+            }
+            if (Children.Count != 0)
+            {
+                LinkedListNode<Entity> child = Children.First;
+                while (child != null)
+                {
+                    child.Value.UpdateCumulativePosition();
+                    child = child.Next;
+                }
+            }
+        }
+
+        /*
         public void Render()
         {
             if (!Enabled) return;
@@ -536,7 +641,7 @@ namespace Lichen.Entities
             if (!Enabled) return;
             if (!Active) return;
 
-            /*
+            /-*
             if (Parent != null)
             {
                 inheritedVisibility = Parent.InheritedVisibility;
@@ -545,7 +650,7 @@ namespace Lichen.Entities
             {
                 inheritedVisibility = Visible;
             }
-            */
+            *-/
             if (chain == null)
             {
                 if (UpdateComponent != null) UpdateComponent.Update();
@@ -579,34 +684,43 @@ namespace Lichen.Entities
                 }
             }
         }
+*/
 
-        public Entity Clone()
+        // Creates a clone of entity and all children, but without components. (They have to be manually cloned.)
+        // So this function is kinda useless.
+        /*
+        public Entity EmptyClone()
         {
-            Entity entity = new Entity();
+            Entity entity = new Entity(scene);
             foreach (Entity child in Children)
             {
-                entity.AddChild(child.Clone());
+                entity.AddChild(child.EmptyClone());
             }
             entity.X = X;
             entity.Y = Y;
-            entity.Active = Active;
+            entity.Active = Active; // TODO: Does this cause unneccesary propagation? I can call some "entity.CopyFrom(this)".
             entity.Visible = Visible;
+            entity.RenderLayer = RenderLayer;
+            entity.RenderDepth = RenderDepth;
+            entity.AutoDepth = AutoDepth;
 
-            if (groups != null)
-            {
+            //if (groups != null)
+            //{
                 foreach (string groupName in groups)
                 {
                     entity.AddToGroup(groupName);
                 }
-            }
-            if (tags != null)
-            {
+            //}
+            //if (tags != null)
+            //{
                 foreach (string tagName in tags)
                 {
                     entity.AddTag(tagName);
                 }
-            }
+            //}
 
+            // TODO: Seems there's no way to clone components in here for now.
+            /-*
             if (UpdateComponent != null) entity.AddUpdateComponent((IUpdateComponent)UpdateComponent.Clone());
             if (RenderComponent != null) entity.AddRenderComponent((IRenderComponent)RenderComponent.Clone());
             foreach (KeyValuePair<Type, Component> entry in ComponentList)
@@ -620,18 +734,19 @@ namespace Lichen.Entities
                     entity.AddChainComponent(chain.Key, (IUpdateComponent)component.Clone());
                 }
             }
-
+            *-/
             return entity;
         }
+        */
     }
 
     public class EntitySorter : IComparer<Entity>
     {
         public int Compare(Entity e1, Entity e2)
         {
-            int compared = e2.RenderOrder.CompareTo(e1.RenderOrder);
+            int compared = e1.RenderLayer.CompareTo(e2.RenderLayer);
             if (compared != 0) return compared;
-            return e1.RenderBackupOrder.CompareTo(e2.RenderBackupOrder);
+            return e1.RenderDepth.CompareTo(e2.RenderDepth);
         }
     }
 }
