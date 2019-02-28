@@ -47,10 +47,12 @@ namespace HiganTour.Scenes
 
             title = camera.MakeChild()
                 .SetPosition(640, 250)
+                .SetRenderOrder(-1, 250)
                 .AddComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:title")));
 
             gameover = camera.MakeChild()
                 .SetPosition(640, 250)
+                .SetRenderOrder(-1, 250)
                 .AddComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:gameover")))
                 .SetVisible(false);
 
@@ -70,21 +72,25 @@ namespace HiganTour.Scenes
                 .SetPosition(20, 140)
                .AddComponent(new TextComponent(font, "Press F11 to enter Debug Mode"));
 
-            /*
-            random = new Random();
+            Sprite lycorisSprite = GlobalServices.GlobalSprites.Lookup("higantour:redlily");
+            random = new Random(0);
             double phi = (Math.Sqrt(5d) - 1d) / 2d;
             double theta = random.NextDouble();
             for (int i = 0; i < 200; i++)
             {
-                lycoris.Clone()
-                    //.SetPosition(random.Next(0, 700), random.Next(0, 700))
+                //float x = random.Next(0, 1280);
+                //float y = random.Next(0, 720);
+                float x = (float)(theta * 1280d + random.NextDouble() * 200d - 100d);
+                float y = i * 920f / 200f;
+                lycoris = camera.MakeChild()
+                    .SetRenderOrder(-1, y)
+                    .AddComponent(new SpriteComponent(lycorisSprite))
+                    .SetPosition(x, y);
                     //.AddChainComponent("motion", new Components.WindyComponent(random.Next(0, 1280), random.Next(0, 720)))
-                    .AddChainComponent("motion", new Components.WindyComponent(null, camera, (float)(theta * 1280d + random.NextDouble() * 200d - 100d), (float)i * 920f / 200f))
-                    .AttachTo(camera);
+                    //.AddChainComponent("motion", new Components.WindyComponent(null, camera, (float)(theta * 1280d + random.NextDouble() * 200d - 100d), (float)i * 920f / 200f))
                 theta += phi;
                 if (theta > 1d) theta -= 1d;
             }
-            */
             //Entity lycorisField = GlobalServices.EntityLibrary["lycoris-field"].Clone();
             //lycorisField.AttachTo(camera);
         }

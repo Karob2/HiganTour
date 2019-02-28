@@ -9,11 +9,12 @@ using System.Threading.Tasks;
 
 namespace HiganTour.Scenes
 {
-    /*
     public static class Common
     {
         public static void Preload()
         {
+            GlobalServices.GlobalSprites.Register("higantour:redlily");
+            /*
             Sprite lycorisSprite = GlobalServices.GlobalSprites.Register("higantour:redlily");
             Entity lycoris = new Entity()
                 .AddRenderComponent(new SpriteComponent(lycorisSprite));
@@ -33,7 +34,7 @@ namespace HiganTour.Scenes
                 if (theta > 1d) theta -= 1d;
             }
             GlobalServices.EntityLibrary.Add("lycoris-field", lycorisField);
+            */
         }
     }
-    */
 }

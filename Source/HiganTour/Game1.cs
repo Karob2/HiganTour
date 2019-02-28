@@ -55,7 +55,7 @@ namespace HiganTour
             // Preload all scene-specific assets.
             //root = new Entity();
             sceneBoard = new SceneBoard();
-            //Scenes.Common.Preload();
+            Scenes.Common.Preload();
             mainMenu = new Scenes.MainMenu();
             mainMenu.Preload(sceneBoard.New());
             mainMenu.Load();

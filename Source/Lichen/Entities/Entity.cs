@@ -84,7 +84,7 @@ namespace Lichen.Entities
         */
         public int RenderLayer { get; set; }
         public float RenderDepth { get; set; }
-        public bool AutoDepth { get; set; } = true;
+        public int AutoDepth { get; set; }
 
         //public List<Entity> ActorList { get; set; }
 
@@ -294,6 +294,25 @@ namespace Lichen.Entities
             return this;
         }
         */
+
+        public Entity SetRenderOrder(int layer, float depth)
+        {
+            RenderLayer = layer;
+            RenderDepth = depth;
+            return this;
+        }
+
+        public Entity SetRenderLayer(int renderLayer)
+        {
+            RenderLayer = renderLayer;
+            return this;
+        }
+
+        public Entity SetRenderDepth(float renderDepth)
+        {
+            RenderDepth = renderDepth;
+            return this;
+        }
 
         public Entity AddComponent<T>(T component) where T : Component
         {
@@ -535,7 +554,7 @@ namespace Lichen.Entities
         }
         */
         
-        public void UpdateCumulativePosition()
+        public void UpdateCumulativePosition(int counter = 0)
         {
             if (!Enabled) return;
             if (!Visible) return;
@@ -550,12 +569,14 @@ namespace Lichen.Entities
                 cumulativeX = X;
                 cumulativeY = Y;
             }
+            AutoDepth = counter;
             if (Children.Count != 0)
             {
                 LinkedListNode<Entity> child = Children.First;
                 while (child != null)
                 {
-                    child.Value.UpdateCumulativePosition();
+                    counter++;
+                    child.Value.UpdateCumulativePosition(counter);
                     child = child.Next;
                 }
             }
