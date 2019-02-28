@@ -8,6 +8,8 @@ namespace Lichen.Entities
     {
         public Entity Owner { get; set; }
 
+        public virtual void OnAttach() { }
+
         public Component Clone()
         {
             return (Component)this.MemberwiseClone();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Linq;
 
 namespace Lichen.Entities
 {
@@ -326,11 +327,29 @@ namespace Lichen.Entities
             components.Add(component.GetType(), componentId);
             // Give the component a reference back to the entity.
             component.Owner = this;
+            component.OnAttach();
             /*
             ComponentList.Add(component.GetType(), component);
             component.Owner = this;
             */
             return this;
+        }
+
+        public T GetComponent<T>() where T : Component
+        {
+            if (!components.TryGetValue(typeof(T), out int componentId)) return null;
+            return scene.GetComponentGroup<T>().List[componentId];
+        }
+
+        public bool TryGetComponent<T>(out T component) where T : Component
+        {
+            if (!components.TryGetValue(typeof(T), out int componentId))
+            {
+                component = null;
+                return false;
+            }
+            component = scene.GetComponentGroup<T>().List[componentId];
+            return true;
         }
 
         /*
@@ -357,20 +376,20 @@ namespace Lichen.Entities
         }
         */
 
-            /*
-        public Entity AddActor(List<Entity> actorList)
-        {
-            ActorList = actorList;
-            actorList.Add(this);
-            return this;
-        }
+        /*
+    public Entity AddActor(List<Entity> actorList)
+    {
+        ActorList = actorList;
+        actorList.Add(this);
+        return this;
+    }
 
-        public Entity AddActorList(List<Entity> actorList)
-        {
-            ActorList = actorList;
-            return this;
-        }
-        */
+    public Entity AddActorList(List<Entity> actorList)
+    {
+        ActorList = actorList;
+        return this;
+    }
+    */
 
         // TODO: Decide whether or not to keep both AttachTo and AddChild.
 
@@ -580,6 +599,12 @@ namespace Lichen.Entities
                     child = child.Next;
                 }
             }
+        }
+
+        public void OverrideCumulativePosition(float x, float y)
+        {
+            cumulativeX = x;
+            cumulativeY = y;
         }
 
         /*

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HiganTour.Components;
 
 namespace HiganTour.Scenes
 {
@@ -38,6 +39,8 @@ namespace HiganTour.Scenes
 
             Scene.AddUpdateChain("menu");
             Scene.AddUpdateChain("motion");
+            Scene.AddSystem(new Systems.WindySystem(), "motion");
+            Scene.AddSystem(new Systems.BodySystem(), "motion");
             Scene.AddRenderChain("render");
             Scene.AddSystem(new Systems.RenderSystem(), "render");
 
@@ -47,12 +50,14 @@ namespace HiganTour.Scenes
 
             title = camera.MakeChild()
                 .SetPosition(640, 250)
-                .SetRenderOrder(-1, 250)
+                .SetRenderLayer(-1)
+                .AddComponent(new BodyComponent())
                 .AddComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:title")));
 
             gameover = camera.MakeChild()
                 .SetPosition(640, 250)
-                .SetRenderOrder(-1, 250)
+                .SetRenderLayer(-1)
+                .AddComponent(new BodyComponent())
                 .AddComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:gameover")))
                 .SetVisible(false);
 
@@ -83,8 +88,12 @@ namespace HiganTour.Scenes
                 float x = (float)(theta * 1280d + random.NextDouble() * 200d - 100d);
                 float y = i * 920f / 200f;
                 lycoris = camera.MakeChild()
-                    .SetRenderOrder(-1, y)
+                    //.SetRenderOrder(-1, y)
+                    .SetRenderLayer(-1)
+                    .AddComponent(new BodyComponent())
                     .AddComponent(new SpriteComponent(lycorisSprite))
+                    .SetPosition(x, y)
+                    .AddComponent(new Components.WindyComponent())
                     .SetPosition(x, y);
                     //.AddChainComponent("motion", new Components.WindyComponent(random.Next(0, 1280), random.Next(0, 720)))
                     //.AddChainComponent("motion", new Components.WindyComponent(null, camera, (float)(theta * 1280d + random.NextDouble() * 200d - 100d), (float)i * 920f / 200f))
