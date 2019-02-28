@@ -43,7 +43,7 @@ namespace HiganTour.Scenes
             Scene.AddSystem(new Systems.WindySystem(), "motion");
             Scene.AddSystem(new Systems.BodySystem(), "motion");
             Scene.AddRenderChain("render");
-            Scene.AddSystem(new Systems.RenderSystem().AddSubsystem(new Systems.RenderOffsetSubsystem()), "render");
+            Scene.AddSystem(new RenderSystem().AddSubsystem(new Systems.RenderOffsetSubsystem()), "render");
 
             root.AddComponent(new Components.MenuComponent()); // This component handles the key input.
 

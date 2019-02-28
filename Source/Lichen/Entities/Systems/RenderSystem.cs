@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Lichen.Entities;
 
-namespace HiganTour.Systems
+namespace Lichen.Entities
 {
     // TODO: Consider having a special ComponentGroup format that pre-filters invisible entities.
     public class RenderSystem : Lichen.Entities.System
