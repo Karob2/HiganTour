@@ -9,7 +9,7 @@ using Lichen.Entities;
 
 namespace HiganTour.Components
 {
-    class MenuComponent : Lichen.Entities.Component, Lichen.Entities.IUpdateComponent
+    class MenuComponent : Lichen.Entities.Component //, Lichen.Entities.IUpdateComponent
     {
         public void Update()
         {

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using Lichen.Entities;
-using HiganTour.Components;
 
 namespace HiganTour.Systems
 {
@@ -27,18 +26,7 @@ namespace HiganTour.Systems
 
             foreach (RenderElement element in renderList)
             {
-                if(element.Entity.TryGetComponent(out RenderOffsetComponent offsetComponent))
-                {
-                    float x = element.Entity.CumulativeX;
-                    float y = element.Entity.CumulativeY;
-                    element.Entity.OverrideCumulativePosition(x + offsetComponent.X, y + offsetComponent.Y);
-                    element.Action();
-                    element.Entity.OverrideCumulativePosition(x, y);
-                }
-                else
-                {
-                    element.Action();
-                }
+                RunSubsystems(element.Entity, element.Action);
             }
         }
     }

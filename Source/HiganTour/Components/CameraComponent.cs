@@ -7,7 +7,7 @@ using Lichen.Entities;
 
 namespace HiganTour.Components
 {
-    class CameraComponent : Lichen.Entities.Component, Lichen.Entities.IUpdateComponent
+    class CameraComponent : Lichen.Entities.Component //, Lichen.Entities.IUpdateComponent
     {
         Entity target;
 
