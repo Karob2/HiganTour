@@ -39,6 +39,7 @@ namespace HiganTour.Scenes
 
             //Scene.AddFilter(typeof(RenderComponent));
             Scene.AddUpdateChain("menu");
+            Scene.AddSystem(new Systems.MainMenuSystem(), "menu");
             Scene.AddUpdateChain("motion");
             Scene.AddSystem(new Systems.WindySystem(), "motion");
             Scene.AddSystem(new Systems.BodySystem(), "motion");

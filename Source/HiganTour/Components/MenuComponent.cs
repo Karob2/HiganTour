@@ -13,6 +13,10 @@ namespace HiganTour.Components
     {
         public void Update()
         {
+            if (Lichen.GlobalServices.InputManager.JustPressed(Lichen.Input.GameCommand.MenuConfirm))
+            {
+                Owner.Scene.ChangeScene("level");
+            }
             /*
             if (!((Game1)Lichen.GlobalServices.Game).GetMR())
             {

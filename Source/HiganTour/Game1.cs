@@ -57,12 +57,12 @@ namespace HiganTour
             sceneBoard = new SceneBoard();
             Scenes.Common.Preload();
             mainMenu = new Scenes.MainMenu();
-            mainMenu.Preload(sceneBoard.New());
+            mainMenu.Preload(sceneBoard.New("main menu"));
             mainMenu.Load();
-            /*
             level = new Scenes.Level();
-            level.Preload(sceneBoard.New());
+            level.Preload(sceneBoard.New("level"));
             level.Load();
+            /*
             gameOver = new Scenes.GameOver();
             gameOver.Preload(sceneBoard.New());
             gameOver.Load();
@@ -71,7 +71,7 @@ namespace HiganTour
             MusicRoom.Load();
             */
             //ChangeScene(0);
-            sceneBoard.Switch(mainMenu.Scene);
+            sceneBoard.ChangeScene("main menu");
         }
 
         // Called when exiting the game.

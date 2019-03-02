@@ -9,6 +9,7 @@ namespace Lichen.Entities
     public class Scene
     {
         public string Name { get; set; }
+        public SceneBoard SceneBoard { get; set; }
         Entity root;
         public Entity Root { get { return root; } }
         Dictionary<string, EntityGroup> entityGroups;
@@ -123,6 +124,10 @@ namespace Lichen.Entities
 
         // TODO: Replace this with a less ridgid way to change scenes - something that supports dynamic loading and unloading.
         // Maybe via delegates/actions? Like "myScene.OnLoad = delegate"
+        public void ChangeScene(string sceneName)
+        {
+            SceneBoard.ChangeScene(sceneName);
+        }
         /*
         public bool ChangeScene(string sceneName)
         {

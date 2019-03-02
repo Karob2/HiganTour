@@ -13,12 +13,14 @@ namespace Lichen.Entities
         {
             scenes.Add(scene);
             active.Add(scene, false);
+            scene.SceneBoard = this;
         }
 
-        public Scene New()
+        public Scene New(string name)
         {
-            Scene scene = new Scene();
+            Scene scene = new Scene(name);
             Add(scene);
+            scene.SceneBoard = this;
             return scene;
         }
 
@@ -32,11 +34,26 @@ namespace Lichen.Entities
             active[scene] = false;
         }
 
-        public void Switch(Scene scene)
+        public void ChangeScene(Scene scene)
         {
             foreach(Scene scene2 in scenes)
             {
                 if (Object.ReferenceEquals(scene, scene2))
+                {
+                    active[scene] = true;
+                }
+                else
+                {
+                    active[scene] = false;
+                }
+            }
+        }
+
+        public void ChangeScene(string sceneName)
+        {
+            foreach (Scene scene in scenes)
+            {
+                if (scene.Name == sceneName)
                 {
                     active[scene] = true;
                 }

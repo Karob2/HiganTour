@@ -28,7 +28,7 @@ namespace HiganTour.Scenes
         List<Entity> enemies, bullets;
         int currentEnemy, currentBullet;
         Entity enemyContainer;
-        Entity lycoris;
+        //Entity lycoris;
         //Entity zone1, zone2, zone3;
 
         List<Entity> actorList;
@@ -46,43 +46,47 @@ namespace HiganTour.Scenes
         public bool debugMode;
 
         // Create a reference set of entities and load necessary assets.
-        public override void Preload(Entity root)
+        public override void Preload(Scene scene)
         {
-            this.root = root;
+            this.Scene = scene;
+
             actorList = new List<Entity>();
 
             player = new Entity()
-                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:spirit4")))
-                .AddChainComponent("control", new Components.PlayerControlComponent(this))
+                .AddComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:spirit4")))
+                //.AddComponent(new Components.PlayerControlComponent(this))
+                .SetRenderLayer(-1)
                 .AddToGroup("movegrass")
                 .AddToGroup("player");
-            //.AddChainComponent("motion", )
-            /*
-            new Entity(0, 0)
-                .AddRenderComponent(new TextComponent(GlobalServices.GlobalFonts.Register("higantour:sans"), "Player 1"))
-                .AttachTo(player);
-                */
             enemy = new Entity()
-                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:fairy_sm")))
-                .AddChainComponent("control", new Components.AI.SeekerAIComponent(this))
+                .AddComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:fairy_sm")))
+                //.AddComponent(new Components.AI.SeekerAIComponent(this))
+                .SetRenderLayer(-1)
                 .AddToGroup("movegrass")
                 .AddToGroup("enemy");
             GlobalServices.GlobalSprites.Register("higantour:enemy");
 
             death = new Entity()
-                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:death_sm")));
+                .AddComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:death_sm")))
+                .SetRenderLayer(-1)
+                .AddToGroup("death");
 
             warning = new Entity()
-                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:fae_warn")));
+                .AddComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:fae_warn")))
+                .SetRenderLayer(-1)
+                .AddToGroup("warning");
 
             bullet = new Entity()
-                .AddRenderComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:bullet")))
-                .AddChainComponent("control", new Components.AI.BulletComponent(this, -200, 0, 0, 0))
+                .AddComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:bullet")))
+                //.AddComponent(new Components.AI.BulletComponent(this, -200, 0, 0, 0))
+                .SetRenderLayer(-1)
                 .AddToGroup("bullet");
 
+            /*
             Sprite lycorisSprite = GlobalServices.GlobalSprites.Register("higantour:redlily");
             lycoris = new Entity()
                 .AddRenderComponent(new SpriteComponent(lycorisSprite));
+            */
 
             font = GlobalServices.GlobalFonts.Register("higantour:sans");
             //bgm = GlobalServices.GlobalSongs.Register("higantour:Stage");
@@ -94,41 +98,31 @@ namespace HiganTour.Scenes
         // Create the scene's entities by cloning reference entities.
         public override void Load()
         {
-            sceneContainer = new Entity()
-                .AttachTo(root).MakeScene("level");
-            sceneContainer.OwnScene.AddUpdateChain("control");
-            sceneContainer.OwnScene.AddUpdateChain("motion");
+            Entity root = Scene.Root;
 
-            camera = new Entity()
-                .SetRenderByDepth(true)
-                .AddUpdateComponent(new Components.CameraComponent(player))
-                .AttachTo(sceneContainer)
+            Scene.AddUpdateChain("motion");
+            Scene.AddSystem(new Systems.WindySystem(), "motion");
+            Scene.AddSystem(new Systems.BodySystem(), "motion");
+            Scene.AddRenderChain("render");
+            Scene.AddSystem(new RenderSystem().AddSubsystem(new Systems.RenderOffsetSubsystem()), "render");
+
+            camera = root.MakeChild()
+                .AddComponent(new Components.CameraComponent(player))
                 .AddToGroup("camera");
 
-            /*
-            zone1 = new Entity().AttachTo(container);
-            zone2 = new Entity().AttachTo(container);
-            zone3 = new Entity().AttachTo(container);
-            */
-
-            random = new Random();
-            /*
-            double phi = (Math.Sqrt(5d)-1d)/2d;
+            random = new Random(0);
+            double phi = (Math.Sqrt(5d) - 1d) / 2d;
             double theta = random.NextDouble();
             for (int i = 0; i < 200; i++)
             {
-                lycoris.Clone()
-                    //.SetPosition(random.Next(0, 700), random.Next(0, 700))
-                    //.AddChainComponent("motion", new Components.WindyComponent(random.Next(0, 1280), random.Next(0, 720)))
-                    .AddChainComponent("motion", new Components.WindyComponent(this, camera, (float)(theta * 1280d + random.NextDouble() * 200d - 100d), (float)i * 920f / 200f))
-                    .AttachTo(camera)
-                    .AddActorList(actorList);
+                //float x = random.Next(0, 1280);
+                //float y = random.Next(0, 720);
+                float x = (float)(theta * 1280d + random.NextDouble() * 200d - 100d);
+                float y = i * 920f / 200f;
+                Scenes.Common.Lycoris.CloneTo(camera).SetPosition(x, y);
                 theta += phi;
                 if (theta > 1d) theta -= 1d;
             }
-            */
-            Entity lycorisField = GlobalServices.EntityLibrary["lycoris-field"].Clone();
-            lycorisField.AttachTo(camera);
 
             enemyContainer = new Entity()
                 .AttachTo(camera);
@@ -137,8 +131,7 @@ namespace HiganTour.Scenes
             //    .AddActor(actorList);
 
             //Entity player1 = player.Clone().SetPosition(300, 200).AttachTo(container);
-            player.SetPosition(880, 200).AttachTo(camera)
-                .AddActor(actorList);
+            player.CloneTo(camera).SetPosition(880, 200);
 
             /*
             TextComponent tc = (TextComponent)player1.Children.First.Value.RenderComponent;
@@ -148,17 +141,17 @@ namespace HiganTour.Scenes
             bullets = new List<Entity>();
             for (int i = 0; i < 100; i++)
             {
-                bullets.Add(bullet.Clone().AttachTo(camera).AddActor(actorList));
+                bullets.Add(bullet.CloneTo(camera));
             }
 
             enemies = new List<Entity>();
             for (int i = 0; i < 20; i++)
             {
-                enemies.Add(enemy.Clone().AttachTo(enemyContainer).AddActor(actorList));
+                enemies.Add(enemy.CloneTo(enemyContainer));
             }
 
-            warning.AttachTo(sceneContainer).SetPosition(0, -10).AddToGroup("warning");
-            death.AttachTo(camera).AddToGroup("death");
+            warning.CloneTo(root).SetPosition(0, -10);
+            death.CloneTo(camera);
         }
 
         public void MakeEnemy()
@@ -177,7 +170,7 @@ namespace HiganTour.Scenes
             }
             Entity enemy = enemies[currentEnemy];
             enemy.SetPosition(x, y);
-            ((Components.AI.SeekerAIComponent)enemy.UpdateChains["control"].First()).SetAIMode(mode);
+            //((Components.AI.SeekerAIComponent)enemy.UpdateChains["control"].First()).SetAIMode(mode);
             enemy.Visible = true;
             enemy.Active = true;
 
@@ -194,7 +187,7 @@ namespace HiganTour.Scenes
                 x = (float)random.NextDouble() * 1180f + 50f;
                 enemy = enemies[currentEnemy];
                 enemy.SetPosition(x, y);
-                ((Components.AI.SeekerAIComponent)enemy.UpdateChains["control"].First()).SetAIMode(1);
+                //((Components.AI.SeekerAIComponent)enemy.UpdateChains["control"].First()).SetAIMode(1);
                 enemy.Visible = true;
                 enemy.Active = true;
                 currentEnemy++;
@@ -209,7 +202,7 @@ namespace HiganTour.Scenes
                 .AddChainComponent("motion", new Components.AI.BulletComponent(this, x, y, vx, vy));
             */
             Entity bullet = bullets[currentBullet];
-            ((Components.AI.BulletComponent)bullet.UpdateChains["control"].First()).Set(x, y, vx, vy);
+            //((Components.AI.BulletComponent)bullet.UpdateChains["control"].First()).Set(x, y, vx, vy);
             bullet.Visible = true;
             bullet.Active = true;
 
@@ -228,6 +221,7 @@ namespace HiganTour.Scenes
 
         public void Reset()
         {
+            /*
             //enemyContainer.Children.Clear();
             actorList.Clear();
 
@@ -274,12 +268,13 @@ namespace HiganTour.Scenes
             warning.Visible = false;
             warningTimer = 0;
             Karma = 100f;
+            */
         }
 
         public void SetDebugMode()
         {
             debugMode = true;
-            sceneContainer.OwnScene.Data.SetBool("debugmode", true);
+            Scene.Data.SetBool("debugmode", true);
             furthestDistance = 0;
             distanceTraveled = 500f * 20f;
         }
