@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 using HiganTour.Systems;
+using HiganTour.Components;
 
 namespace HiganTour.Scenes
 {
@@ -57,12 +58,14 @@ namespace HiganTour.Scenes
             player = new Entity()
                 .AddComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:spirit4")))
                 //.AddComponent(new Components.PlayerControlComponent(this))
+                .AddComponent(new BodyComponent())
                 .SetRenderLayer(-1)
                 .AddToGroup("movegrass")
                 .AddToGroup("player");
             enemy = new Entity()
                 .AddComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:fairy_sm")))
                 //.AddComponent(new Components.AI.SeekerAIComponent(this))
+                .AddComponent(new BodyComponent())
                 .SetRenderLayer(-1)
                 .AddToGroup("movegrass")
                 .AddToGroup("enemy");
@@ -70,6 +73,7 @@ namespace HiganTour.Scenes
 
             death = new Entity()
                 .AddComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:death_sm")))
+                .AddComponent(new BodyComponent())
                 .SetRenderLayer(-1)
                 .AddToGroup("death");
 
@@ -81,6 +85,7 @@ namespace HiganTour.Scenes
             bullet = new Entity()
                 .AddComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:bullet")))
                 //.AddComponent(new Components.AI.BulletComponent(this, -200, 0, 0, 0))
+                .AddComponent(new BodyComponent())
                 .SetRenderLayer(-1)
                 .AddToGroup("bullet");
 
@@ -105,12 +110,13 @@ namespace HiganTour.Scenes
             Scene.AddUpdateChain("motion");
             Scene.AddSystem(new Systems.WindySystem(), "motion");
             Scene.AddSystem(new Systems.BodySystem(), "motion");
+            Scene.AddSystem(new Systems.CameraSystem(), "motion");
             Scene.AddRenderChain("render");
             Scene.AddSystem(new HiganRenderSystem(), "render");
             //Scene.AddSystem(new RenderSystem().AddSubsystem(new Systems.RenderOffsetSubsystem()), "render");
 
             camera = root.MakeChild()
-                .AddComponent(new Components.CameraComponent(player))
+                .AddComponent(new Components.CameraComponent("player"))
                 .AddToGroup("camera");
 
             random = new Random(0);

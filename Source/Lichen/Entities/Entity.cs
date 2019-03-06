@@ -823,7 +823,7 @@ namespace Lichen.Entities
             {
                 entity.AddChild(child.CloneTo(entity));
             }
-            return this;
+            return entity;
         }
 
         public Entity Clone()
@@ -834,7 +834,7 @@ namespace Lichen.Entities
             {
                 entity.AddChild(child.Clone());
             }
-            return this;
+            return entity;
         }
 
         void CopyPropertiesTo(Entity entity)
