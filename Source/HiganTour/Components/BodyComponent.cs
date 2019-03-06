@@ -17,10 +17,15 @@ namespace HiganTour.Components
 
     public class BodyComponent : Component
     {
+        /*
         public double X { get; set; }
         public double Y { get; set; }
         public double Z { get; set; }
+        public double VX { get; set; }
         public Rectangle RenderArea { get; set; }
+        */
+        public Vector3 Position { get; set; } = new Vector3();
+        public Vector3 Velocity { get; set; } = new Vector3();
         /*
         public CollisionTypes CollisionType { get; set; }
         public Rectangle CollisionRect { get; set; }
@@ -28,8 +33,16 @@ namespace HiganTour.Components
         public Vector4 CollisionSphere { get; set; }
         public Polygon CollisionPolygon { get; set; }
         public Polyhedron CollisionPolyhedron { get; set; }
+        collision lines (disconnected)
         */
         //public CollisionBody CollisionBody { get; set; }
+
+        public BodyComponent() { }
+
+        public BodyComponent(float x, float y, float z)
+        {
+            Position = new Vector3(x, y, z);
+        }
 
         public override void OnAttach()
         {
@@ -38,6 +51,33 @@ namespace HiganTour.Components
         public override void AttachTo(Entity entity)
         {
             entity.AddComponent(this);
+        }
+    }
+
+    public static class BodyExtensions
+    {
+        public static Entity SetBodyPosition(this Entity entity, float x, float y, float z)
+        {
+            if (!entity.TryGetComponent(out BodyComponent bodyComponent))
+            {
+                bodyComponent = new BodyComponent();
+                entity.AddComponent(bodyComponent);
+            }
+            bodyComponent.Position = new Vector3(x, y, z);
+
+            return entity;
+        }
+
+        public static Entity SetBodyVelocity(this Entity entity, float x, float y, float z)
+        {
+            if (!entity.TryGetComponent(out BodyComponent bodyComponent))
+            {
+                bodyComponent = new BodyComponent();
+                entity.AddComponent(bodyComponent);
+            }
+            bodyComponent.Velocity = new Vector3(x, y, z);
+
+            return entity;
         }
     }
 

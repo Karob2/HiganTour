@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 using HiganTour.Systems;
 using HiganTour.Components;
+using Microsoft.Xna.Framework;
 
 namespace HiganTour.Scenes
 {
@@ -57,7 +58,7 @@ namespace HiganTour.Scenes
 
             player = new Entity()
                 .AddComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:spirit4")))
-                //.AddComponent(new Components.PlayerControlComponent(this))
+                .AddComponent(new PlayerControlComponent())
                 .AddComponent(new BodyComponent())
                 .SetRenderLayer(-1)
                 .AddToGroup("movegrass")
@@ -109,6 +110,7 @@ namespace HiganTour.Scenes
 
             Scene.AddUpdateChain("motion");
             Scene.AddSystem(new Systems.WindySystem(), "motion");
+            Scene.AddSystem(new Systems.PlayerControlSystem(), "motion");
             Scene.AddSystem(new Systems.BodySystem(), "motion");
             Scene.AddSystem(new Systems.CameraSystem(), "motion");
             Scene.AddRenderChain("render");
@@ -128,7 +130,7 @@ namespace HiganTour.Scenes
                 //float y = random.Next(0, 720);
                 float x = (float)(theta * 1280d + random.NextDouble() * 200d - 100d);
                 float y = i * 920f / 200f;
-                Scenes.Common.Lycoris.CloneTo(camera).SetPosition(x, y);
+                Scenes.Common.Lycoris.CloneTo(camera).SetBodyPosition(x, y, 0);
                 theta += phi;
                 if (theta > 1d) theta -= 1d;
             }
@@ -140,7 +142,7 @@ namespace HiganTour.Scenes
             //    .AddActor(actorList);
 
             //Entity player1 = player.Clone().SetPosition(300, 200).AttachTo(container);
-            player.CloneTo(camera).SetPosition(880, 200);
+            player.CloneTo(camera).SetBodyPosition(880, 200, 0);
 
             /*
             TextComponent tc = (TextComponent)player1.Children.First.Value.RenderComponent;
@@ -156,6 +158,7 @@ namespace HiganTour.Scenes
             enemies = new List<Entity>();
             for (int i = 0; i < 20; i++)
             {
+                //enemies.Add(enemy.CloneTo(enemyContainer).SetBodyPosition((float)(400d + random.NextDouble() * 4000d), 400, 0));
                 enemies.Add(enemy.CloneTo(enemyContainer));
             }
 

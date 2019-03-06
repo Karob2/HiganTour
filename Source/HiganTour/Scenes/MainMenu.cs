@@ -54,15 +54,13 @@ namespace HiganTour.Scenes
             camera = root.MakeChild();
 
             title = camera.MakeChild()
-                .SetPosition(640, 250)
                 .SetRenderLayer(-1)
-                .AddComponent(new BodyComponent())
+                .AddComponent(new BodyComponent(640, 250, 0))
                 .AddComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:title")));
 
             gameover = camera.MakeChild()
-                .SetPosition(640, 250)
                 .SetRenderLayer(-1)
-                .AddComponent(new BodyComponent())
+                .AddComponent(new BodyComponent(640, 250, 0))
                 .AddComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:gameover")))
                 .SetVisible(false);
 
@@ -91,7 +89,7 @@ namespace HiganTour.Scenes
                 //float y = random.Next(0, 720);
                 float x = (float)(theta * 1280d + random.NextDouble() * 200d - 100d);
                 float y = i * 920f / 200f;
-                Scenes.Common.Lycoris.CloneTo(camera).SetPosition(x, y);
+                Scenes.Common.Lycoris.CloneTo(camera).SetBodyPosition(x, y, 0);
                 /*
                 lycoris = camera.MakeChild()
                     //.SetRenderOrder(-1, y)

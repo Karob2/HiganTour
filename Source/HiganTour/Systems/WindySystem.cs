@@ -62,24 +62,64 @@ namespace HiganTour.Systems
             {
                 double x = component.Owner.X + component.X2;
                 double y = component.Owner.Y + component.Y2;
-                Entity nearestActor = null;
-                double nearestDistance = 1000d;
+                //Entity nearestActor = null;
+                //double nearestDistance = 1000d;
+                double count = 0d;
 
                 foreach (Entity entity in actorList)
                 {
+                    double hiding = 1d;
+                    if (entity.HasTag("hiding")) hiding = -1d;
                     double distance = Math.Sqrt(Math.Pow(entity.X - x, 2) + Math.Pow((entity.Y - y) * 2d, 2));
+                    /*
                     if (distance < nearestDistance)
                     {
                         nearestDistance = distance;
                         nearestActor = entity;
                     }
+                    */
+                    if (distance < 200d)
+                    {
+                        double multiplier = (200d - distance) / 2d * hiding;
+                        //if (hiding < 0) multiplier = Math.Min(multiplier, distance);
+                        double influence = 200d - distance;
+
+                        if (distance == 0 && hiding > 0)
+                        {
+                            ddy += multiplier * influence;
+                        }
+                        else
+                        {
+                            if (distance < 1d) distance = 1d;
+                            ddx += -(entity.X - x) / distance * multiplier * influence;
+                            ddy += -(entity.Y - y) / distance * multiplier * influence;
+                        }
+                        count += influence;
+                    }
                 }
 
+                if (count > 0d)
+                {
+                    ddx /= count;
+                    ddy /= count;
+                }
+
+                /*
                 if (nearestActor != null && nearestDistance < 200d)
                 {
                     double multiplier = (200d - nearestDistance) / 4d;
-                    ddx = -(nearestActor.X - x) / nearestDistance * multiplier;
-                    ddy = -(nearestActor.Y - y) * 2f / nearestDistance * multiplier;
+
+                    if (nearestDistance == 0)
+                    {
+                        ddx = 0d;
+                        ddy = 2d * multiplier;
+                    }
+                    else
+                    {
+                        if (nearestDistance < 1d) nearestDistance = 1d;
+                        ddx = -(nearestActor.X - x) / nearestDistance * multiplier;
+                        ddy = -(nearestActor.Y - y) * 2d / nearestDistance * multiplier;
+                    }
 
                     if (nearestActor.HasTag("hiding"))
                     {
@@ -87,6 +127,7 @@ namespace HiganTour.Systems
                         ddy = -ddy;
                     }
                 }
+                */
             }
 
             component.X2 = (10d * component.X2 + component.Dx + ddx) / 11d;

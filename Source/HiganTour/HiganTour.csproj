@@ -34,7 +34,6 @@
     <MonoGameContentReference Include="**\*.mgcb" />
     <Compile Remove="Components\AI\BulletComponent.cs" />
     <Compile Remove="Components\AI\SeekerAIComponent.cs" />
-    <Compile Remove="Components\PlayerControlComponent.cs" />
     <Compile Remove="Components\RenderOffsetComponent.cs" />
     <Compile Remove="Components\SceneComponents\LevelUpdateComponent.cs" />
     <Compile Remove="Components\SceneComponents\StageComponent.cs" />

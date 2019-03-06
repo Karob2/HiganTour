@@ -11,8 +11,12 @@ using Microsoft.Xna.Framework.Audio;
 
 namespace HiganTour.Components
 {
-    class PlayerControlComponent : Lichen.Entities.Component, Lichen.Entities.IUpdateComponent
+    class PlayerControlComponent : Component //, Lichen.Entities.IUpdateComponent
     {
+        public int DodgeTimer { get; set; }
+        public int Hiding { get; set; }
+        public float Karma { get; set; }
+        /*
         //Scenes.Level level;
         Vector2 d;
         int dodgeTimer;
@@ -21,13 +25,6 @@ namespace HiganTour.Components
         bool karmaChanged;
         //public bool Hiding { get; set; }
         SoundEffectInstance rustle = GlobalServices.GlobalSoundEffects.Lookup("higantour:leaves").CreateInstance();
-
-        /*
-                public PlayerControlComponent(Scenes.Level level)
-                {
-                    this.level = level;
-                }
-        */
 
         public void Reset()
         {
@@ -133,6 +130,12 @@ namespace HiganTour.Components
             }
 
             level.UpdateDistance(d.Y * 6f);
+        }
+        */
+
+        public override void AttachTo(Entity entity)
+        {
+            entity.AddComponent(this);
         }
     }
 }

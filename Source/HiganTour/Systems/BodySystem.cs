@@ -13,10 +13,11 @@ namespace HiganTour.Systems
             ComponentGroup<BodyComponent> components = scene.GetComponentGroup<BodyComponent>();
             foreach (BodyComponent component in components.List)
             {
-                //if (component.Owner.TryGetComponent(out BodyComponent bodyComponent))
-                //{
-                    component.Owner.RenderDepth = component.Owner.Y;
-                //}
+                component.Position += component.Velocity;
+
+                component.Owner.X = component.Position.X;
+                component.Owner.Y = component.Position.Y;
+                component.Owner.RenderDepth = component.Owner.Y;
             }
         }
     }
