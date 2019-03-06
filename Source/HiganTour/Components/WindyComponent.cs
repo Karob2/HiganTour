@@ -17,6 +17,8 @@ namespace HiganTour.Components
         */
         //public double X { get; set; }
         //public double Y { get; set; }
+        public double OldX { get; set; }
+        public double OldY { get; set; }
         public double X2 { get; set; }
         public double Y2 { get; set; }
         public double Dx { get; set; }

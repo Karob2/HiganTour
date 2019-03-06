@@ -38,11 +38,13 @@ namespace HiganTour.Systems
             else component.Y = (920f + dist % 920f) - pos - 200f;
             */
 
+            /*
             if (!component.Owner.TryGetComponent(out RenderOffsetComponent offsetComponent))
             {
                 offsetComponent = new RenderOffsetComponent();
                 component.Owner.AddComponent(offsetComponent);
             }
+            */
 
             component.Vx += rand.NextDouble() - 0.5d;
             component.Vy += rand.NextDouble() - 0.5d;
@@ -91,8 +93,10 @@ namespace HiganTour.Systems
             component.Y2 = (10d * component.Y2 + component.Dy + ddy) / 11d;
             //component.Owner.X = (float)(component.X + component.X2);
             //component.Owner.Y = (float)(component.Y + component.Y2);
+            /*
             offsetComponent.X = (float)component.X2;
             offsetComponent.Y = (float)component.Y2;
+            */
 
             //Owner.X = (float)(x + dx + ddx);
             //Owner.Y = (float)(y + dy + ddy);

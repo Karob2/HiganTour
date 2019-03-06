@@ -1,5 +1,6 @@
 ﻿using Lichen;
 using Lichen.Entities;
+using Lichen.Entities.Components;
 using Lichen.Libraries;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
+using HiganTour.Systems;
 
 namespace HiganTour.Scenes
 {
@@ -104,7 +106,8 @@ namespace HiganTour.Scenes
             Scene.AddSystem(new Systems.WindySystem(), "motion");
             Scene.AddSystem(new Systems.BodySystem(), "motion");
             Scene.AddRenderChain("render");
-            Scene.AddSystem(new RenderSystem().AddSubsystem(new Systems.RenderOffsetSubsystem()), "render");
+            Scene.AddSystem(new HiganRenderSystem(), "render");
+            //Scene.AddSystem(new RenderSystem().AddSubsystem(new Systems.RenderOffsetSubsystem()), "render");
 
             camera = root.MakeChild()
                 .AddComponent(new Components.CameraComponent(player))

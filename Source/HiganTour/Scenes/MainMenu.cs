@@ -1,5 +1,6 @@
 using Lichen;
 using Lichen.Entities;
+using Lichen.Entities.Components;
 using Lichen.Libraries;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HiganTour.Components;
+using HiganTour.Systems;
 
 namespace HiganTour.Scenes
 {
@@ -44,7 +46,8 @@ namespace HiganTour.Scenes
             Scene.AddSystem(new Systems.WindySystem(), "motion");
             Scene.AddSystem(new Systems.BodySystem(), "motion");
             Scene.AddRenderChain("render");
-            Scene.AddSystem(new RenderSystem().AddSubsystem(new Systems.RenderOffsetSubsystem()), "render");
+            Scene.AddSystem(new HiganRenderSystem(), "render");
+            //Scene.AddSystem(new RenderSystem().AddSubsystem(new Systems.RenderOffsetSubsystem()), "render");
 
             root.AddComponent(new Components.MenuComponent()); // This component handles the key input.
 

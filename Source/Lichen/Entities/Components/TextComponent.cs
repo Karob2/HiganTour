@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace Lichen.Entities
+namespace Lichen.Entities.Components
 {
     public class TextComponent : RenderComponent
     {

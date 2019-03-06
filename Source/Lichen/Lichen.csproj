@@ -13,6 +13,7 @@
     <InformationalVersion>0.2</InformationalVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Entities\Components\RenderModifierComponent.cs" />
     <Compile Remove="Entities\Components\SceneComponent.cs" />
     <Compile Remove="Entities\Components\TilemapComponent.cs" />
     <Compile Remove="Entities\EntityProvider.cs" />

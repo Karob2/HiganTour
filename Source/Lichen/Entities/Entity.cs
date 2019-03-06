@@ -132,8 +132,8 @@ namespace Lichen.Entities
         */
         float cumulativeX;
         float cumulativeY;
-        public float CumulativeX { get { return cumulativeX; } }
-        public float CumulativeY { get { return cumulativeY; } }
+        public float CumulativeX { get { return cumulativeX; } set { cumulativeX = value; } }
+        public float CumulativeY { get { return cumulativeY; } set { cumulativeY = value; } }
 
         private bool active = true;
         private bool visible = true;
@@ -682,11 +682,13 @@ namespace Lichen.Entities
             }
         }
 
+        /*
         public void OverrideCumulativePosition(float x, float y)
         {
             cumulativeX = x;
             cumulativeY = y;
         }
+        */
 
         /*
         public void Render()

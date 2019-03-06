@@ -1,5 +1,6 @@
 ﻿using Lichen;
 using Lichen.Entities;
+using Lichen.Entities.Components;
 using Lichen.Libraries;
 using System;
 using System.Collections.Generic;

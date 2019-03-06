@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Lichen.Entities;
+using Lichen.Entities.Components;
 
 namespace Lichen.Entities
 {
