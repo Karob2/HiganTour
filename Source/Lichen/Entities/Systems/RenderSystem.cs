@@ -17,6 +17,7 @@ namespace Lichen.Entities
 
             foreach (RenderComponent component in components)
             {
+                if (component.Owner.Enabled == false) continue;
                 if (component.Owner.Visible == false) continue;
                 // TODO: Also check if sprite is offscreen.
                 //sprite.Update();

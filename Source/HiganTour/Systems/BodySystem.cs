@@ -11,7 +11,7 @@ namespace HiganTour.Systems
         public override void Update(Scene scene)
         {
             ComponentGroup<BodyComponent> components = scene.GetComponentGroup<BodyComponent>();
-            foreach (BodyComponent component in components.List)
+            foreach (BodyComponent component in components.EnabledComponents)
             {
                 component.Position += component.Velocity;
 

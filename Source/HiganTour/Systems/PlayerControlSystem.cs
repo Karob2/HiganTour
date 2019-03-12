@@ -18,7 +18,7 @@ namespace HiganTour.Systems
             ComponentGroup<BodyComponent> bodyComponents = scene.GetComponentGroup<BodyComponent>();
             ComponentGroup<SpriteComponent> spriteComponents = scene.GetComponentGroup<SpriteComponent>();
 
-            foreach (PlayerControlComponent component in playerControlComponents.List)
+            foreach (PlayerControlComponent component in playerControlComponents.EnabledComponents)
             {
                 Entity player = component.Owner;
 

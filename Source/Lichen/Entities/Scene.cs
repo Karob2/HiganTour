@@ -1,5 +1,6 @@
 ﻿using Lichen.Entities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -355,6 +356,12 @@ namespace Lichen.Entities
         List<T> list = new List<T>();
         public List<T> List { get { return list; } }
         Dictionary<Entity, T> listByOwner = new Dictionary<Entity, T>();
+        public EnabledComponentCollection<T> EnabledComponents { get; set; }
+
+        public ComponentGroup()
+        {
+            EnabledComponents = new EnabledComponentCollection<T>(list);
+        }
 
         public void Add(T component, out int id)
         {
@@ -373,6 +380,70 @@ namespace Lichen.Entities
         public bool TryGetByOwner(Entity owner, out T component)
         {
             return listByOwner.TryGetValue(owner, out component);
+        }
+    }
+
+    public class EnabledComponentCollection<T> : IEnumerable<T> where T : Component
+    {
+        List<T> list;
+
+        public EnabledComponentCollection(List<T> list)
+        {
+            this.list = list;
+        }
+
+        public Enumerator GetEnumerator()
+        {
+            return new Enumerator(this.list);
+        }
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        {
+            return new Enumerator(this.list);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return new Enumerator(this.list);
+        }
+
+        public struct Enumerator : IEnumerator<T>, IEnumerator
+        {
+            private List<T> list;
+            private int index;
+            private T current;
+
+            internal Enumerator(List<T> list)
+            {
+                this.list = list;
+                index = 0;
+                current = default(T);
+            }
+
+            public T Current { get { return current; } }
+
+            Object IEnumerator.Current { get { return Current; } }
+
+            void IEnumerator.Reset()
+            {
+                index = 0;
+                current = default(T);
+            }
+
+            public bool MoveNext()
+            {
+                while (index < list.Count)
+                {
+                    current = list[index];
+                    index++;
+                    if (current.Owner.Enabled) return true;
+                }
+                index = list.Count + 1;
+                current = default(T);
+                return false;
+            }
+
+            public void Dispose() { }
         }
     }
 }

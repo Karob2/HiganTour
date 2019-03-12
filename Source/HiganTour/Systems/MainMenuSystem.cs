@@ -12,7 +12,7 @@ namespace HiganTour.Systems
         {
             // TODO: Should I expect there to only be one MenuComponent, and thus simplify this to a single constant reference somehow?
             ComponentGroup<MenuComponent> components = scene.GetComponentGroup<MenuComponent>();
-            foreach (MenuComponent component in components.List)
+            foreach (MenuComponent component in components.EnabledComponents)
             {
                 component.Update();
             }

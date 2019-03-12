@@ -21,7 +21,7 @@ namespace HiganTour.Systems
             List<Entity> actorList = scene.GetGroup("movegrass");
             ComponentGroup<BodyComponent> bodyComponents = scene.GetComponentGroup<BodyComponent>();
 
-            foreach (WindyComponent component in components.List)
+            foreach (WindyComponent component in components.EnabledComponents)
             {
                 // Endless scrolling flowers.
                 if (!bodyComponents.TryGetByOwner(component.Owner, out BodyComponent bodyComponent))

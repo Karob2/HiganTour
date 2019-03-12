@@ -11,7 +11,7 @@ namespace HiganTour.Systems
         public override void Update(Scene scene)
         {
             ComponentGroup<CameraComponent> components = scene.GetComponentGroup<CameraComponent>();
-            foreach (CameraComponent component in components.List)
+            foreach (CameraComponent component in components.EnabledComponents)
             {
                 Entity target = component.Owner.Scene.GetEntity(component.TargetName);
                 if (target == null) return;
