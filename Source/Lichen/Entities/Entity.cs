@@ -153,7 +153,7 @@ namespace Lichen.Entities
         public Dictionary<Type,Component> ComponentList { get; set; }
         public Dictionary<string,UpdateChain> UpdateChains { get; set; }
         */
-        Dictionary<Type, int> components = new Dictionary<Type, int>();
+        //Dictionary<Type, int> components = new Dictionary<Type, int>();
         // To enable full cloning:
         List<Component> componentReferences = new List<Component>();
 
@@ -399,7 +399,7 @@ namespace Lichen.Entities
                 // Add to scene's component group by type.
                 group.Add(component, out int componentId);
                 // Add to entity's component list.
-                components.Add(component.GetType(), componentId);
+                //components.Add(component.GetType(), componentId);
                 component.FilterComponent(); // This leads to downcasting via GetComponentFilter<> whenever an item is successfully filtered. (At the time of this writing, that's once per attach of each RenderComponent inheritor.)
                 component.OnAttach();
             }
@@ -412,12 +412,16 @@ namespace Lichen.Entities
 
         public T GetComponent<T>() where T : Component
         {
+            /*
             if (!components.TryGetValue(typeof(T), out int componentId)) return null;
             return scene.GetComponentGroup<T>().List[componentId];
+            */
+            return scene.GetComponentGroup<T>().GetByOwner(this);
         }
 
         public bool TryGetComponent<T>(out T component) where T : Component
         {
+            /*
             if (!components.TryGetValue(typeof(T), out int componentId))
             {
                 component = null;
@@ -425,6 +429,8 @@ namespace Lichen.Entities
             }
             component = scene.GetComponentGroup<T>().List[componentId];
             return true;
+            */
+            return scene.GetComponentGroup<T>().TryGetByOwner(this, out component);
         }
 
         /*

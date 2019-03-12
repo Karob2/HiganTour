@@ -354,11 +354,25 @@ namespace Lichen.Entities
         // TODO: Replace this with a re-usable smart collection?
         List<T> list = new List<T>();
         public List<T> List { get { return list; } }
+        Dictionary<Entity, T> listByOwner = new Dictionary<Entity, T>();
 
         public void Add(T component, out int id)
         {
             id = list.Count;
             list.Add(component);
+            listByOwner.Add(component.Owner, component);
+        }
+
+        public T GetByOwner(Entity owner)
+        {
+            T component = null;
+            listByOwner.TryGetValue(owner, out component);
+            return component;
+        }
+
+        public bool TryGetByOwner(Entity owner, out T component)
+        {
+            return listByOwner.TryGetValue(owner, out component);
         }
     }
 }

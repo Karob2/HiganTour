@@ -6,6 +6,7 @@ using HiganTour.Components;
 using Microsoft.Xna.Framework;
 using Lichen;
 using Lichen.Entities.Components;
+using Lichen.Util;
 
 namespace HiganTour.Systems
 {
@@ -13,22 +14,25 @@ namespace HiganTour.Systems
     {
         public override void Update(Scene scene)
         {
-            ComponentGroup<PlayerControlComponent> components = scene.GetComponentGroup<PlayerControlComponent>();
+            ComponentGroup<PlayerControlComponent> playerControlComponents = scene.GetComponentGroup<PlayerControlComponent>();
+            ComponentGroup<BodyComponent> bodyComponents = scene.GetComponentGroup<BodyComponent>();
+            ComponentGroup<SpriteComponent> spriteComponents = scene.GetComponentGroup<SpriteComponent>();
 
-            foreach (PlayerControlComponent component in components.List)
+            foreach (PlayerControlComponent component in playerControlComponents.List)
             {
                 Entity player = component.Owner;
 
-                // TODO: Do I really want to repeat these every frame?
-                if (!player.TryGetComponent(out BodyComponent bodyComponent))
+                if (!bodyComponents.TryGetByOwner(player, out BodyComponent bodyComponent))
                 {
                     bodyComponent = new BodyComponent();
                     player.AddComponent(bodyComponent);
                     bodyComponent.Position = new Vector3(player.X, player.Y, 0);
                 }
-                if (!player.TryGetComponent(out SpriteComponent spriteComponent))
+                if (!spriteComponents.TryGetByOwner(player, out SpriteComponent spriteComponent))
                 {
-                    spriteComponent = null;
+                    //spriteComponent = null;
+                    Error.LogErrorAndShutdown("Player without Sprite.");
+                    //continue;
                 }
 
                 if (component.DodgeTimer > 0) component.DodgeTimer--;
