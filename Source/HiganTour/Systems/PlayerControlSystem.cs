@@ -30,6 +30,7 @@ namespace HiganTour.Systems
                 }
                 if (!spriteComponents.TryGetByOwner(player, out SpriteComponent spriteComponent))
                 {
+                    // TODO: How should I handle this? Create blank sprite? Ignore and move on? Crash?
                     //spriteComponent = null;
                     Error.LogErrorAndShutdown("Player without Sprite.");
                     //continue;

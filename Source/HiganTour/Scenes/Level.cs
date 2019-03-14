@@ -65,7 +65,7 @@ namespace HiganTour.Scenes
                 .AddToGroup("player");
             enemy = new Entity()
                 .AddComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:fairy_sm")))
-                //.AddComponent(new Components.AI.SeekerAIComponent(this))
+                .AddComponent(new AIComponent())
                 .AddComponent(new BodyComponent())
                 .SetRenderLayer(-1)
                 .AddToGroup("movegrass")
@@ -111,6 +111,7 @@ namespace HiganTour.Scenes
             Scene.AddUpdateChain("motion");
             Scene.AddSystem(new Systems.WindySystem(), "motion");
             Scene.AddSystem(new Systems.PlayerControlSystem(), "motion");
+            Scene.AddSystem(new Systems.AISystem(), "motion");
             Scene.AddSystem(new Systems.BodySystem(), "motion");
             Scene.AddSystem(new Systems.CameraSystem(), "motion");
             Scene.AddRenderChain("render");
