@@ -71,6 +71,7 @@ namespace HiganTour.Scenes
                 .AddToGroup("movegrass")
                 .AddToGroup("enemy");
             GlobalServices.GlobalSprites.Register("higantour:enemy");
+            scene.EntityLibrary.Add("enemy", enemy);
 
             death = new Entity()
                 .AddComponent(new SpriteComponent(GlobalServices.GlobalSprites.Register("higantour:death_sm")))
@@ -114,9 +115,12 @@ namespace HiganTour.Scenes
             Scene.AddSystem(new Systems.AISystem(), "motion");
             Scene.AddSystem(new Systems.BodySystem(), "motion");
             Scene.AddSystem(new Systems.CameraSystem(), "motion");
+            Scene.AddSystem(new Systems.LevelSystem(), "motion");
             Scene.AddRenderChain("render");
             Scene.AddSystem(new HiganRenderSystem(), "render");
             //Scene.AddSystem(new RenderSystem().AddSubsystem(new Systems.RenderOffsetSubsystem()), "render");
+
+            root.AddComponent(new LevelComponent());
 
             camera = root.MakeChild()
                 .AddComponent(new Components.CameraComponent("player"))

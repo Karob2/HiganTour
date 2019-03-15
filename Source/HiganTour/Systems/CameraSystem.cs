@@ -13,7 +13,7 @@ namespace HiganTour.Systems
             ComponentGroup<CameraComponent> components = scene.GetComponentGroup<CameraComponent>();
             foreach (CameraComponent component in components.EnabledComponents)
             {
-                Entity target = component.Owner.Scene.GetEntity(component.TargetName);
+                Entity target = scene.GetEntity(component.TargetName);
                 if (target == null) return;
                 component.Owner.X = 0;
                 component.Owner.X = -target.X + Lichen.GlobalServices.Game.GraphicsDevice.Viewport.Width / 2f + 100f;

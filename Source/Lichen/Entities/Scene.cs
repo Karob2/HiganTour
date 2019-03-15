@@ -21,6 +21,7 @@ namespace Lichen.Entities
         List<string> renderChains;
         //List<System> systems;
         public Util.Databank Data { get; set; }
+        public Dictionary<string, Entity> EntityLibrary = new Dictionary<string, Entity>();
 
         Dictionary<Type, ComponentGroup> componentGroups = new Dictionary<Type, ComponentGroup>();
         public ComponentGroup<T> GetComponentGroup<T>() where T : Component
